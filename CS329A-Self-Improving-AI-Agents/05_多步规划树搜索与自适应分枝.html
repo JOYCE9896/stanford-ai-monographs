@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第五讲：多步规划树搜索与自适应分枝 | 斯坦福 CS329A 专论</title>
+    <title>第五讲：多步规划树搜索与自适应分枝 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -30,7 +30,7 @@
     <div class="epigraph">
         <blockquote>
             “人类最伟大的思维产物从来不是从第一个字一气呵成写到最后一个字的线性流水账。真正的深思熟虑充满着假设的分岔、死胡同前的断然回溯、以及多个独立子问题的并行拆解。将大模型强行禁锢在单向因果注意力掩码（Causal Mask）中，是对机器智能最残忍的束缚。”
-            <footer>— Azalia Mirhoseini, Stanford CS329A 课堂导论</footer>
+            <footer>,  Azalia Mirhoseini, Stanford CS329A 课堂导论</footer>
         </blockquote>
     </div>
 
@@ -44,7 +44,7 @@
         <div class="guide-box">
             <div class="guide-box-title">【通俗白话拆解】什么是“蒙特卡洛树搜索（MCTS）”？为什么不能“一条道走到黑”？</div>
             <p>
-                <strong>普通大模型的思考方式</strong>，就像下象棋时“只看眼前这一步，看到能吃兵就立刻吃”，完全不顾三步之后自己的帅会被将死。这就是“线性单向思考”的致命弱点——一旦第 3 步走错，后面写几千字全是在死胡同里撞墙。<br><br>
+                <strong>普通大模型的思考方式</strong>，就像下象棋时“只看眼前这一步，看到能吃兵就立刻吃”，完全不顾三步之后自己的帅会被将死。这就是“线性单向思考”的致命弱点, , 一旦第 3 步走错，后面写几千字全是在死胡同里撞墙。<br><br>
                 <strong>真正的推理大师（如 AlphaGo 与具备树搜索的 Agent）</strong>，在动手前会在脑海中画出一张<strong>“决策树”</strong>：
                 “如果我选方案 A（分枝1），环境会报错还是通过？如果报错，能不能回溯到分岔口改走方案 B（分枝2）？”
                 遇到容易的步骤迅速单线前进，遇到关键分水岭展开多路径试探，这就是“树搜索”带来质变的核心逻辑。
@@ -114,7 +114,7 @@
         </p>
 
         <div class="sharp-box">
-            <div class="sharp-box-title">反直觉结论：固定宽度搜索是计算资源的巨大浪费——自适应分枝（AB-MCTS）</div>
+            <div class="sharp-box-title">反直觉结论：固定宽度搜索是计算资源的巨大浪费, , 自适应分枝（AB-MCTS）</div>
             工业界早期的树搜索通常设置固定的超参数（如每步生成 5 个分枝，搜索深度为 8）。
             <br><br>
             <strong>《Wider or Deeper? (2025)》论文揭示了这种设计的极度低效</strong>：
@@ -128,7 +128,7 @@
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="04_工具代码反馈与执行强化学习.html">&larr; 返回第四讲</a> | <a href="index.html">返回主目录</a> | <a href="06_训练期算力扩展与强化学习熵崩溃.html">阅读第六讲 &rarr;</a></p>
     </footer>
 </article>

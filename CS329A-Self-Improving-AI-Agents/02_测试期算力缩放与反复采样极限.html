@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第二讲：测试期算力扩展定律与反复采样极限 | 斯坦福 CS329A 专论</title>
+    <title>第二讲：测试期算力扩展定律与反复采样极限 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -30,7 +30,7 @@
     <div class="epigraph">
         <blockquote>
             “如果给足够多的猴子足够多的打字机，它们终将敲出莎士比亚的全集；如果给一个 8B 参数的大语言模型足够多的测试期采样预算与一个精准的代码判决器，它在解决复杂软件工程问题上的表现，将彻底羞辱只允许前向思考一次的万亿参数巨无霸。”
-            <footer>— Bradley Brown et al., 《Large Language Monkeys》题记</footer>
+            <footer>,  Bradley Brown et al., 《Large Language Monkeys》题记</footer>
         </blockquote>
     </div>
 
@@ -57,7 +57,7 @@
             在斯坦福 CS329A 的第二讲中，导师彻底揭示了旧范式的盲区：<strong>预训练算力是在编译期一次性固化的静态资产，而真实世界的问题难度在推理期呈现出极端的非均匀长尾分布。</strong>
             <label for="sn-fixed-compute-flaw" class="margin-toggle sidenote-number"></label>
             <input type="checkbox" id="sn-fixed-compute-flaw" class="margin-toggle"/>
-            <span class="sidenote">传统的贪婪解码（Greedy Decoding）对任何问题均施加完全相同的单次前向浮点开销——无论是询问“法国的首都是哪里”，还是要求“证明黎曼猜想在特定临界线上的收敛性”，模型都被迫在几百毫秒内吐出第一个 Token。这种机制违背了人类思考的基本认知规律。</span>
+            <span class="sidenote">传统的贪婪解码（Greedy Decoding）对任何问题均施加完全相同的单次前向浮点开销, , 无论是询问“法国的首都是哪里”，还是要求“证明黎曼猜想在特定临界线上的收敛性”，模型都被迫在几百毫秒内吐出第一个 Token。这种机制违背了人类思考的基本认知规律。</span>
         </p>
 
         <p>
@@ -115,7 +115,7 @@ where:
     <section>
         <h2>四、 致命的阿喀琉斯之踵：验证瓶颈（The Verification Bottleneck）</h2>
         <p>
-            然而，斯坦福 CS329A 绝不停留在盲目乐观的技术狂欢中。Azalia Mirhoseini 教授在黑板上画出了这门课程最震撼的一张对比曲线图——<strong>覆盖率（Coverage）与选择准确率（Selection Accuracy）的巨大剪刀差</strong>。
+            然而，斯坦福 CS329A 绝不停留在盲目乐观的技术狂欢中。Azalia Mirhoseini 教授在黑板上画出了这门课程最震撼的一张对比曲线图, , <strong>覆盖率（Coverage）与选择准确率（Selection Accuracy）的巨大剪刀差</strong>。
         </p>
 
         <div class="sharp-box">
@@ -142,12 +142,12 @@ where:
             <span class="sidenote">Charlie Snell 等人（2024）在《Scaling LLM Test-Time Compute Optimally》中给出的帕累托前沿严格量化了这一拐点：在缺乏高质量奖励模型监督时，继续对提问追加推理 FLOPs 的边际效用在 <i>N</i> > 64 后趋近于零。</span>
         </p>
         <p>
-            正因如此，如何构建脱离人类投票偏见、能够对每一步逻辑推理进行严格审查的<strong>“过程级鲁棒验证器（Process-Supervised Verifiers）”</strong>，成为了自演进 AI 系统的生死分水岭——这正是第三讲所要攻克的终极要塞。
+            正因如此，如何构建脱离人类投票偏见、能够对每一步逻辑推理进行严格审查的<strong>“过程级鲁棒验证器（Process-Supervised Verifiers）”</strong>，成为了自演进 AI 系统的生死分水岭, , 这正是第三讲所要攻克的终极要塞。
         </p>
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="01_自演进闭环与静态模型终结.html">&larr; 返回第一讲</a> | <a href="index.html">返回主目录</a> | <a href="03_鲁棒验证机制与生成验证剪刀差.html">阅读第三讲 &rarr;</a></p>
     </footer>
 </article>

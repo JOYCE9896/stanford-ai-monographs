@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第八讲：深度研究Agent与搜索增强推理 | 斯坦福 CS329A 专论</title>
+    <title>第八讲：深度研究Agent与搜索增强推理 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -30,14 +30,14 @@
     <div class="epigraph">
         <blockquote>
             “让一个从未出过国的人靠一本字典写出一篇关于异域文化的论文，他只能靠幻觉填补空白；让一个不具备动态检索能力的大模型闭门造车地推演科学，它的逻辑无论多么自洽，也无法击中客观现实。搜索不应当是推理的前置外挂，而必须成为思维链本身的内生算子。”
-            <footer>— Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
+            <footer>,  Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
         </blockquote>
     </div>
 
     <section>
         <h2>一、 顶级人类智力的终极挑战：竞赛编程与前沿信息迷宫</h2>
         <p>
-            在第八讲中，课程讨论的场景推进到了两个人类顶级智力的象牙塔——<strong>国际竞赛级算法编程（如 Codeforces 全球天梯赛）</strong>与<strong>需要跨越数百篇权威文献进行交叉印证的“深度研究（Deep Research）”</strong>。
+            在第八讲中，课程讨论的场景推进到了两个人类顶级智力的象牙塔, , <strong>国际竞赛级算法编程（如 Codeforces 全球天梯赛）</strong>与<strong>需要跨越数百篇权威文献进行交叉印证的“深度研究（Deep Research）”</strong>。
         </p>
 
         <!-- 通俗注释：通俗拆解 GAIA 基准与深度研究 Agent -->
@@ -50,7 +50,7 @@
                 <li><strong>GAIA 基准（General AI Assistants，通用打工人助手大考）</strong>：<br>
                 由 Hugging Face 和 Meta 联合设计，完全抛弃了死板的选择题。题目全是极其繁琐的真实人类办公难题，比如：“去联合国统计年鉴下载近十年的拉美农业出口 Excel，提取智利车厘子的出口吨数，再用维基百科交叉比对当年厄尔尼诺发生的月份，计算气候异常对价格波动的相关系数”。人类专家做一道题需要翻阅十几份资料、耗费 30 分钟，普通大模型刚开始的准确率甚至不到 15%！</li>
                 <li><strong>为什么传统 RAG（外挂检索）会死机？</strong><br>
-                传统 RAG 就像一个笨蛋助理：你刚问完，他就胡乱从网盘抓取 20 篇相关度不明的文章全塞给你看（导致大模型上下文被垃圾污染）。而 <strong>Search-o1 / 深度研究 Agent</strong> 则是“边思考边查证”——模型自己在内部推导，推导到某个关键数据卡壳时，自己发起精确搜索，读完数据再继续推进下一步！</li>
+                传统 RAG 就像一个笨蛋助理：你刚问完，他就胡乱从网盘抓取 20 篇相关度不明的文章全塞给你看（导致大模型上下文被垃圾污染）。而 <strong>Search-o1 / 深度研究 Agent</strong> 则是“边思考边查证”, , 模型自己在内部推导，推导到某个关键数据卡壳时，自己发起精确搜索，读完数据再继续推进下一步！</li>
             </ul>
         </div>
 
@@ -140,7 +140,7 @@
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="07_开放式演进与AI科学家全自动研发.html">&larr; 返回第七讲</a> | <a href="index.html">返回主目录</a> | <a href="09_长周期任务评估与真实经济价值陷阱.html">阅读第九讲 &rarr;</a></p>
     </footer>
 </article>

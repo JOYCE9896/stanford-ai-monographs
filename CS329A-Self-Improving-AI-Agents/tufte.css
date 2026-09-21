@@ -1,48 +1,44 @@
 @charset "UTF-8";
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Noto+Serif+SC:wght@400;500;600&display=swap');
 
 /* ==========================================================================
-   Tufte CSS — Refined Scholarly Edition
-   Typography: English: 'Newsreader' | Chinese: 'Noto Serif SC' (思源宋体)
-   Strict Constraint: Exactly 3 font sizes across the entire webpage:
-     --fs-large:   1.55rem (Headings: h1, h2, h3, card titles)
-     --fs-regular: 1.10rem (Body: p, subtitle, lists, quotes, tables, code)
-     --fs-small:   0.88rem (Notes: sidenotes, marginnotes, metadata, tags, footers)
+   Minimal Typography System
+   Fonts: English = Newsreader | Chinese = Noto Serif SC (思源宋体)
+   Strict Constraint: Exactly 2 font sizes across the entire webpage:
+     --fs-heading: 1.35rem (h1, h2, h3)
+     --fs-body:    1.05rem (everything else)
    ========================================================================== */
 
 :root {
-    --fs-large: 1.55rem;
-    --fs-regular: 1.10rem;
-    --fs-small: 0.88rem;
+    --fs-heading: 1.35rem;
+    --fs-body: 1.05rem;
 
-    --font-serif: "Newsreader", "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "Songti SC", "SimSun", Georgia, serif;
-    --font-mono: "JetBrains Mono", Consolas, Menlo, Monaco, "Liberation Mono", Courier, monospace;
+    --font-main: "Newsreader", "Noto Serif SC", serif;
 
-    --bg-color: #faf9f5;
-    --text-color: #242220;
-    --text-muted: #686560;
-    --accent-color: #8b261e;
-    --border-color: #e2dfd5;
-    --box-bg: #f5f3ec;
-    --code-bg: #f0ede4;
-    --note-bg: #f3f0e6;
-    --guide-accent: #204e79;
-    --guide-bg: #f0f4f8;
+    --bg-color: #faf9f6;
+    --text-color: #222220;
+    --text-muted: #555550;
+    --border-color: #dedcd5;
+    --code-bg: #f2f0ea;
+    --link-color: #222220;
+    --link-hover: #8b261e;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color: #161616;
-        --text-color: #e0ded9;
-        --text-muted: #9c9993;
-        --accent-color: #d9685b;
-        --border-color: #2f2d29;
-        --box-bg: #1e1d1a;
-        --code-bg: #22211d;
-        --note-bg: #1f1e1a;
-        --guide-accent: #6aa3d8;
-        --guide-bg: #17222c;
+        --bg-color: #181818;
+        --text-color: #dedede;
+        --text-muted: #999999;
+        --border-color: #333333;
+        --code-bg: #222222;
+        --link-color: #dedede;
+        --link-hover: #e07060;
     }
+}
+
+* {
+    box-sizing: border-box;
+    font-family: var(--font-main);
 }
 
 html {
@@ -57,8 +53,8 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding-left: 12.5%;
-    font-family: var(--font-serif);
-    font-size: var(--fs-regular);
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
     background-color: var(--bg-color);
     color: var(--text-color);
     max-width: 1350px;
@@ -67,64 +63,47 @@ body {
 }
 
 article {
-    padding: 3rem 0 6rem;
+    padding: 2.5rem 0 5rem;
 }
 
 section {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
 }
 
 /* ==========================================================================
-   1. Large Size Elements (var(--fs-large))
+   1. Headings (var(--fs-heading))
    ========================================================================== */
 
-h1 {
-    font-size: var(--fs-large);
+h1, h2, h3 {
+    font-family: var(--font-main);
+    font-size: var(--fs-heading);
     font-weight: 600;
-    margin-top: 3.5rem;
-    margin-bottom: 0.8rem;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    width: 55%;
+    line-height: 1.35;
     color: var(--text-color);
+    width: 55%;
+}
+
+h1 {
+    margin-top: 2.5rem;
+    margin-bottom: 0.6rem;
 }
 
 h2 {
-    font-size: var(--fs-large);
-    font-weight: 600;
-    margin-top: 2.8rem;
-    margin-bottom: 1rem;
-    line-height: 1.35;
-    width: 55%;
-    color: var(--text-color);
-    padding-bottom: 0.35rem;
+    margin-top: 2.2rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
     border-bottom: 1px solid var(--border-color);
 }
 
 h3 {
-    font-size: var(--fs-large);
-    font-style: italic;
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
     font-weight: 500;
-    margin-top: 2rem;
-    margin-bottom: 0.8rem;
-    line-height: 1.4;
-    width: 55%;
-    color: var(--text-color);
-}
-
-.lecture-card h3 {
-    font-size: var(--fs-large);
-    font-style: normal;
-    font-weight: 600;
-    width: 100%;
-    margin-top: 0;
-    margin-bottom: 0.4rem;
-    line-height: 1.35;
 }
 
 /* ==========================================================================
-   2. Regular / Body Size Elements (var(--fs-regular))
+   2. Body & All Other Elements (var(--fs-body))
    ========================================================================== */
 
 p,
@@ -135,27 +114,25 @@ section > footer,
 table,
 section > table {
     width: 55%;
+    font-size: var(--fs-body);
 }
 
 p {
-    font-size: var(--fs-regular);
-    line-height: 1.8;
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
-    padding-right: 0;
-    vertical-align: baseline;
+    font-size: var(--fs-body);
+    line-height: 1.75;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     text-align: justify;
 }
 
 p.subtitle {
-    font-size: var(--fs-regular);
+    font-size: var(--fs-body);
     font-style: italic;
-    margin-top: 0.6rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
     margin-bottom: 1.5rem;
-    display: block;
     line-height: 1.6;
     width: 55%;
-    color: var(--text-muted);
 }
 
 nav.top-nav {
@@ -163,154 +140,133 @@ nav.top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0.8rem 0;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 2.5rem;
-    font-size: var(--fs-regular);
+    margin-bottom: 2rem;
+    font-size: var(--fs-body);
     font-style: italic;
 }
 
 nav.top-nav a {
-    color: var(--text-color);
+    color: var(--link-color);
     text-decoration: underline;
     text-underline-offset: 0.15em;
-    text-decoration-thickness: 0.05em;
 }
 
 nav.top-nav a:hover {
-    color: var(--accent-color);
+    color: var(--link-hover);
 }
 
 div.epigraph {
-    margin: 3em 0;
-}
-
-div.epigraph > blockquote {
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
+    margin: 2em 0;
 }
 
 div.epigraph > blockquote,
-div.epigraph > blockquote > p {
-    font-style: italic;
-    width: 55%;
-    font-size: var(--fs-regular);
-    line-height: 1.8;
-}
-
 blockquote {
-    font-size: var(--fs-regular);
-    line-height: 1.8;
+    font-size: var(--fs-body);
+    line-height: 1.75;
+    font-style: italic;
+    margin: 1.5em 0;
 }
 
 blockquote p {
     width: 55%;
-    margin-right: 40px;
-    font-style: italic;
-    font-size: var(--fs-regular);
+    font-size: var(--fs-body);
+}
+
+blockquote footer {
+    width: 55%;
+    font-size: var(--fs-body);
+    font-style: normal;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
 }
 
 section > dl,
 section > ol,
 section > ul,
 dl, ol, ul {
-    width: 50%;
+    width: 55%;
     -webkit-padding-start: 5%;
     padding-inline-start: 5%;
-    font-size: var(--fs-regular);
-    line-height: 1.8;
+    font-size: var(--fs-body);
+    line-height: 1.75;
 }
 
 li {
-    font-size: var(--fs-regular);
-}
-
-dt:not(:first-child),
-li:not(:first-child) {
+    font-size: var(--fs-body);
     margin-top: 0.4rem;
 }
 
-.sharp-box {
-    width: 55%;
-    box-sizing: border-box;
-    background-color: var(--box-bg);
-    border-left: 3px solid var(--accent-color);
-    padding: 1.3rem 1.6rem;
-    margin: 2.2rem 0;
-    font-size: var(--fs-regular);
-    line-height: 1.75;
-}
-
-.sharp-box p {
-    width: 100%;
-    margin: 0.5rem 0;
-    font-size: var(--fs-regular);
-}
-
-.sharp-box strong {
-    color: var(--accent-color);
-}
-
-.sharp-box ul, .sharp-box ol {
-    width: 90%;
-    padding-inline-start: 5%;
-    font-size: var(--fs-regular);
-}
-
-/* Guide box for beginner explanations */
+/* Minimal notes instead of flashy colored boxes */
+.sharp-box,
 .guide-box {
     width: 55%;
     box-sizing: border-box;
-    background-color: var(--guide-bg);
-    border-left: 3px solid var(--guide-accent);
-    padding: 1.3rem 1.6rem;
-    margin: 2.2rem 0;
-    font-size: var(--fs-regular);
+    border-left: 2px solid var(--border-color);
+    padding: 0.8rem 1.2rem;
+    margin: 1.8rem 0;
+    font-size: var(--fs-body);
     line-height: 1.75;
 }
 
+.sharp-box p,
 .guide-box p {
     width: 100%;
-    margin: 0.5rem 0;
-    font-size: var(--fs-regular);
+    margin: 0.4rem 0;
+    font-size: var(--fs-body);
 }
 
-.guide-box strong {
-    color: var(--guide-accent);
-}
-
-.guide-box ul, .guide-box ol {
-    width: 90%;
+.sharp-box ul,
+.guide-box ul,
+.sharp-box ol,
+.guide-box ol {
+    width: 100%;
     padding-inline-start: 5%;
-    font-size: var(--fs-regular);
+    font-size: var(--fs-body);
+}
+
+.sharp-box-title,
+.guide-box-title {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
 .lecture-card {
     width: 55%;
     box-sizing: border-box;
     border-top: 1px solid var(--border-color);
-    padding: 1.6rem 0;
-    margin: 1.6rem 0;
+    padding: 1.2rem 0;
+    margin: 1.5rem 0;
 }
 
 .lecture-card p {
     width: 100%;
-    font-size: var(--fs-regular);
+    font-size: var(--fs-body);
     margin: 0.4rem 0;
-    line-height: 1.7;
+}
+
+.lecture-tag {
+    display: inline-block;
+    color: var(--text-muted);
+    font-size: var(--fs-body);
+    margin-bottom: 0.3rem;
 }
 
 table {
     border-collapse: collapse;
-    margin: 2rem 0;
-    font-size: var(--fs-regular);
+    margin: 1.8rem 0;
+    font-size: var(--fs-body);
+    width: 55%;
 }
 
 th, td {
-    padding: 0.65rem 0.8rem;
+    padding: 0.55rem 0.75rem;
     border-bottom: 1px solid var(--border-color);
     text-align: left;
-    font-size: var(--fs-regular);
+    font-size: var(--fs-body);
+    font-family: var(--font-main);
 }
 
 th {
@@ -318,26 +274,26 @@ th {
     font-weight: 600;
 }
 
-code, pre > code {
-    font-family: var(--font-mono);
-    font-size: var(--fs-regular);
+/* Code elements use the exact same font as body */
+code, pre, pre > code {
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
     line-height: 1.6;
 }
 
 code {
     background: var(--code-bg);
-    padding: 0.12rem 0.35rem;
-    border-radius: 2px;
+    padding: 0.1rem 0.3rem;
 }
 
 pre {
     width: 55%;
     box-sizing: border-box;
-    padding: 1.1rem 1.3rem;
+    padding: 1rem;
     background: var(--code-bg);
     overflow-x: auto;
-    margin: 1.8rem 0;
-    border-left: 1px solid var(--border-color);
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
 }
 
 pre > code {
@@ -348,9 +304,9 @@ pre > code {
 }
 
 span.newthought {
-    font-variant: small-caps;
-    letter-spacing: 0.05em;
-    font-size: var(--fs-regular);
+    letter-spacing: 0.04em;
+    font-size: var(--fs-body);
+    font-weight: 600;
 }
 
 hr {
@@ -363,38 +319,14 @@ hr {
     padding: 0;
 }
 
-/* ==========================================================================
-   3. Small Size Elements (var(--fs-small))
-   ========================================================================== */
-
 .author-meta {
-    font-size: var(--fs-small);
+    font-size: var(--fs-body);
     color: var(--text-muted);
-    margin-bottom: 2.2rem;
+    margin-bottom: 1.8rem;
     width: 55%;
-    padding-bottom: 0.8rem;
+    padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border-color);
     line-height: 1.6;
-}
-
-div.epigraph > blockquote > footer {
-    font-style: normal;
-    width: 55%;
-    font-size: var(--fs-small);
-    text-align: right;
-    color: var(--text-muted);
-    margin-top: 0.6rem;
-}
-
-div.epigraph > blockquote > footer > cite {
-    font-style: italic;
-}
-
-blockquote footer {
-    width: 55%;
-    font-size: var(--fs-small);
-    text-align: right;
-    color: var(--text-muted);
 }
 
 .sidenote,
@@ -403,19 +335,14 @@ blockquote footer {
     clear: right;
     margin-right: -60%;
     width: 50%;
-    margin-top: 0.25rem;
-    margin-bottom: 1.2rem;
-    font-size: var(--fs-small);
-    line-height: 1.55;
+    margin-top: 0.2rem;
+    margin-bottom: 1rem;
+    font-size: var(--fs-body);
+    line-height: 1.6;
     vertical-align: baseline;
     position: relative;
     color: var(--text-muted);
     text-align: left;
-}
-
-.sidenote strong,
-.marginnote strong {
-    color: var(--text-color);
 }
 
 .sidenote-number {
@@ -430,19 +357,17 @@ blockquote footer {
 
 .sidenote-number:after {
     content: counter(sidenote-counter);
-    font-size: var(--fs-small);
-    top: -0.45rem;
+    font-size: var(--fs-body);
+    top: -0.35rem;
     left: 0.1rem;
-    color: var(--accent-color);
-    font-weight: 600;
+    color: var(--text-muted);
 }
 
 .sidenote:before {
-    content: counter(sidenote-counter) " ";
-    font-size: var(--fs-small);
+    content: counter(sidenote-counter) ". ";
+    font-size: var(--fs-body);
     top: 0;
-    color: var(--accent-color);
-    font-weight: 600;
+    color: var(--text-muted);
 }
 
 input.margin-toggle {
@@ -459,56 +384,26 @@ label.margin-toggle:not(.sidenote-number) {
     display: none;
 }
 
-.sharp-box-title {
-    font-size: var(--fs-small);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent-color);
-    margin-bottom: 0.65rem;
-}
-
-.guide-box-title {
-    font-size: var(--fs-small);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--guide-accent);
-    margin-bottom: 0.65rem;
-}
-
-.lecture-tag {
-    display: inline-block;
-    color: var(--accent-color);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
-}
-
 footer.document-footer {
     border-top: 1px solid var(--border-color);
-    margin-top: 4rem;
-    padding-top: 1.5rem;
-    font-size: var(--fs-small);
+    margin-top: 3.5rem;
+    padding-top: 1.2rem;
+    font-size: var(--fs-body);
     color: var(--text-muted);
     width: 55%;
 }
 
-/* Links */
 a:link,
 a:visited {
-    color: inherit;
+    color: var(--link-color);
     text-underline-offset: 0.15em;
     text-decoration-thickness: 0.05em;
 }
 
 a:hover {
-    color: var(--accent-color);
+    color: var(--link-hover);
 }
 
-/* KaTeX custom sizing to ensure strict adherence */
 .katex {
     font-size: 1em !important;
 }
@@ -516,9 +411,9 @@ a:hover {
 /* Responsive / Mobile View */
 @media (max-width: 760px) {
     body {
-        width: 88%;
-        padding-left: 6%;
-        padding-right: 6%;
+        width: 90%;
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     h1, h2, h3,
@@ -564,11 +459,10 @@ a:hover {
         display: block;
         float: none;
         clear: both;
-        width: 95%;
-        margin: 1rem 0;
+        width: 100%;
+        margin: 0.8rem 0;
         position: relative;
-        background: var(--note-bg);
-        padding: 0.8rem 1rem;
-        border-left: 3px solid var(--accent-color);
+        padding: 0.6rem 0.8rem;
+        border-left: 2px solid var(--border-color);
     }
 }

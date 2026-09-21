@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第六讲：训练期算力扩展与强化学习熵崩溃 | 斯坦福 CS329A 专论</title>
+    <title>第六讲：训练期算力扩展与强化学习熵崩溃 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -30,7 +30,7 @@
     <div class="epigraph">
         <blockquote>
             “测试期的搜索探索无论多么绚丽，如果不能被系统性地蒸馏并固化回神经网络的前向权重中，模型就永远只是一台用昂贵电费堆砌起来的高延时临时计算机。真正的自演进，必须完成‘搜索外循环 &rarr; 权重内循环’的自举对弈闭环。”
-            <footer>— Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
+            <footer>,  Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
         </blockquote>
     </div>
 
@@ -64,7 +64,7 @@
             </p>
             <ul>
                 <li><strong>传统的 PPO（配随身私教）</strong>：大模型自己是做题学生（Actor）。为了让它知道每一步做对没有，PPO 必须在显存里<strong>额外塞进一个体量一模一样的私教模型（Critic）</strong>，时时刻刻盯着学生打分。这直接导致 GPU 显存消耗翻倍，而且私教自己经常看花眼打错分。</li>
-                <li><strong>DeepSeek 的 GRPO（组内同学互评）</strong>：DeepSeek 做出了一次天才级的减法——<strong>把私教直接辞退！</strong>同一个题目，让模型一口气写出 8 个不同的解答（组成一个 8 人学习小组）。计算这 8 个解答的平均分，凡是比组内平均分高的解答就狠狠奖励，比平均分低的就惩罚。根本不需要额外的私教模型，显存直接省出一半，训练吞吐量翻倍！</li>
+                <li><strong>DeepSeek 的 GRPO（组内同学互评）</strong>：DeepSeek 做出了一次天才级的减法, , <strong>把私教直接辞退！</strong>同一个题目，让模型一口气写出 8 个不同的解答（组成一个 8 人学习小组）。计算这 8 个解答的平均分，凡是比组内平均分高的解答就狠狠奖励，比平均分低的就惩罚。根本不需要额外的私教模型，显存直接省出一半，训练吞吐量翻倍！</li>
             </ul>
         </div>
 
@@ -103,7 +103,7 @@ For each prompt q:
     <section>
         <h2>三、 致命的病理学：强化学习中的“熵崩溃（Entropy Collapse）”</h2>
         <p>
-            然而，当各前沿团队兴高采烈地将 GRPO 规模化放大到更大计算量时，所有人都迎头撞上了一堵无形的物理墙——<strong>策略熵崩溃（Entropy Collapse）</strong>。
+            然而，当各前沿团队兴高采烈地将 GRPO 规模化放大到更大计算量时，所有人都迎头撞上了一堵无形的物理墙, , <strong>策略熵崩溃（Entropy Collapse）</strong>。
         </p>
 
         <div class="sharp-box">
@@ -111,7 +111,7 @@ For each prompt q:
             在强化学习训练到特定中后期（通常在数千步迭代后），研究者观察到模型的<strong>输出香农熵（Policy Entropy）出现断崖式坍缩</strong>。
             <br><br>
             <strong>通俗大白话比喻</strong>：
-            “熵”代表可能性的多样性。一个学生如果在某次模考中偶然靠“选择题全部选 C”碰巧得了及格分，在缺乏正确引导下，他就会坚信“选 C 是保底神技”。从此外界无论怎么出题，他脑子里除了 C 再也想不到别的选项——他的思维多样性彻底死绝了，这就是“熵崩溃”。
+            “熵”代表可能性的多样性。一个学生如果在某次模考中偶然靠“选择题全部选 C”碰巧得了及格分，在缺乏正确引导下，他就会坚信“选 C 是保底神技”。从此外界无论怎么出题，他脑子里除了 C 再也想不到别的选项, , 他的思维多样性彻底死绝了，这就是“熵崩溃”。
             <br><br>
             <strong>底层致病机理分析</strong>：
             在标准的 PPO/GRPO 中，梯度的裁剪范围是对称的（例如 ε = 0.2，即将重要性权重严格限制在 [0.8, 1.2]）。
@@ -147,7 +147,7 @@ For each prompt q:
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="05_多步规划树搜索与自适应分枝.html">&larr; 返回第五讲</a> | <a href="index.html">返回主目录</a> | <a href="07_开放式演进与AI科学家全自动研发.html">阅读第七讲 &rarr;</a></p>
     </footer>
 </article>

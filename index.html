@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stanford AI Monographs | 斯坦福前沿人工智能研读笔记文集</title>
+    <title>Stanford AI 课程</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -13,74 +13,60 @@
 
 <nav class="top-nav">
     <span>Stanford University (2025-2026)</span>
-    <span>Notes curated by Joyce (<a href="https://github.com/JOYCE9896/stanford-ai-monographs" target="_blank">GitHub</a>)</span>
+    <span><a href="https://github.com/JOYCE9896/stanford-ai-monographs" target="_blank">GitHub Repository</a></span>
 </nav>
 
 <article>
     <header>
-        <h1>Stanford AI Monographs</h1>
-        <p class="subtitle">斯坦福大学前沿人工智能课程研读笔记（CS329A 与 MS&E 435）</p>
+        <h1>Stanford AI 课程</h1>
+        <p class="subtitle">斯坦福大学前沿课程研读笔记（CS329A 与 MS&E 435）</p>
         <div class="author-meta">
-            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>） · 基于 Tufte CSS 排版规范与 Newsreader / 思源宋体<br>
-            内容形式：学术课程笔记整理、技术背景补充与行业播客访谈纪要
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
         </div>
     </header>
 
     <section>
         <h2>课程概览</h2>
         <p>
-            本文集整理了斯坦福大学 2025-2026 学年的两门 AI 主题研讨课程。一门侧重强化学习与模型自主演进算法，另一门探讨数据中心能耗、硬件成本与产业投资周期。正文中对涉及的论文和评测基准补充了背景说明。
+            这里收录了斯坦福大学 2025-2026 学年开设的两门 AI 专题课程笔记。一门偏技术机制，探讨 Agent 如何通过强化学习与环境反馈实现自我演进；另一门偏产业与经济学，探讨数据中心电力、硬件开支与商业落地。
         </p>
 
-        <!-- 专题一：CS329A -->
-        <div class="lecture-card" style="border-left: 4px solid #8b261e; padding-left: 1.5rem; background: var(--box-bg); margin: 2rem 0;">
-            <span class="lecture-tag">专题 01 · 计算机科学系前沿研讨</span>
-            <h3><a href="CS329A-Self-Improving-AI-Agents/index.html">CS329A: Self-Improving AI Agents（自演进智能体） &rarr;</a></h3>
-            <p>
-                <strong>主讲</strong>：Aakanksha Chowdhery（Google PaLM 共同一作）、Azalia Mirhoseini（AlphaChip 共同一作，斯坦福助理教授）<br>
-                <strong>内容规模</strong>：10 讲技术笔记 + 12 场主讲人与研究者访谈纪要<br>
-                <strong>技术主题</strong>：预训练数据的瓶颈与序列累积误差；测试期算力扩展与 Pass@k 采样规律；过程奖励模型（PRM）与结果奖励模型（ORM）；代码沙盒反馈强化学习（RLEF）与 Anthropic Constitutional AI 流程；树搜索（MCTS）在多步推理中的应用；DeepSeek GRPO 算法原理与策略熵衰减；评测基准历史（从 MMLU、GSM8K 到 SWE-bench 与 GAIA）。
-            </p>
-            <p>
-                <a href="CS329A-Self-Improving-AI-Agents/index.html"><strong>进入 CS329A 目录</strong></a>
-            </p>
-        </div>
+        <h3><a href="CS329A-Self-Improving-AI-Agents/index.html">专题一：CS329A: Self-Improving AI Agents</a></h3>
+        <p>
+            由 Aakanksha Chowdhery 与 Azalia Mirhoseini 主讲，共 10 讲笔记与 12 场嘉宾访谈纪要。核心探讨 LLM 如何通过 Reinforcement Learning、环境反馈与搜索算法实现推理能力的自我演进。内容涵盖 Pre-training 与 Post-training 的分工、Test-time compute 与 Pass@k 规律、PRM 与 ORM 验证机制、RLEF（代码沙盒反馈强化学习）、Anthropic Constitutional AI、MCTS 树搜索、DeepSeek GRPO 算法原理，以及从 MMLU、GSM8K 到 SWE-bench 与 GAIA 等 Benchmark 的演进脉络。
+        </p>
+        <p>
+            <a href="CS329A-Self-Improving-AI-Agents/index.html">浏览 CS329A 目录 &rarr;</a>
+        </p>
 
-        <!-- 专题二：MS&E 435 -->
-        <div class="lecture-card" style="border-left: 4px solid #204e79; padding-left: 1.5rem; background: var(--guide-bg); margin: 2rem 0;">
-            <span class="lecture-tag" style="color: #204e79;">专题 02 · 管理科学与工程系研讨</span>
-            <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">MS&E 435: Economics of the AI Supercycle（AI 经济学） &rarr;</a></h3>
-            <p>
-                <strong>主讲</strong>：Apoorv Agrawal（Altimeter Capital 合伙人）<br>
-                <strong>内容规模</strong>：9 讲产业笔记 + 15 场基础设施与投资人访谈纪要<br>
-                <strong>讨论主题</strong>：生成式 AI 的可变推理成本与应用层利润率；GPU 折旧周期与内存带宽瓶颈；吉瓦级数据中心建设、电网排期与变压器供应链；企业软件应用中的生产率 J 曲线效应；芯片先进制程产能分配与推理模型硬件需求变化；意图驱动编程对软件工程门槛的影响；生物制药干湿闭环实验。
-            </p>
-            <p>
-                <a href="MSE435-Economics-of-the-AI-Supercycle/index.html"><strong>进入 MS&E 435 目录</strong></a>
-            </p>
-        </div>
+        <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">专题二：MS&E 435: Economics of the AI Supercycle</a></h3>
+        <p>
+            由 Apoorv Agrawal（Altimeter Capital 合伙人）主讲，共 9 讲笔记与 15 场产业嘉宾访谈纪要。核心探讨生成式 AI 的商业模式、基础设施资本开支与传统工业约束。内容涵盖可变推理成本结构、GPU 折旧周期与内存带宽瓶颈、吉瓦级数据中心建设、电网排期与高压变压器供应链、企业软件落地的生产率 J 曲线、Vibe Coding 对软件开发门槛的影响，以及生物制药干湿实验闭环。
+        </p>
+        <p>
+            <a href="MSE435-Economics-of-the-AI-Supercycle/index.html">浏览 MS&E 435 目录 &rarr;</a>
+        </p>
     </section>
 
     <section>
-        <h2>排版与阅读支持</h2>
+        <h2>排版原则</h2>
         <ul>
-            <li><strong>字体系统</strong>：正文西文使用 Newsreader，中文搭配思源宋体（Noto Serif SC），代码使用 JetBrains Mono。</li>
-            <li><strong>字号规范</strong>：全站仅保留 3 种字号（大号 1.55rem 用于标题，正文 1.10rem，小号 0.88rem 用于旁注和表格），控制排版杂乱。</li>
-            <li><strong>公式与图表</strong>：数学推导基于 KaTeX 矢量渲染，并保留了适合窄屏阅读的纯文本备选标记。</li>
-            <li><strong>背景注释</strong>：正文中通过提示框对 PRM、RLAIF、GRPO 以及测试基准做了背景补充，降低阅读门槛。</li>
+            <li><strong>少即是多</strong>：只保留清晰的小标题、自然段落与必要的简明列表，去掉多余的装饰性边框、背景色块与高频加粗。</li>
+            <li><strong>字体统一</strong>：英文统一使用 Newsreader，中文统一使用思源宋体（Noto Serif SC）。代码块、正文、表格与注释使用完全一致的字体，不混用无衬线体或等宽字体。</li>
+            <li><strong>字号精简</strong>：全网页只保留 2 种字号（标题 1.35rem，所有其他正文、代码、表格、注释均为 1.05rem）。</li>
+            <li><strong>术语自然</strong>：Agent、Post-training、Test-time compute、Benchmark、SWE-bench 等技术专有名词保留英文原生称谓，不作生硬直译。</li>
         </ul>
     </section>
 
     <section>
-        <h2>声明与致谢</h2>
+        <h2>版权与致谢</h2>
         <p>
-            本文集为个人学术研读整理，按 <strong>CC BY-NC-SA 4.0</strong> 许可共享（署名、非商业性使用、相同方式共享）。原始讲座内容与学术观点版权归斯坦福大学、授课教师及演讲嘉宾所有。
+            本文集为个人学术研读整理，按 CC BY-NC-SA 4.0 协议共享（署名、非商业性使用、相同方式共享）。课程大纲与讲座原始内容版权归斯坦福大学、授课教师及演讲嘉宾所有。
         </p>
     </section>
 
     <footer class="document-footer">
-        <p>Stanford AI Monographs (2025-2026) · Curated by Joyce</p>
-        <p><a href="https://github.com/JOYCE9896/stanford-ai-monographs" target="_blank">View on GitHub</a></p>
+        <p>Stanford AI 课程 · 2025-2026</p>
     </footer>
 </article>
 

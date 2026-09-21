@@ -3,173 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 超级周期的经济学真相 | 斯坦福 MS&E 435 深度全景解构</title>
+    <title>MS&E 435: Economics of the AI Supercycle | 斯坦福课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
-    
 </head>
 <body>
 
 <nav class="top-nav">
-    <span>Stanford University &mdash; Department of Management Science & Engineering</span>
-    <span>MS&E 435: Spring 2026</span>
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>MS&E 435 (Spring 2026)</span>
 </nav>
 
 <article>
     <header>
-        <h1>MS&E 435: AI 超级周期经济学研读</h1>
+        <h1>MS&E 435: Economics of the AI Supercycle</h1>
         <p class="subtitle">生成式 AI 的成本结构、算力基础设施与投资周期分析</p>
         <div class="author-meta">
-            主讲：Apoorv Agrawal（Altimeter Capital 合伙人） · 全课程 9 篇课程笔记与产业访谈纪要
+            主讲：Apoorv Agrawal（Altimeter Capital 合伙人）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “在科技行业的常规周期中，超额利润往往顺着技术栈向上迁移：硬件逐渐标准化，最终由边际成本极低的软件与平台获取大部分利润。但在当前的生成式 AI 周期中，整个逻辑发生变化：应用层承担了较高的研发与推理成本，而资本大量沉淀在底层电力、数据中心建设与先进制程硬件中。”
-            <footer>引自 Apoorv Agrawal 课程导论</footer>
-        </blockquote>
-    </div>
-
     <section>
-        <h2>序言：从“虚拟软件神话”到“热力学重工业”的暴力撞击</h2>
+        <h2>课程背景</h2>
         <p>
-            过去三十年，硅谷向全球投资者兜售了一个极其优雅的叙事：软件是一门神圣的“零边际成本（Zero Marginal Cost）”生意。一旦核心代码编译完成，服务第一千个用户和第一亿个用户的边际成本无限趋近于零。凭借着 85% 以上的毛利率、负营运资本周期（Negative Working Capital）与 SaaS 按人头付费的锁定期，软件资本主义赢得了人类商业史上最高的市盈率倍数。
-            <label for="sn-saas-pe" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-saas-pe" class="margin-toggle"/>
-            <span class="sidenote">在 2021 年云计算狂热顶峰，顶级 B2B SaaS 公司的企业价值/远期收入（EV/NTM Revenue）中位数曾一度飙升至 25x-40x，其估值基石正是建立在“近乎免费的软件再分发”与“极低云端基础设施消耗”的财务模型之上。</span>
+            过去三十年，软件行业主要依赖“近乎零边际成本”的分发逻辑，凭借高毛利与极低的基础设施损耗实现了极高估值。而生成式 AI 的普及改变了这一成本结构：每次调用模型、执行 Agent 任务都在产生非零的浮点运算与电能开销。
         </p>
-
         <p>
-            然而，2022 年底 ChatGPT 的引爆不仅没有强化这一逻辑，反而以极其暴烈的方式将整个科技产业狠狠砸向了物理世界的硬质铁壁。今天，每一个用户向大模型发送一个 Prompt、每一次代码 Agent 尝试修复 Bug，后台的万卡集群都在以每毫秒数十安培的电流在硅片间高速跃迁。<strong>生成式 AI 的边际成本严格非零，并且随着模型推理深度的增加而指数级抬升。</strong>
-            <label for="mn-inverted-triangle" class="margin-toggle">&#8853;</label>
-            <input type="checkbox" id="mn-inverted-triangle" class="margin-toggle"/>
-            <span class="marginnote"><strong>倒三角利润池结构</strong>：<br>
-            • 顶层应用：毛利率承压（30% - 60%），承受严重推理 COGS。<br>
-            • 模型中间层：面临高强度预训练资本支出与开源模型平权双重挤压。<br>
-            • 底层半导体与能源：英伟达维持 75%+ 毛利率，TSMC 先进封装供不应求，千兆瓦级电网指标溢价飙升。</span>
+            这导致资本大量流向底层硬件与能源建设：
+            <label for="sn-inverted-pool" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-inverted-pool" class="margin-toggle"/>
+            <span class="sidenote">倒三角利润结构：应用层面临较高的推理成本压力，毛利率通常在 30% 到 60% 之间；中间模型层承受持续的预训练与对齐开销；而底层的芯片制造（如台积电先进制程）与电力供应拥有更强劲的现金流支撑。</span>
         </p>
-
         <p>
-            这正是斯坦福大学 MS&E 435《AI 超级周期经济学》设立的根本动因。这门课程彻底摒弃了主流媒体上关于“AGI 毁灭人类”或“AI 取代一切打工人”的形而上空谈，直接由掌管数十亿美元前沿资本的 Altimeter Capital 合伙人 Apoorv Agrawal 挂帅，每一周将全球身处最血腥一线的决策者请上讲台——从 OpenAI 的算力总指挥、Databricks 的技术掌门、Crusoe 的电网超级矿工，到 Vercel、Baseten 与 Anthropic 的创始人。九场连续的思想交锋，系统揭示了当今商业世界最隐秘也最残酷的五大底层真相。
+            斯坦福大学 MS&E 435 邀请了 Databricks、OpenAI 基础架构团队、Crusoe、Vercel 等一线从业者，从真实的硬件折旧、电网接入排期、数据治理成本与商业落地周期出发，探讨当前 AI 基础设施建设的经济学逻辑。
         </p>
     </section>
 
     <section>
-        <h2>核心理论框架：木桶短板模型与动态瓶颈迁移</h2>
+        <h2>供应链瓶颈的阶段迁移</h2>
         <p>
-            在课程的官方量化模型中，Apoorv 提出了一个极富洞察力的系统吞吐公式，直接套用了农业化学中的李比希最低律（Liebig's Law of the Minimum）：
+            算力供应链的实际吞吐量取决于各环节中最狭窄的部分：
         </p>
 
-        <pre><code>Effective Supply Growth = min( Chip_Growth, Memory_Bandwidth, Energy_Capacity, Interconnect_Speed )
-System Pressure Gap    = Effective Supply Growth - Demand_Growth</code></pre>
+        <pre><code>Effective Supply Growth = min( Chip_Growth, Memory_Bandwidth, Energy_Capacity, Interconnect_Speed )</code></pre>
 
         <p>
-            整个 AI 算力供应链是一个环环相扣的不可逆物理管道。当某一层成为全系统最狭窄的咽喉（Binding Constraint）时，该层便会凭借绝对短缺攫取全行业的绝大多数超额利润（Pricing Power）：
-            <label for="sn-bottleneck-history" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-bottleneck-history" class="margin-toggle"/>
-            <span class="sidenote">据 Epoch AI 与高盛投研数据，2023 年全行业算力需求增速高达 310%/年，而物理电网接入年化增长仅为 15%/年，两者的巨大剪刀差构成了当前吉瓦级数据中心建设的终极枷锁。</span>
+            随着产业演进，瓶颈正在经历三个典型阶段：
         </p>
-
         <ul>
-            <li><strong>第一阶段（2022-2023）：先进半导体与 CoWoS 封装瓶颈。</strong> 台积电 Chip-on-Wafer-on-Substrate 产能告急，英伟达 H100 成为全球稀缺硬通货，单卡利润率突破天际。</li>
-            <li><strong>第二阶段（2024-2025）：电网容量与重工业变压器瓶颈。</strong> 芯片不再是唯一死穴，美国各独立电网调度中心（RTO）的并网队列排期长达 4-5 年，大型升压变压器交货周期被锁死在 36-48 个月。</li>
-            <li><strong>第三阶段（2025-2027+）：内存墙（Memory Wall）与光互联拓扑。</strong> 随着推理负载全面向“测试期长思考（Test-Time Compute）”倾斜，算力核心不再缺乏乘法器，而是被高带宽内存（HBM）的引脚带宽与互联延迟严重卡死。</li>
+            <li><strong>2022-2023：先进制程与封装瓶颈</strong>。台积电 CoWoS 先进封装产能紧张，高端 GPU 供不应求。</li>
+            <li><strong>2024-2025：电网接入与大容量变压器瓶颈</strong>。数据中心建设周期受制于地方电网排期，大型升压变压器交货周期拉长至 3 年以上。</li>
+            <li><strong>2025-2027+：显存带宽（Memory Wall）与互联延迟</strong>。随着推理逐渐向多步长思考倾斜，HBM 带宽与集群节点间通信速度成为限制吞吐的核心制约。</li>
         </ul>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">犀利洞见：为什么过度投资是巨头唯一的理性纳什均衡？</div>
-            外界普遍质疑微软、谷歌、Meta 每年数千亿美元的 CapEx 是一场注定破灭的泡沫。但从微观博弈论视角看，<strong>巨头过度投资（Over-investing）的风险在财务上是可控的（无非是延长几年折旧期或资产计提减值），而投资不足（Under-investing）的风险是终局性的、不可逆的灭顶之灾</strong>。错失下一个计算平台的巨头将被彻底边缘化（参考功能机时代的诺基亚与移动时代的英特尔）。因此，无论应用层当期能否产生足够利润，巨头们都会被迫继续把利润表上的现金全部烧成地壳里的算力工厂。
-        </div>
     </section>
 
     <section>
-        <h2>特辑拓展：受邀嘉宾 YouTube 播客深度访谈精编</h2>
+        <h2>课程目录（9 讲笔记）</h2>
+
+        <h3><a href="01_生成式AI的经济学本质与资本陷阱.html">01. 生成式AI的经济学本质与资本陷阱</a></h3>
         <p>
-            在斯坦福课堂之外，受邀嘉宾们在硅谷顶级科技与投资播客中留下了大量未加修饰、更具实战杀伤力的深度思想输出。本拓展专论系统解构了 15 场最核心播客长访谈：
+            分析生成式 AI 可变推理成本对传统软件商业模式的冲击、应用层利润分配，以及企业端对认知劳动的采购考量。
         </p>
 
-        <div class="lecture-card" style="border-left: 4px solid #8f2d2d; background: #faf6f0;">
-            <span class="lecture-tag" style="color: #8f2d2d; font-weight: bold;">Extended Monograph · 8 组顶级嘉宾 × 15 场深度播客解构</span>
-            <h3><a href="podcasts_guest_interviews.html">硅谷顶尖大脑的原声：MS&E 435 嘉宾播客深层洞见全集 &rarr;</a></h3>
-            <p><strong>核心阵容</strong>：Brad Gerstner（Altimeter）、Chase Lochmiller（Crusoe）、Ali Ghodsi（Databricks）、Sachin Katti（OpenAI）、Guillermo Rauch（Vercel）、Tuhin Srivastava（Baseten）、Josh Meier & Eric Kauderer-Abrams（Chai Discovery & Anthropic）<br>
-            <strong>播客节目</strong>：<em>Acquired</em>、<em>Dwarkesh Patel Podcast</em>、<em>No Priors</em>（Sarah Guo & Elad Gil）、<em>The MAD Podcast</em>（Matt Turck）、<em>Invest Like the Best</em>（Patrick O'Shaughnessy）、<em>BG2 Pod</em>、<em>Lex Fridman</em> 等<br>
-            <strong>内容穿透</strong>：揭秘讲堂之外的千亿美金 CapEx 真实焦虑、吉瓦级 Stargate 内部电力工期、企业数据迁移残酷阻力、闭源 API 毛利陷阱与生物制药湿实验室终局（每篇均附官方 YouTube 原声播放链接）。</p>
-        </div>
-    </section>
-
-    <section>
-        <h2>全课程 9 讲万字深度专论目录（点击直达）</h2>
+        <h3><a href="02_GPU经济学与智力边际成本归零.html">02. GPU经济学与智力边际成本归零</a></h3>
         <p>
-            以下为本课程全部九节讲座的独立长文分析，每篇文章均以完整的学术论文/行业白皮书规格展开，深入到芯片寄存器、电网合同、变电站排期与企业采购财报的真实细节中：
+            梳理 GPU 硬件折旧周期、SRAM 与 HBM 显存架构差异，以及长文本生成场景下单 Token 推理成本的走势。
         </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 01 · 宏观经济框架</span>
-            <h3><a href="01_生成式AI的经济学本质与资本陷阱.html">第一讲：生成式 AI 的经济学本质、倒三角结构与认知劳动陷阱</a></h3>
-            <p><strong>主讲人</strong>：Apoorv Agrawal（Altimeter Capital 合伙人）<br>
-            <strong>核心穿透</strong>：为什么软件边际成本为零的 SaaS 神话彻底破灭？ChatGPT 为什么无法像微信和 TikTok 那样成为全民被动消遣级超级 App？深度拆解人类“主动认知劳动（Active Cognitive Work）”的高摩擦阻力，以及风投资本对底层算力事实上的巨额倒贴补贴。</p>
-        </div>
+        <h3><a href="03_吉瓦级AI工厂与热力学重工业之壁.html">03. 吉瓦级AI工厂与热力学重工业之壁</a></h3>
+        <p>
+            拆解大型数据中心的资本开销结构、电网互连排期压力、油气现场发电与能源调度模式。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 02 · 硅基物理机制</span>
-            <h3><a href="02_GPU经济学与智力边际成本归零.html">第二讲：GPU 经济学、SRAM 微架构与机器智力的终极贬值</a></h3>
-            <p><strong>嘉宾</strong>：Brad Gerstner（Altimeter 创始人/CEO） & Sunny Madra（Groq 总裁，现加入 NVIDIA）<br>
-            <strong>核心穿透</strong>：大矩阵乘法与逐字推理的底层冲突。为什么 Groq 抛弃 HBM 采用片上 SRAM？GPU+LPU 异构系统如何在同等功耗下榨出 2.5 倍 Token？为什么机器纯粹智商（IQ）正在迅速贬值为自来水，而人类情商（EQ）、组织说服力与品味却获得了前所未有的超额溢价？</p>
-        </div>
+        <h3><a href="04_企业级AI与软件的生产率J曲线.html">04. 企业级AI与软件的生产率J曲线</a></h3>
+        <p>
+            探讨企业引入新技术时的生产率 J 曲线效应、私有数据权限管理、数据清洗难度与定制化系统的维护成本。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 03 · 物理基建工程</span>
-            <h3><a href="03_吉瓦级AI工厂与热力学重工业之壁.html">第三讲：吉瓦级 AI 工厂建造、搁浅能源套利与硬件折旧反转神话</a></h3>
-            <p><strong>嘉宾</strong>：Chase Lochmiller（Crusoe 联合创始人兼 CEO）<br>
-            <strong>核心穿透</strong>：建造一座数十亿美元 AI 数据中心的 100 美元资本拆解。为什么旧款芯片 H100 租赁价格不降反升反超首发高点？为什么施耐德与伊顿等传统电气巨头的高估值背后潜藏着被软件定义电力彻底颠覆的致命危机？AI 工厂如何彻底解绑城市人口距离。</p>
-        </div>
+        <h3><a href="05_前沿算力战争与地缘半导体博弈.html">05. 前沿算力战争与地缘半导体博弈</a></h3>
+        <p>
+            分析全球先进制程晶圆产能分配、封装技术演进，以及长思维链推理对芯片计算密集度与访存比提出的新要求。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 04 · 企业服务重塑</span>
-            <h3><a href="04_企业级AI与软件的生产率J曲线.html">第四讲：企业级 AI 落地真相、生产率 J 曲线与私有上下文主权</a></h3>
-            <p><strong>嘉宾</strong>：Ali Ghodsi（Databricks 联合创始人兼 CEO / UC伯克利教授）<br>
-            <strong>核心穿透</strong>：从 1880 年代电动机替代蒸汽机导致生产率整整停滞 30 年的历史推演当前 AI 落地困局。为什么企业通用大模型无法解决真实客服？为什么开源模型在 B 端企业穿透力数倍于闭源大模型？AI 为何不仅没有消灭 IT 咨询外包，反而引发了前所未有的高薪重写狂潮？</p>
-        </div>
+        <h3><a href="06_数据之墙与后训练可验证强化学习.html">06. 数据之墙与后训练可验证强化学习</a></h3>
+        <p>
+            探讨自然语言高质量语料的存量极限，分析合成数据生成方式，以及利用代码和数学等客观结果进行可验证强化学习（RLVR）的路径。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 05 · 前沿实验室推演</span>
-            <h3><a href="05_前沿算力战争与地缘半导体博弈.html">第五讲：前沿实验室算力总动员、测试期计算跃迁与台积电的帝衡术</a></h3>
-            <p><strong>嘉宾</strong>：Sachin Katti（OpenAI 工业算力负责人 / 前 Intel 高级副总裁）<br>
-            <strong>核心穿透</strong>：OpenAI 如何指挥从核电地热、高压输电到硅片晶体管的整个工业链条？从一次性生成向测试期计算（Test-Time Compute）的惊天质变。为什么台积电的商业利益决定了它决不允许英伟达永久独吞算力？前沿实验室如何用 AI 递归自研下一代芯片。</p>
-        </div>
+        <h3><a href="07_VibeCoding与软件的可塑性革命.html">07. VibeCoding与软件的可塑性革命</a></h3>
+        <p>
+            讨论自然语言驱动编程对传统软件工程流程的影响，分析定制化长尾小软件开发门槛下降带来的需求变化。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 06 · 算法训练迭代</span>
-            <h3><a href="06_数据之墙与后训练可验证强化学习.html">第六讲：预训练撞上数据之墙、代码作为 AGI 底座与隐式反馈飞轮</a></h3>
-            <p><strong>嘉宾</strong>：Yash Patil（Applied Compute 创始人 / 前 OpenAI 后训练研究员）<br>
-            <strong>核心穿透</strong>：人类互联网纯文本消耗殆尽后的生路——可验证奖励强化学习（RLVR）。为什么代码是连接物理与虚拟世界的唯一确定性真理编译器？Cursor 如何通过 Tab 键与 Cmd+Z 撤销打造通用模型永远无法获取的隐式遥测护城河？痛击“坐等 GPT-17”的企业投机谬论。</p>
-        </div>
+        <h3><a href="08_十亿倍推理爆发与多模型世界的反垄断.html">08. 十亿倍推理爆发与多模型世界的反垄断</a></h3>
+        <p>
+            测算长期推理 Token 的规模需求，对比云端闭源 API 与本地开源模型私有化部署的适用场景与总拥有成本（TCO）。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 07 · 软件生产革命</span>
-            <h3><a href="07_VibeCoding与软件的可塑性革命.html">第七讲：Vibe Coding 意图编码、软件可塑性与延迟转化率悖论</a></h3>
-            <p><strong>嘉宾</strong>：Guillermo Rauch（Vercel 创始人兼 CEO / Next.js 创造者）<br>
-            <strong>核心穿透</strong>：软件从“花岗岩雕刻”走向“橡皮泥可塑”。亚马逊 100 毫秒延迟定律在 AI 时代的奇迹反转——用户为什么心甘情愿为深度认知等待一分钟？Token 时代的 CDN（AI Gateway）如何重写中间件标准？智能的终极物理学：能量输入，智能输出。</p>
-        </div>
+        <h3><a href="09_生命科学双循环与生物制药范式跃迁.html">09. 生命科学双循环与生物制药范式跃迁</a></h3>
+        <p>
+            探讨结构生物学模型（AlphaFold、Chai-1）在早期药物发现中的作用，分析计算筛选与自动化湿实验室验证的闭环流程。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 08 · 推理基础设施</span>
-            <h3><a href="08_十亿倍推理爆发与多模型世界的反垄断.html">第八讲：推理十亿倍大爆发、破除两家垄断神话与推理云终极粘性</a></h3>
-            <p><strong>嘉宾</strong>：Tuhin Srivastava（Baseten 联合创始人兼 CEO）<br>
-            <strong>核心穿透</strong>：为什么长远看训练算力是有限的，而推理算力是无限的？为什么大企业在通过 PoC 后 90% 必然从闭源 API 倒戈向开源私有部署？深度剖析为什么推理基础设施拥有比传统公有云更致命的客户锁定性与零流失率。</p>
-        </div>
-
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 09 · 科学发现跃迁</span>
-            <h3><a href="09_生命科学双循环与生物制药范式跃迁.html">第九讲：逆转埃隆定律、双循环科学发现系统与生物湿实验室 API 化</a></h3>
-            <p><strong>嘉宾</strong>：Eric Kauderer-Abrams（Anthropic 生命科学总监） & Josh Meier（Chai Discovery 创始人）<br>
-            <strong>核心穿透</strong>：一款新药 15 年 26 亿美元与 90% 失败率的世纪诅咒如何被打破？Claude 宏观推理外环与 Chai-1 物理模拟内环的精妙啮合。为什么临床试验周期并非不可压缩？AI 大模型在生物学理解上的突发性涌现规律，以及物理湿实验室 API 化的终极咽喉卡位。</p>
-        </div>
+        <h3><a href="podcasts_guest_interviews.html">特辑：产业与投资人访谈选录</a></h3>
+        <p>
+            整理 Acquired、Dwarkesh Podcast、BG2 等 15 场围绕数据中心、能源供应与商业落地的嘉宾访谈纪要。
+        </p>
     </section>
 
     <footer class="document-footer">
-        <p>Stanford University Department of Management Science & Engineering &copy; Spring 2026</p>
-        <p>Document compiled for Joyce · Standalone Tufte-Style Longform Essays</p>
+        <p>Stanford MS&E 435 · Notes curated by Joyce</p>
     </footer>
 </article>
 

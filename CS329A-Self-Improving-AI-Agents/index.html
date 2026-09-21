@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自演进 AI Agent 的范式跃迁 | 斯坦福 CS329A 深度全景解构</title>
+    <title>CS329A: Self-Improving AI Agents | 斯坦福课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -12,206 +12,127 @@
 <body>
 
 <nav class="top-nav">
-    <span>Stanford University (Department of Computer Science)</span>
-    <span>CS329A: Autumn / Academic Year 2025-2026</span>
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>CS329A (2025-2026)</span>
 </nav>
 
 <article>
     <header>
-        <h1>CS329A: 自演进 AI Agent 技术研读</h1>
-        <p class="subtitle">测试期算力扩展、过程验证与模型自主迭代机制</p>
+        <h1>CS329A: Self-Improving AI Agents</h1>
+        <p class="subtitle">大语言模型的自我演进、强化学习与测试期推理算力分配</p>
         <div class="author-meta">
-            主讲：Aakanksha Chowdhery（Google PaLM 共同一作）、Azalia Mirhoseini（AlphaChip 共同一作，斯坦福助理教授）<br>
-            课程代码：Stanford CS329A · 全套 10 篇课程笔记与特邀嘉宾研讨纪要
+            主讲：Aakanksha Chowdhery（Google PaLM 共同一作）、Azalia Mirhoseini（AlphaChip 共同一作，Stanford 助理教授）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
         </div>
     </header>
 
-    <!-- 初学者通识指南与核心概念 -->
-    <div class="guide-box">
-        <div class="guide-box-title">【导读说明】核心概念与基准测试背景</div>
+    <section>
+        <h2>核心概念说明</h2>
         <p>
-            Stanford CS329A 讨论大语言模型如何从单次问答交互，发展为具有自主试错与自我改进能力的系统。以下是阅读课程时常见的核心概念：
+            本课程探讨语言模型如何超越单次前向预测，通过强化学习、测试期搜索与环境交互实现自我迭代。阅读本课程常涉及以下概念：
+        </p>
+
+        <h3>1. Pre-training 与 Post-training</h3>
+        <p>
+            Pre-training（预训练）让模型在海量网页和图书文本上做 Next-token prediction，习得通识语言表征与广泛常识。但这一阶段模型缺乏多步逻辑验证与任务拆解能力，且公开高质量自然文本在 2024-2025 年前后基本已被主流实验室用尽。
+        </p>
+        <p>
+            Post-training（后训练）包括监督微调（SFT）和强化学习（RL）。Anthropic 的 Claude 系列在代码生成与长逻辑推理上表现优异，核心在于其后训练设计：采用 Constitutional AI（宪法自对齐），依靠模型根据预设原则进行自检自修，大幅降低对外包人工标注的依赖；同时接入代码沙盒运行环境做执行反馈强化学习（RLEF），根据真实报错信息定位并修正代码。
+        </p>
+
+        <h3>2. 常见 Benchmark 的测试重点</h3>
+        <p>
+            评估模型能力的 Benchmark 在过去几年经历了明显的变迁：
         </p>
         <ul>
-            <li>
-                <strong>1. 什么是预训练与后训练（Post-Training）？为什么 Claude 在代码与推理中表现突出？</strong><br>
-                • <strong>预训练（Pre-training）</strong>：模型在大规模通用文本上做自回归预测（Next-token prediction），学习语言常识与统计模式。此时模型具备广度，但缺乏多步推理的准确性与自我检验能力。<br>
-                • <strong>后训练（Post-training）</strong>：包括监督微调（SFT）和基于人类或环境反馈的强化学习（RL）。<strong>Anthropic 的 Claude 系列在代码编写与长程推理上表现突出，关键在于后训练流程的打磨</strong>：提出了宪法对齐（Constitutional AI），通过预设原则引导模型进行自我审查与修正，减少对人工标注的依赖；同时结合代码执行沙盒提供即时反馈（RLEF），让模型在执行报错中学习定位并修复问题。
-            </li>
-            <li>
-                <strong>2. 各大 Benchmark（评测基准）分别测试什么？</strong><br>
-                • <strong>MMLU（多学科选择题）</strong>：覆盖 57 个学科的单选题，考察知识记忆与广泛常识。由于选项有限且题目可能存在训练集泄漏，高分并不完全代表复杂推理能力。<br>
-                • <strong>GSM8K（小学数学）</strong>：约 8,000 道基础应用题，当前主流前沿模型多数已接近满分，辨识度逐渐降低。<br>
-                • <strong>HumanEval / MBPP（函数级代码生成）</strong>：针对短小 Python 函数的单元测试，主要测试基础语法与常用算法。<br>
-                • <strong>SWE-bench / SWE-bench Verified（实际 GitHub Issue 修复）</strong>：工业级基准测试。直接从真实开源项目（如 Django、SymPy）提取 Issue，要求模型在大型代码库中定位 Bug、编写补丁并通过项目现有的单元测试。<br>
-                • <strong>GAIA（通用助手基准）</strong>：侧重多步工具调用与多模态检索，要求模型结合网页浏览、表格处理与跨模态信息完成任务。<br>
-                • <strong>GDPVal（经济价值与专业任务基准）</strong>：评估模型在金融建模、硬件描述语言等专业工作流程中的完成度与算力开销。
-            </li>
-            <li>
-                <strong>3. 什么是测试期算力（Test-Time Compute）与自演进（Self-Improvement）？</strong><br>
-                传统推理在用户输入后以固定单向生成输出。测试期算力扩展允许模型在作答前分配更多计算资源，例如生成多条候选解、结合蒙特卡洛树搜索（MCTS）进行剪枝、或在代码沙盒中运行校验。通过将环境反馈或自动化验证机制引入训练与推理环节，模型能够在无需新增人工标注的情况下实现性能迭代。
-            </li>
-        </ul>
-    </div>
-
-    <section>
-        <h2>序言：从“静态被动查表机”到“主动自适应实体”的物理质变</h2>
-        <p>
-            在传统的大语言模型（LLM）范式中，一个经过海量语料预训练并对齐（Post-trained）的模型本质上是一个<strong>只读的静态概率查表机</strong>。当模型权重被固定并打包部署至推理服务器那一刻起，它的智力生命便宣告终结。无论一个用户向它输入多么具有启发性的物理反例，或者代码执行器向它反馈了何等致命的堆栈崩溃报错，在单次前向传播（Forward Pass）结束后，模型的大脑依然如花岗岩般纹丝不动。
-            <label for="sn-static-llm-flaw" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-static-llm-flaw" class="margin-toggle"/>
-            <span class="sidenote">据 Chinchilla 缩放法则测算，当前全球高质量人类文本总存量约为 10<sup>14</sup> 至 10<sup>15</sup> Tokens，按现有算力增长速度已在 2024-2025 年前后被主流前沿大模型全量消耗。依赖外部静态数据喂养的预训练红利已至临界边际递减点。</span>
-        </p>
-
-        <p>
-            这种“生成即遗忘”的模式在处理简短的对话与单轮事实检索时或许尚能应付，但一旦将其置入长周期（Long-Horizon）、多步骤、需要复杂环境交互的真实世界任务（例如重构万行代码库、自主定理证明、或者在真实物理世界调度机器人关节）时，系统性崩溃便不可避免。由于误差随决策步骤呈指数级累积（Compounding Errors），一个单步准确率为 95% 的静态模型在经历 20 步推理后的全局成功率将暴跌至不足 35%。
-            <label for="mn-compounding-errors" class="margin-toggle">&#8853;</label>
-            <input type="checkbox" id="mn-compounding-errors" class="margin-toggle"/>
-            <span class="marginnote"><strong>误差复合定理（Compounding Errors）</strong>：设 Agent 每步决策正确率为 <i>p</i>，长程任务包含 <i>T</i> 步连续动作。在缺乏自纠错机制下，全局成功概率遵循几何级数断崖式衰减：<br>
-            $$P(\text{Success}) = \prod_{t=1}^T p_t \approx p^T$$<br>
-            <strong>通俗直观案例</strong>：即使每一步有高达 98%（<i>p</i>=0.98）的超高成功率，只要任务需要连续走 50 步（<i>T</i>=50），最终成功率将暴跌至 <strong>36.4%</strong>；如果走 100 步，成功率仅剩 <strong>13.2%</strong>！这就是为什么光靠单步盲猜永远成不了可靠 Agent，必须建立中途检查点与执行验证。</span>
-        </p>
-
-        <p>
-            正是在这一深刻的历史拐点上，斯坦福大学计算机系推出了标志性的前沿研究生课程 <strong>CS329A《自演进 AI Agent（Self-Improving AI Agents）》</strong>。该课程由两位身处全球大模型架构最前线的学者亲自挂帅——一位是率领谷歌团队训练出 5400 亿参数里程碑模型 PaLM 并深度参与 Gemini 研发的 Aakanksha Chowdhery 教授；另一位则是发明了用强化学习颠覆芯片物理布局的 AlphaChip、并在 Claude 与 Gemini 架构设计中做出核心贡献的 Azalia Mirhoseini 教授。
-        </p>
-
-        <p>
-            CS329A 彻底跨越了主流技术自媒体关于“提示词工程（Prompt Engineering）”的花拳绣腿，直刺现代 Agentic 系统的技术骨髓：<strong>如何构建能够自我生成训练数据、利用外部工具与可验证环境反馈持续自举（Bootstrapping）、并在推理时根据问题难度动态伸缩算力的自提升闭环系统？</strong>
-        </p>
-    </section>
-
-    <section>
-        <h2>核心理论体系：自演进智能的三维正交算力张量</h2>
-        <p>
-            在 CS329A 的系统化理论框架中，两位主讲导师将传统单一维度的“预训练算力缩放（Pre-training Scaling）”升维为一个相互制衡的三维正交张量系统：
-        </p>
-
-        <pre><code>Total Intelligence Potential = F( Compute_train, Compute_test, Verification_Bandwidth )
-where:
-  • Compute_train: 训练期通过自博弈强化学习（RL）与合成轨迹注入的内化认知结构
-  • Compute_test: 推理期通过反复采样、束搜索与 MCTS 动态消耗的思考算力
-  • Verification_Bandwidth: 环境确定性判决器（Oracle / PRM）对中间思考步骤的纠偏带宽</code></pre>
-
-        <p>
-            这三大维度的动态啮合，彻底重写了人工智能的成本与性能边界：
-            <label for="sn-three-axes" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-three-axes" class="margin-toggle"/>
-            <span class="sidenote">Snell 等人（2024）与 Brown 等人（2024）在《Large Language Monkeys》中的里程碑实验证明：在特定验证机制完备的场景下，仅在测试期将推理算力增加 4 个数量级，一个 8B 参数的小模型在数学与代码基准上的解题率可以直接碾压大它 50 倍但仅进行贪婪单次采样的顶尖基座模型。</span>
-        </p>
-
-        <ul>
-            <li><strong>第一轴：测试期算力缩放（Test-Time Compute Scaling）</strong>。不再追求单次前向生成的绝对完美，而是通过并行采样（Parallel Sampling）、自适应分枝（Adaptive Branching）与测试期搜索，将原本在线下预训练消耗的浮点运算动态迁移至线上推理端。</li>
-            <li><strong>第二轴：生成-验证剪刀差与过程奖励模型（PRMs & Verifiers）</strong>。破解“验证往往比生成更容易”的计算复杂度非对称性。如何防止大模型在自评时出现“自欺欺人（Self-Delusion）”与奖励作弊（Reward Hacking）？过程级监督（Step-by-step PRM）与弱验证器集成（WEAVER）成为系统的生死护城河。</li>
-            <li><strong>第三轴：自主合成与训练期强化闭环（Train-Time Self-Play & RL）</strong>。利用 STaR（Self-Taught Reasoner）与改进型 GRPO（Group Relative Policy Optimization），让模型在代码沙盒、编译器和形式化定理证明器中进行亿万次自主对弈，将外化的搜索轨迹重新蒸馏内化为神经网络的高效直觉。</li>
+            <li><strong>MMLU</strong>：包含 57 个学科的四选一单选题，主要考察知识储备。由于选项有限且存在训练集污染风险，高分难以直接对应复杂的实际问题解决能力。</li>
+            <li><strong>GSM8K</strong>：基础小学数学应用题，前沿模型大多已达到 95% 以上，辨识度逐步饱和。</li>
+            <li><strong>HumanEval / MBPP</strong>：短 Python 函数的代码生成测试，主要检验语法与基础算法。</li>
+            <li><strong>SWE-bench / SWE-bench Verified</strong>：直接从真实 GitHub 开源项目提取的 Issue，要求 Agent 在大型工程仓库中定位 Bug、编写补丁并通过单元测试，是目前衡量工程级代码能力的行业基准。</li>
+            <li><strong>GAIA</strong>：要求结合网页浏览、文件读取、计算等多步工具调用，考察解决复杂综合任务的稳定性。</li>
+            <li><strong>GDPVal</strong>：评估模型在金融建模、芯片硬件描述语言等高门槛工作场景下的完成质量与算力成本。</li>
         </ul>
 
-        <div class="sharp-box">
-            <div class="sharp-box-title">核心反直觉法则：为什么更多的自由思考反而会导致模型的“熵崩溃”？</div>
-            外界普遍以为，给模型更多的上下文窗口和更长的思维链（CoT），模型就会自发变得更聪明。但在 CS329A 的实盘实验中，导师揭示了一个致命的物理陷阱：<strong>强化学习中的熵崩溃（Entropy Collapse）</strong>。在没有非对称梯度裁剪（如 DAPO 的 Clip-Higher）与细粒度过程验证的情况下，模型在自我演进探索中会极其迅速地坍缩到极少数确定性但脆弱的高频 Token 路径上，造成输出多样性的不可逆灭绝，最终退化为满嘴胡话但置信度极高的僵死策略。
-        </div>
+        <h3>3. Test-time compute 与自演进机制</h3>
+        <p>
+            传统的推理方式是用户发送请求后模型单向生成固定长度回复。Test-time compute（测试期算力）允许模型在输出最终答案前分配更多计算资源，例如生成多条候选解（反复采样）、引入树搜索（MCTS）进行剪枝、或在沙盒中反复执行校验。通过将验证机制引入模型迭代循环，模型能够在较少依赖人工新标注的情况下持续提升。
+        </p>
     </section>
 
     <section>
-        <h2>特辑拓展：受邀导师与前沿嘉宾 YouTube 播客深度访谈精编</h2>
+        <h2>背景与问题定义</h2>
         <p>
-            在学术讲堂之外，CS329A 的主讲导师与顶尖嘉宾在硅谷前沿技术播客中留下了大量未加过滤的实战反思与内幕推演。本拓展专论系统解构了 12 场最硬核的深度长访谈：
+            固定权重的模型在部署后不再更新。面对单轮事实问答尚可应付，但面对多步骤的长程任务时，自回归生成的误差会随步数累积。
+            <label for="sn-compounding-error" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-compounding-error" class="margin-toggle"/>
+            <span class="sidenote">误差复合机制：若单步决策成功率为 <i>p</i>，连续进行 <i>T</i> 步无纠错决策时，全局成功率为 <i>P</i> = <i>p</i><sup><i>T</i></sup>。即使每步成功率为 0.98，连续执行 50 步后的成功率也仅约为 36.4%。</span>
         </p>
-
-        <div class="lecture-card" style="border-left: 4px solid #8f2d2d; background: #faf6f0;">
-            <span class="lecture-tag" style="color: #8f2d2d; font-weight: bold;">Extended Monograph · 7 组领袖先锋 × 12 场深度播客解构</span>
-            <h3><a href="podcasts_guest_interviews.html">硅谷前沿先锋的闭门原声：Stanford CS329A 导师与嘉宾播客深度全集 &rarr;</a></h3>
-            <p><strong>核心阵容</strong>：Aakanksha Chowdhery（Google PaLM）、Azalia Mirhoseini（Ricursive / AlphaChip）、Thang Luong（AlphaProof / DeepMind）、Danny Driess（Physical Intelligence）、Misha Laskin（Reflection AI）、Junchen Jiang（LMCache）、Denny Zhou（DeepMind 推理总监）<br>
-            <strong>播客节目</strong>：<em>The TWIML AI Podcast</em>、<em>No Priors</em>（Sarah Guo）、<em>The MAD Podcast</em>（Matt Turck）、<em>The Investment Memo</em>、<em>AI Ascent</em>、<em>Tech Beats Unplugged</em> 等<br>
-            <strong>内容穿透</strong>：揭秘讲堂之外的预训练目标终结真相、AI 自研下一代先进制程芯片内幕、AlphaProof 形式化证明突破 IMO 国际数学奥赛金牌幕后、物理机械臂连续流匹配（π0）与操作系统级 KV Cache 虚拟内存革命（每篇均附官方 YouTube 原始视频链接）。</p>
-        </div>
+        <p>
+            因此，构建具有自主演进能力的 Agent 需要三大支撑：测试期算力的高效分配、独立可靠的过程验证器（PRM）、以及模型基于环境真实反馈（如代码编译器报错）的强化学习闭环。
+        </p>
     </section>
 
     <section>
-        <h2>全课程 10 讲万字深度专论目录（点击直达）</h2>
+        <h2>课程目录（10 讲笔记）</h2>
+
+        <h3><a href="01_自演进闭环与静态模型终结.html">01. 自演进闭环与静态模型终结</a></h3>
         <p>
-            以下专论涵盖斯坦福 CS329A 的全部九大核心教学专题及压轴前沿嘉宾研讨特辑。每篇文章均以完整的学术专著/系统架构白皮书规格展开，深入到损失函数推导、采样算法复杂度、GPU 内存优化与真实代码框架中：
+            讨论预训练数据的存量边界、自回归序列的累积误差机制，以及从静态概率预测向状态机决策转移的系统架构。
         </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 01 · 理论基石与系统架构</span>
-            <h3><a href="01_自演进闭环与静态模型终结.html">第一讲：自演进智能闭环、静态模型终结与 Agentic 状态机范式跃迁</a></h3>
-            <p><strong>主讲导师</strong>：Aakanksha Chowdhery & Azalia Mirhoseini<br>
-            <strong>核心穿透</strong>：为什么“预训练+人类反馈微调（RLHF）”是一座行将倒塌的技术悬崖？深入拆解感知-动作-环境反馈的马尔可夫决策过程。为什么单向自回归生成的概率衰减决定了静态大模型在长程任务中的必然溃败？构建持续自改进飞轮的四大不可替代工程支柱。</p>
-        </div>
+        <h3><a href="02_测试期算力缩放与反复采样极限.html">02. 测试期算力缩放与反复采样极限</a></h3>
+        <p>
+            分析测试期采样算力分配规律、Pass@k 的覆盖率变化，以及 Majority Voting（多数投票）在长尾逻辑题中的局限性。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 02 · 推理算力物理法则</span>
-            <h3><a href="02_测试期算力缩放与反复采样极限.html">第二讲：测试期算力扩展定律、Pass@k 指数幂律与验证瓶颈之壁</a></h3>
-            <p><strong>核心论文</strong>：<em>Large Language Monkeys (Brown et al., 2024)</em> & <em>Archon Framework</em><br>
-            <strong>核心穿透</strong>：如何用反复独立采样（Repeated Sampling）突破性能天花板？深入解析覆盖率（Coverage）随计算量呈对数线性增长的惊人幂律。为什么在 SWE-bench 上 250 次采样的开源中型模型能够绝杀 GPT-4 单次贪婪输出？揭秘多数投票（Majority Voting）在超过临界样本数后的致命失效边际。</p>
-        </div>
+        <h3><a href="03_鲁棒验证机制与生成验证剪刀差.html">03. 鲁棒验证机制与生成验证剪刀差</a></h3>
+        <p>
+            对比 ORM（结果奖励）与 PRM（过程奖励）的优劣，探讨弱验证器加权集成（WEAVER）在算力约束下的判决精度。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 03 · 判决机制与对齐监督</span>
-            <h3><a href="03_鲁棒验证机制与生成验证剪刀差.html">第三讲：生成-验证剪刀差、过程奖励模型（PRM）与弱验证器集成</a></h3>
-            <p><strong>核心论文</strong>：<em>Let's Verify Step by Step (Lightman et al.)</em> & <em>Math-Shepherd</em> & <em>WEAVER (2025)</em><br>
-            <strong>核心穿透</strong>：结果奖励模型（ORM）为何必然引发奖励作弊（Reward Hacking）？过程奖励模型（PRM）如何利用蒙特卡洛树搜索自动合成无人工干预的步骤级标签？剖析 WEAVER 如何将数个廉价弱验证器在微观概率上加权组合，在浮点运算降低 99.97% 的前提下逼平 o3-mini 的判决精度。</p>
-        </div>
+        <h3><a href="04_工具代码反馈与执行强化学习.html">04. 工具代码反馈与执行强化学习</a></h3>
+        <p>
+            梳理代码执行沙盒作为客观环境反馈源的价值，解析 RLEF 训练框架与 Anthropic Constitutional AI 自对齐流程。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 04 · 外部物理交互锚定</span>
-            <h3><a href="04_工具代码反馈与执行强化学习.html">第四讲：环境反馈具身化：ReAct 循环、执行强化学习（RLEF）与宪法自纠错</a></h3>
-            <p><strong>核心论文</strong>：<em>ReAct (Yao et al.)</em> & <em>RLEF: Grounding Code LLMs in Execution Feedback</em> & <em>Constitutional AI</em><br>
-            <strong>核心穿透</strong>：如何打破纯语言漫游的幻觉怪圈？编译器与执行环境（REPL）作为宇宙终极客观裁判的数学严密性。深入拆解 RLEF 将编译器报错堆栈作为强化学习状态转移的奖励重塑机制；解析 Constitutional AI 如何通过形式化原则自博弈实现无人类介入的对齐提纯。</p>
-        </div>
+        <h3><a href="05_多步规划树搜索与自适应分枝.html">05. 多步规划树搜索与自适应分枝</a></h3>
+        <p>
+            分析顺序 CoT 在分支任务下的容错短板，介绍结合树搜索（LATS）与并行探索（SPRINT）的多步规划算法。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 05 · 复杂长程多步决策</span>
-            <h3><a href="05_多步规划树搜索与自适应分枝.html">第五讲：长程规划的蒙特卡洛树搜索（LATS）、SPRINT 并行推理与自适应分枝</a></h3>
-            <p><strong>核心论文</strong>：<em>LATS (Zhou et al., 2023)</em> & <em>SPRINT (Mirhoseini et al., 2025)</em> & <em>AB-MCTS</em><br>
-            <strong>核心穿透</strong>：纯顺序思维链（Chain of Thought）在面对高分支因子时的延迟自杀。LATS 如何将思考（Thought）、动作（Action）与外部状态评估统一纳入口算 MCTS 拓扑中？Azalia 团队首创的 SPRINT 框架如何将长链条重构为交织规划与并行多 Agent 执行，以几何级削减无效 Token 消耗。</p>
-        </div>
+        <h3><a href="06_训练期算力扩展与强化学习熵崩溃.html">06. 训练期算力扩展与强化学习熵崩溃</a></h3>
+        <p>
+            探讨 DeepSeek GRPO 算法省去 Critic 网络的显存机制，以及强化学习中应对策略熵快速衰减的裁剪防御策略。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 06 · 训练期自举对弈</span>
-            <h3><a href="06_训练期算力扩展与强化学习熵崩溃.html">第六讲：训练期算力自举：STaR 推理飞轮、DeepSeekMath GRPO 与 DAPO 熵防御</a></h3>
-            <p><strong>核心论文</strong>：<em>STaR (Zelikman et al.)</em> & <em>DeepSeekMath (Shao et al.)</em> & <em>DAPO (2025)</em><br>
-            <strong>核心穿透</strong>：模型如何“自己拔着自己的头发离开地球”？STaR 自举机制中理性提示修正（Rationalization）的妙用。Group Relative Policy Optimization（GRPO）如何彻底扔掉繁重的 Critic 价值网络？DAPO 系统的 Clip-Higher 非对称裁剪机制如何从底层防止强化学习发生灾难性的策略坍缩。</p>
-        </div>
+        <h3><a href="07_开放式演进与AI科学家全自动研发.html">07. 开放式演进与AI科学家全自动研发</a></h3>
+        <p>
+            以 Sakana AI 的 The AI Scientist 与 AlphaEvolve 为案例，讨论全自动科研与代码变异演进的工程流程及安全边界。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 07 · 全自动科学发现</span>
-            <h3><a href="07_开放式演进与AI科学家全自动研发.html">第七讲：开放式进化演进：The AI Scientist 全自动科研、AlphaEvolve 与 Agent 架构自设计</a></h3>
-            <p><strong>核心论文</strong>：<em>The AI Scientist (Lu et al., 2024 / Nature 2026)</em> & <em>AlphaEvolve (DeepMind)</em><br>
-            <strong>核心穿透</strong>：人工智能不仅能写代码，更能设计人工智能自身。The AI Scientist 从头条假设生成、自动设计实验、调用 GPU 训练、绘制图表到撰写 LaTeX 论文全生命周期的工程闭环。AlphaEvolve 如何将遗传进化与 Gemini 大脑融合以自研超越人类经验的算法；剖析 Agent 自动修改自身系统提示词带来的对齐漂移与安全防线。</p>
-        </div>
+        <h3><a href="08_深度研究Agent与搜索增强推理.html">08. 深度研究Agent与搜索增强推理</a></h3>
+        <p>
+            分析 AlphaCode 2 的聚类过滤策略、CoT 内部交织搜索逻辑（Search-o1），以及 GAIA 对综合办公任务的考察方式。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 08 · 深度研究与搜索增强</span>
-            <h3><a href="08_深度研究Agent与搜索增强推理.html">第八讲：竞赛级代码生成与深度研究 Agent：AlphaCode 2、Search-o1 与信息检索融合</a></h3>
-            <p><strong>核心论文</strong>：<em>AlphaCode 2 Technical Report</em> & <em>Search-o1 (2025)</em><br>
-            <strong>核心穿透</strong>：面对 Codeforces 顶级人类选手的绝对解题难度，AlphaCode 2 如何通过“100 万候选采样 + 聚类测试 + 精准过滤”将前沿率打入人类前 15%？Search-o1 如何打破传统 RAG 单次检索的浅薄性，在思维链内部实现自主触发搜索、反思未解之谜与迭代推演的交织循环。</p>
-        </div>
+        <h3><a href="09_长周期任务评估与真实经济价值陷阱.html">09. 长周期任务评估与真实经济价值陷阱</a></h3>
+        <p>
+            梳理主流 Benchmark 演进历程，分析 LLM-as-a-Judge 存在的自洽性偏差，介绍基于实际专业产出的 GDPVal 评估方案。
+        </p>
 
-        <div class="lecture-card">
-            <span class="lecture-tag">Lecture 09 · 评估体系与现实对齐</span>
-            <h3><a href="09_长周期任务评估与真实经济价值陷阱.html">第九讲：Agentic 评测科学：长周期任务度量、GDPVal 真实经济价值与自评病理学</a></h3>
-            <p><strong>核心论文</strong>：<em>Measuring AI Ability to Complete Long Tasks</em> & <em>GDPVal (2025)</em> & <em>DeepScholar-Bench</em><br>
-            <strong>核心穿透</strong>：为什么静态基准测试（MMLU、GSM8K）在 Agent 时代已沦为毫无参考价值的数字游戏？长周期任务中评估维度的指数级爆炸与不可复现危机。GDPVal 如何以小时级人类专家劳动价值量化 Agent 真实产出？解密“大模型当裁判（LLM-as-a-Judge）”中广泛存在的谄媚偏见（Sycophancy）与虚假自洽性陷阱。</p>
-        </div>
+        <h3><a href="10_未来研究范式与顶尖嘉宾思想总汇.html">10. 未来研究范式与顶尖嘉宾思想总汇</a></h3>
+        <p>
+            整理 Denny Zhou 关于思维链本质的观点、Thang Luong 团队在 Lean 4 形式化数学验证（AlphaProof）中的实践，以及分布式 KV Cache 内存优化。
+        </p>
 
-        <div class="lecture-card" style="border-left: 4px solid #8f2d2d; background: #faf6f0;">
-            <span class="lecture-tag" style="color: #8f2d2d; font-weight: bold;">Lecture 10 · 硅谷顶尖先锋思想汇编</span>
-            <h3><a href="10_未来研究范式与顶尖嘉宾思想总汇.html">第十讲：未来研究前沿与特邀顶尖嘉宾思想全集（DeepMind、Pi、Reflection & LMCache）</a></h3>
-            <p><strong>特邀嘉宾阵容</strong>：<br>
-            • <strong>Denny Zhou</strong>（Google DeepMind 推理研究总指挥）：思维链本质与数学推理的终极界限<br>
-            • <strong>Thang Luong</strong>（Google DeepMind 首席科学家）：AlphaProof、AlphaGeometry 与 IMO 国际数学奥赛金牌破壁<br>
-            • <strong>Melvin Johnson</strong>（Google DeepMind 杰出科学家）：从 Chatbot 到 Agent 的后训练范式演进<br>
-            • <strong>Junchen Jiang</strong>（芝加哥大学教授 / LMCache 联合创始人）：Agent 长期记忆与分布式 KV Cache 物理复用<br>
-            • <strong>Misha Laskin</strong>（Reflection AI 创始人 / 前 DeepMind 研究员）：异步强化学习与自主 Agent 落地教训<br>
-            • <strong>Danny Driess</strong>（Physical Intelligence 创始团队 / π0 核心作者）：多模态具身 Agent 与物理世界真实动作流（Flow Matching）</p>
-        </div>
+        <h3><a href="podcasts_guest_interviews.html">特辑：嘉宾访谈选录</a></h3>
+        <p>
+            收录 TWIML AI、No Priors、The MAD Podcast 等 12 场针对主讲导师及研究者的访谈纪要，提供音频来源与核心观点梳理。
+        </p>
     </section>
 
     <footer class="document-footer">
-        <p>Stanford University Department of Computer Science &copy; Academic Year 2025&ndash;2026</p>
-        <p>Document compiled for Joyce · Deep Analytical Monograph Suite adhering to Edward Tufte CSS Standards</p>
+        <p>Stanford CS329A · Notes curated by Joyce</p>
     </footer>
 </article>
 

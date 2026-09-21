@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第四讲：工具代码反馈与执行强化学习 | 斯坦福 CS329A 专论</title>
+    <title>第四讲：工具代码反馈与执行强化学习 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -29,8 +29,8 @@
 
     <div class="epigraph">
         <blockquote>
-            “语言是人类用来交流概念的极其模糊、高度容错的符号系统；但代码不是。代码在编译器面前是冷酷无情的布尔对立——要么退出码为 0，要么抛出不可隐瞒的运行时异常。让大模型脱离纯文本遐想、接入执行环境沙盒的那一刻，才是智能真正产生物理锚定的分水岭。”
-            <footer>— Azalia Mirhoseini, Stanford CS329A 讲堂实录</footer>
+            “语言是人类用来交流概念的极其模糊、高度容错的符号系统；但代码不是。代码在编译器面前是冷酷无情的布尔对立, , 要么退出码为 0，要么抛出不可隐瞒的运行时异常。让大模型脱离纯文本遐想、接入执行环境沙盒的那一刻，才是智能真正产生物理锚定的分水岭。”
+            <footer>,  Azalia Mirhoseini, Stanford CS329A 讲堂实录</footer>
         </blockquote>
     </div>
 
@@ -92,7 +92,7 @@
             $$R_{\text{unit\_pass}} = \frac{\text{Passed Test Cases}}{\text{Total Test Cases}} \in [0, 1.0]$$
             <br>
             <strong>质变飞轮</strong>：
-            RLEF 训练出来的模型自发掌握了高级人类工程师的核心素质——<strong>“阅读报错信息的能力”</strong>。当模型遇到 `KeyError: 'user_id'` 时，它不会茫然重写整份代码，而是极其精准地向上回溯两行，增加字典判空防护代码！
+            RLEF 训练出来的模型自发掌握了高级人类工程师的核心素质, , <strong>“阅读报错信息的能力”</strong>。当模型遇到 `KeyError: 'user_id'` 时，它不会茫然重写整份代码，而是极其精准地向上回溯两行，增加字典判空防护代码！
         </div>
     </section>
 
@@ -101,7 +101,7 @@
 
         <div class="sharp-box">
             <div class="sharp-box-title">反直觉工程铁律：工具过度仪装（Tool Over-Instrumentation）的致命毒性</div>
-            许多商业 Agent 框架热衷于向模型提供琳琅满目的“工具箱”——一个做数学运算的 Calculator 工具、一个查天气的 API 工具、一个做字符串统计的 WordCounter 工具、一个数据库查询工具……一口气往 System Prompt 里塞入 40 到 60 个 JSON Schema。
+            许多商业 Agent 框架热衷于向模型提供琳琅满目的“工具箱”, , 一个做数学运算的 Calculator 工具、一个查天气的 API 工具、一个做字符串统计的 WordCounter 工具、一个数据库查询工具……一口气往 System Prompt 里塞入 40 到 60 个 JSON Schema。
             <br><br>
             Aakanksha 教授在课上直言：<strong>这是工程架构上极度愚蠢的灾难设计。</strong>
             <br><br>
@@ -160,7 +160,7 @@
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="03_鲁棒验证机制与生成验证剪刀差.html">&larr; 返回第三讲</a> | <a href="index.html">返回主目录</a> | <a href="05_多步规划树搜索与自适应分枝.html">阅读第五讲 &rarr;</a></p>
     </footer>
 </article>

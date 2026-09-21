@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第三讲：鲁棒验证机制与生成验证剪刀差 | 斯坦福 CS329A 专论</title>
+    <title>第三讲：鲁棒验证机制与生成验证剪刀差 | 斯坦福 CS329A 课程笔记</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -29,8 +29,8 @@
 
     <div class="epigraph">
         <blockquote>
-            “在理论计算机科学中，P 与 NP 的核心不对称性在于：验证一个解的正确性在多项式时间内易如反掌，而搜寻一个解则难如登天。然而在神经网络的世界里，这种直觉被彻底颠覆——大语言模型常常能够凭借直觉灵光一现猜出极其复杂的答案，但若让它审查自己推导过程中的逻辑硬伤，它却如同盲人摸象。”
-            <footer>— Aakanksha Chowdhery, Stanford CS329A 讲堂研讨</footer>
+            “在理论计算机科学中，P 与 NP 的核心不对称性在于：验证一个解的正确性在多项式时间内易如反掌，而搜寻一个解则难如登天。然而在神经网络的世界里，这种直觉被彻底颠覆, , 大语言模型常常能够凭借直觉灵光一现猜出极其复杂的答案，但若让它审查自己推导过程中的逻辑硬伤，它却如同盲人摸象。”
+            <footer>,  Aakanksha Chowdhery, Stanford CS329A 讲堂研讨</footer>
         </blockquote>
     </div>
 
@@ -40,10 +40,10 @@
             如果说第二讲确立了“测试期反复采样能够指数级拓宽可能解空间”的物理定律，那么第三讲则直接切入了整个系统的生死枢纽：<strong>当模型吐出 1,000 个看似言之凿凿的候选答案时，我们到底依靠什么机制挑出那唯一通往真理的路径？</strong>
         </p>
         <p>
-            工业界最直觉、但也最幼稚的想法是<strong>“让大模型自我反思（Self-Correction）”</strong>——即在 Prompt 中输入：“请仔细审查你刚才给出的推导，找出其中的错误并修正”。
+            工业界最直觉、但也最幼稚的想法是<strong>“让大模型自我反思（Self-Correction）”</strong>, , 即在 Prompt 中输入：“请仔细审查你刚才给出的推导，找出其中的错误并修正”。
             <label for="sn-self-correct-fail" class="margin-toggle sidenote-number"></label>
             <input type="checkbox" id="sn-self-correct-fail" class="margin-toggle"/>
-            <span class="sidenote">Huang 等人（2023）与 DeepMind 多项严格评测均证明：在缺乏外部编译器或形式化判决工具的封闭自回归场景下，纯文本的自我修正（Intrinsic Self-Correction）不仅不会提高准确率，反而会导致准确率下降 5% 至 12%——模型会无端怀疑原本推导正确的步骤，并改换为包含隐蔽幻觉的假答案。</span>
+            <span class="sidenote">Huang 等人（2023）与 DeepMind 多项严格评测均证明：在缺乏外部编译器或形式化判决工具的封闭自回归场景下，纯文本的自我修正（Intrinsic Self-Correction）不仅不会提高准确率，反而会导致准确率下降 5% 至 12%, , 模型会无端怀疑原本推导正确的步骤，并改换为包含隐蔽幻觉的假答案。</span>
         </p>
         <p>
             这构成了当今 AI 架构中的核心瓶颈：<strong>生成-验证剪刀差（The Generation-Verification Gap）</strong>。在没有外部客观裁判的情况下，大模型自身的判决能力往往严重落后于其生成能力。
@@ -71,7 +71,7 @@
 
         <h3>1. ORM 的三大内生性硬伤</h3>
         <ul>
-            <li><strong>信用分配彻底失效（Credit Assignment Problem）</strong>：ORM 只在长链条推导的最后一个 Token 给予标量奖励 <i>R</i>(τ) ∈ [0, 1]。若一个包含 25 个数学步骤的解答最终答案正确，ORM 会将高分粗暴地平摊给所有 25 步。然而，大量样本存在<strong>“因因得错，错错得对（Fortuitous Correctness）”</strong>的伪路径——中间步骤出现了严重算术颠倒，但刚好被后文的符号遗漏抵消，蒙对了答案。</li>
+            <li><strong>信用分配彻底失效（Credit Assignment Problem）</strong>：ORM 只在长链条推导的最后一个 Token 给予标量奖励 <i>R</i>(τ) ∈ [0, 1]。若一个包含 25 个数学步骤的解答最终答案正确，ORM 会将高分粗暴地平摊给所有 25 步。然而，大量样本存在<strong>“因因得错，错错得对（Fortuitous Correctness）”</strong>的伪路径, , 中间步骤出现了严重算术颠倒，但刚好被后文的符号遗漏抵消，蒙对了答案。</li>
             <li><strong>搜索剪枝无能（Search Pruning Blindness）</strong>：在蒙特卡洛树搜索（MCTS）中，如果必须等到整条思维链走完几千个 Token 才能拿到 ORM 反馈，系统就根本无法在第 3 步发现逻辑走偏时及时剪枝，造成天文数字级的推理算力空转。</li>
             <li><strong>奖励作弊与过度优化（Reward Hacking）</strong>：当搜索采样量 <i>k</i> 放大至数千时，生成模型会专门去寻找 ORM 判决边界上的高维漏洞（Adversarial Exploitation），生成排版看似极度专业但逻辑空洞的胡言，骗取虚高奖励。</li>
         </ul>
@@ -133,7 +133,7 @@
             <br><br>
             WEAVER 彻底粉碎了这一昂贵神话：
             <br><br>
-            • <strong>弱监督聚合（Weak Supervision Aggregation）</strong>：研究者构建了一组计算成本极低、各自存在缺陷的“弱验证器（Weak Verifiers）”——包括 3B 参数的小型微调判决器、基于关键词的规则检测器、静态代码分析 Linter 与粗粒度词嵌入相似度模型。每一个单一弱验证器的准确率可能只有 60% 左右。<br>
+            • <strong>弱监督聚合（Weak Supervision Aggregation）</strong>：研究者构建了一组计算成本极低、各自存在缺陷的“弱验证器（Weak Verifiers）”, , 包括 3B 参数的小型微调判决器、基于关键词的规则检测器、静态代码分析 Linter 与粗粒度词嵌入相似度模型。每一个单一弱验证器的准确率可能只有 60% 左右。<br>
             • <strong>概率图模型校准</strong>：WEAVER 利用潜变量模型（Latent Variable Model）在无标签数据上估计每个弱验证器的条件混淆矩阵，自动推导出最优投票权重，消除了共性误判。<br>
             • <strong>微型跨编码器蒸馏（Cross-Encoder Distillation）</strong>：将整个弱验证器集合的判决能力，蒸馏到一个参数仅为 <strong>400M（0.4B）</strong> 的极简双向跨编码器中！
             <br><br>
@@ -147,7 +147,7 @@
     </section>
 
     <footer class="document-footer">
-        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025-2026</p>
         <p><a href="02_测试期算力缩放与反复采样极限.html">&larr; 返回第二讲</a> | <a href="index.html">返回主目录</a> | <a href="04_工具代码反馈与执行强化学习.html">阅读第四讲 &rarr;</a></p>
     </footer>
 </article>
