@@ -71,7 +71,9 @@ where:
         <p>
             当采样预算 <i>k</i> 从 1 激增至 10,000 时，解决问题的覆盖率（Coverage，即 <i>k</i> 次采样中至少有一次命中正确答案的概率）并未如传统悲观预期那样迅速饱和，而是遵循一条广义指数化幂律：
         </p>
-        $$\text{Coverage}(k) = 1 - \exp\left(-\alpha \cdot k^\beta\right)$$
+        <p>
+            $$\text{Coverage}(k) = 1 - \exp\left(-\alpha \cdot k^\beta\right)$$
+        </p>
         <p>
             在 GSM8K、MATH（高中数学竞赛）、CodeContests（算法竞赛）及 SWE-bench 上，拟合系数 β &isin; [0.4, 0.7]，显示出跨越四个计算数量级（10<sup>0</sup> ~ 10<sup>4</sup>）的高度普适性与外推能力。
         </p>

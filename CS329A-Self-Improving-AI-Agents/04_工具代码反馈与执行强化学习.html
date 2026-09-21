@@ -68,12 +68,14 @@
         <p>
             不再采用单一的通过/失败二元奖励，RLEF 构建了一个连续的语义反馈函数：
         </p>
-        $$R(\tau) = R_{\text{syntax}} + R_{\text{compilation}} + R_{\text{runtime\_progress}} + R_{\text{unit\_pass}}$$
+        <p>
+            $$R(\tau) = R_{\text{syntax}} + R_{\text{compilation}} + R_{\text{runtime\_progress}} + R_{\text{unit\_pass}}$$
+        </p>
         <ol>
             <li><strong>语法层</strong>：若代码成功通过 AST（抽象语法树）解析，给予基础奖励 +0.1；若发生 SyntaxError，直接将错误行号与标记反向编码进惩罚项。</li>
             <li><strong>执行层</strong>：若程序无崩溃运行完毕，给予 +0.3；若抛出 IndexError、TypeError 或 ZeroDivisionError，提取 Traceback 深度作为连续距离惩罚。</li>
             <li><strong>逻辑层</strong>：
-                $$R_{\text{unit\_pass}} = \frac{\text{Passed Test Cases}}{\text{Total Test Cases}} \in [0, 1.0]$$
+                <p>$$R_{\text{unit\_pass}} = \frac{\text{Passed Test Cases}}{\text{Total Test Cases}} \in [0, 1.0]$$</p>
             </li>
         </ol>
         <p>

@@ -90,7 +90,7 @@
             <li><strong>前缀固定与蒙特卡洛补全</strong>：对于前 <i>t</i> 步序列，保持其不变，从该截断点出发，调用模型并行采样补全 <i>M</i> 次（例如 <i>M</i> = 16），直到生成最终答案。</li>
             <li><strong>客观终局校验</strong>：由于数学问题拥有唯一的确定性终局答案，用程序自动对比这 <i>M</i> 条补全路径的最终答案是否正确。</li>
             <li><strong>软标签计算</strong>：
-                $$r(step_t) = \frac{1}{M} \sum_{m=1}^M \mathbb{I}(\text{Rollout}_m(step_{\le t}) \text{ is correct})$$
+                <p>$$r(step_t) = \frac{1}{M} \sum_{m=1}^M \mathbb{I}(\text{Rollout}_m(step_{\le t}) \text{ is correct})$$</p>
             </li>
         </ol>
         <p>
