@@ -19,124 +19,70 @@
 
 <article>
     <header>
-        <h1>第八讲：竞赛级代码生成与深度研究 Agent：AlphaCode 2、Search-o1 与信息检索融合</h1>
-        <p class="subtitle">百万候选采样中的执行聚类剪枝、打破静态 RAG 枷锁与思维链内生搜索算子</p>
+        <h1>第八讲：竞赛级代码生成与深度研究 Agent：AlphaCode 2、Search-o1</h1>
+        <p class="subtitle">百万候选采样中的执行聚类剪枝，与打破静态 RAG 枷锁的思维链内生搜索</p>
         <div class="author-meta">
             核心文献：<em>AlphaCode 2 Tech Report (Google DeepMind)</em> · <em>Search-o1 (2025)</em> · <em>GAIA Benchmark</em><br>
-            主讲教授：Aakanksha Chowdhery & Azalia Mirhoseini · 深入解构深度研究智能体（Deep Research Agents）
+            主讲教授：Aakanksha Chowdhery & Azalia Mirhoseini · 深度研究智能体（Deep Research Agents）
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “让一个从未出过国的人靠一本字典写出一篇关于异域文化的论文，他只能靠幻觉填补空白；让一个不具备动态检索能力的大模型闭门造车地推演科学，它的逻辑无论多么自洽，也无法击中客观现实。搜索不应当是推理的前置外挂，而必须成为思维链本身的内生算子。”
-            <footer>,  Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
-        </blockquote>
-    </div>
-
     <section>
-        <h2>一、 顶级人类智力的终极挑战：竞赛编程与前沿信息迷宫</h2>
+        <h2>一、 两个容错率为零的战场</h2>
         <p>
-            在第八讲中，课程讨论的场景推进到了两个人类顶级智力的象牙塔, , <strong>国际竞赛级算法编程（如 Codeforces 全球天梯赛）</strong>与<strong>需要跨越数百篇权威文献进行交叉印证的“深度研究（Deep Research）”</strong>。
+            第八讲讨论的场景是两个人类顶级智力的象牙塔：国际竞赛级算法编程（如 Codeforces 全球天梯赛），与需要跨越数百篇权威文献交叉印证的深度研究（Deep Research）。
         </p>
-
-        <!-- 通俗注释：通俗拆解 GAIA 基准与深度研究 Agent -->
-        <div class="guide-box">
-            <div class="guide-box-title">【通俗白话拆解】什么是 GAIA 基准？为什么普通搜索做不了“深度研究”？</div>
-            <p>
-                如果你让 ChatGPT 搜一下“今天天气怎么样”，它立刻就能回答。但现实工作中的<strong>深度研究（Deep Research）</strong>远比这复杂万倍：
-            </p>
-            <ul>
-                <li><strong>GAIA 基准（General AI Assistants，通用打工人助手大考）</strong>：<br>
-                由 Hugging Face 和 Meta 联合设计，完全抛弃了死板的选择题。题目全是极其繁琐的真实人类办公难题，比如：“去联合国统计年鉴下载近十年的拉美农业出口 Excel，提取智利车厘子的出口吨数，再用维基百科交叉比对当年厄尔尼诺发生的月份，计算气候异常对价格波动的相关系数”。人类专家做一道题需要翻阅十几份资料、耗费 30 分钟，普通大模型刚开始的准确率甚至不到 15%！</li>
-                <li><strong>为什么传统 RAG（外挂检索）会死机？</strong><br>
-                传统 RAG 就像一个笨蛋助理：你刚问完，他就胡乱从网盘抓取 20 篇相关度不明的文章全塞给你看（导致大模型上下文被垃圾污染）。而 <strong>Search-o1 / 深度研究 Agent</strong> 则是“边思考边查证”, , 模型自己在内部推导，推导到某个关键数据卡壳时，自己发起精确搜索，读完数据再继续推进下一步！</li>
-            </ul>
-        </div>
-
         <p>
-            这两个领域都有一个极其残酷的共同特征：<strong>容错率为严格的零</strong>。
-            在 Codeforces 赛场上，一个题目的运行时间被严格限制在 1.0 秒以内，内存被锁死在 256MB，只要算法的时间复杂度从 <i>O</i>(<i>N</i> log <i>N</i>) 退化为 <i>O</i>(<i>N</i><sup>2</sup>)，或者在极端输入下发生整数溢出，程序便会被判定为完全零分；
-            而在深度研究中，只要引述了一篇被撤稿的虚假论文或混淆了两个相似的生化分子式，整份分析报告的商业与科学价值便荡然无存。
+            GAIA 基准（General AI Assistants）由 Hugging Face 和 Meta 联合设计，完全抛弃了选择题：题目是真实的办公难题，比如"去联合国统计年鉴下载近十年的拉美农业出口数据，提取智利车厘子的出口吨数，再与维基百科交叉比对当年厄尔尼诺发生的月份，计算气候异常对价格波动的相关系数"。人类专家做一道这样的题需要翻阅十几份资料、耗费 30 分钟，早期大模型的准确率甚至不到 15%。
+        </p>
+        <p>
+            传统 RAG（检索增强生成）在这类任务上很容易失效：用户一提问，系统就胡乱抓取 20 篇相关度不明的文章一股脑塞进上下文；而 Search-o1 这类深度研究 Agent 采取的是"边思考边查证"——模型在内部推导，推导到关键数据卡壳时才主动发起精确搜索，读完数据再继续往下走。
+        </p>
+        <p>
+            这两个领域有一个共同点：容错率为零。Codeforces 赛场上，题目运行时间被限制在 1.0 秒以内、内存锁死在 256MB，算法复杂度从 <i>O</i>(<i>N</i> log <i>N</i>) 退化为 <i>O</i>(<i>N</i><sup>2</sup>)，或在极端输入下发生整数溢出，程序就会被判零分；而深度研究中，只要引述了一篇撤稿论文或混淆两个相似的分子式，整份分析报告的价值便荡然无存。
         </p>
     </section>
 
     <section>
-        <h2>二、 AlphaCode 2：百万采样与执行聚类的降维打击</h2>
+        <h2>二、 AlphaCode 2：百万采样与执行聚类</h2>
         <p>
-            由 Google DeepMind 研发并在 CS329A 课堂上被深度拆解的 <strong>AlphaCode 2</strong>，代表了算法生成领域的工业工程奇迹。它在 Codeforces 竞赛平台上达到了超过 85% 人类程序员的恐怖水平。
-        </p>
-        <p>
-            与普通工程师试图让大模型“一次性把代码写对”的幼稚思路截然不同，AlphaCode 2 的成功完全建立在<strong>极其暴力的测试期算力缩放与精密的三级过滤漏斗架构</strong>之上：
+            Google DeepMind 的 AlphaCode 2 在 Codeforces 上达到了超过 85% 人类程序员的水平。它的成功不是靠"一次性把代码写对"，而是靠暴力的测试期算力缩放与精密的三级过滤：
         </p>
 
-        <h3>AlphaCode 2 的四阶段流水线</h3>
+        <h3>四阶段流水线</h3>
         <ol>
-            <li><strong>海量候选采样（Massive Sampling）</strong>：针对一道复杂的动态规划或图论题目，使用微调后的 Gemini 模型在不同采样温度下并行生成多达 <strong>100 万个（10<sup>6</sup>）</strong> 候选代码解法！</li>
-            <li><strong>测试用例粗筛（Test Execution Filtering）</strong>：将题目描述中自带的示例输入输出（Sample I/O）作为第一道过滤器。凡是在示例测试上编译失败、超时（TLE）或输出不匹配的样本直接物理粉碎，瞬间剔除 95% 以上的垃圾代码。</li>
-            <li><strong>执行聚类（Clustering by Execution Signature）</strong>：面对依然存活的数万个候选程序，如何挑出最后提交的 10 个答案？AlphaCode 2 创造了令人叹为观止的<strong>“语义执行指纹聚类”</strong>。</li>
-            <li><strong>代表性提交（Candidate Selection）</strong>：从最大的 10 个集群中各挑出一个最优雅的代码作为最终提交，确保策略在多样性与确定性之间取得完美平衡。</li>
+            <li><strong>海量候选采样</strong>：针对一道复杂的动态规划或图论题目，用微调后的 Gemini 在不同采样温度下并行生成多达 100 万个候选代码解法。</li>
+            <li><strong>测试用例粗筛</strong>：把题目自带的示例输入输出作为第一道过滤器，凡在示例上编译失败、超时或输出不匹配的样本直接剔除，一轮就能清掉 95% 以上的候选。</li>
+            <li><strong>执行聚类</strong>：面对依然存活的数万个候选程序，用语义执行指纹聚类挑出代表答案。</li>
+            <li><strong>代表性提交</strong>：从最大的 10 个集群中各挑一个代表提交，在多样性与确定性之间取得平衡。</li>
         </ol>
 
-        <label for="mn-alphacode-percentile" class="margin-toggle">&#8853;</label>
-        <input type="checkbox" id="mn-alphacode-percentile" class="margin-toggle"/>
-        <span class="marginnote"><strong>实战战果</strong>：在与数千名人类全球顶尖选手的实盘对抗中，AlphaCode 2 解决了 43% 的题目，其综合天梯分位列人类前 15%，彻底打破了“AI 只能写模板 CRUD 代码”的行业傲慢。</span>
+        <p>
+            在与数千名人类顶尖选手的实盘对抗中，AlphaCode 2 解决了 43% 的题目，天梯分位列人类前 15%。
+        </p>
     </section>
 
     <section>
-        <h2>三、 执行语义指纹：超越人类打分的聚类数学机理</h2>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">核心反直觉设计：为什么不用大模型给代码打分，而是用随机输入聚类？</div>
-            工业界通常的习惯是：训练一个昂贵的大模型裁判（Code Judge）去通读代码并给出置信度分数。
-            <br><br>
-            <strong>AlphaCode 2 团队发现了大模型裁判在竞赛级代码上的无能</strong>：
-            两段看起来极其相似的代码，仅仅因为一个加号写成了减号，其语义便谬以千里；而两段语法完全不同的代码（一段用深度优先搜索 DFS，一段用位运算 Bit Manipulation），其实质行为可能完全等价。大模型凭借表层 Token 难以穿透这种高维数学本质。
-            <br><br>
-            <strong>DeepMind 的天才工程解法：随机输入沙盒对决</strong>：
-            <br>
-            1. 自动生成大量符合题目输入格式的<strong>随机测试用例（Random Test Inputs）</strong>。<br>
-            2. 将留存的 10,000 个候选程序丢入沙盒，针对这些随机输入全量并发执行。<br>
-            3. 如果程序 A、程序 B 和程序 C 尽管语法风格天差地别，但在面对 100 个极其刁钻的随机复杂输入时，<strong>吐出的二进制输出完全分毫不差</strong>，算法便将它们归入同一个“执行语义等价类（Equivalence Cluster）”！
-            <br><br>
-            <strong>数学确定性突破</strong>：
-            如果一个独立采样演化出的集群汇聚了 3,000 个独立程序，这在统计学上意味着：这些程序哪怕内部实现不同，它们都在客观逻辑上收敛到了同一种正确的算法状态机！通过挑选最大集群的代表元，系统在完全无需人类判题官介入的情况下，以压倒性的置信度锁定了正确代码。
-        </div>
+        <h2>三、 执行语义指纹：为什么不靠模型打分</h2>
+        <p>
+            工业界通常的做法是训练一个大模型裁判去通读代码、给出置信度分数，但 AlphaCode 2 团队发现这类裁判在竞赛级代码上并不可靠：两段几乎一样的代码，可能仅仅因为一个加号写成减号就谬以千里；而两段语法完全不同的代码（一段用深度优先搜索，一段用位运算），行为却可能完全等价。大模型凭表层 Token 难以穿透这种本质。
+        </p>
+        <p>
+            DeepMind 的做法是随机输入沙盒对决：自动生成大量符合题目格式的随机测试用例，把留存的一万个候选程序丢入沙盒并发执行；如果程序 A、B、C 语法风格迥异，但面对 100 个刁钻输入时输出完全一致，就把它们归入同一个执行语义等价类。如果一个集群汇聚了 3,000 个独立程序，就意味着这些程序在逻辑上收敛到了同一个正确算法，挑选最大集群的代表元即可，完全不需要人类判题。
+        </p>
     </section>
 
     <section>
-        <h2>四、 Search-o1 与深度研究：打破静态 RAG 的认知牢笼</h2>
+        <h2>四、 Search-o1：打破静态 RAG 的枷锁</h2>
         <p>
-            在讨论通用知识密集型任务时，讲座对过去两年风靡一时的<strong>检索增强生成（RAG）</strong>进行了冷酷的解构。
+            静态 RAG 有两个硬伤：一是检索和理解的时序倒错——模型在深入分析之前，用用户模糊的原始提问去做一轮粗糙的 Top-K 检索，根本不知道自己真正缺什么；二是上下文污染——把 20 篇相关性可疑的长文档塞进上下文，不仅浪费带宽，还会引发"迷失在中间"的注意力涣散。
         </p>
-
-        <h3>1. 静态 RAG 的三大认知硬伤</h3>
-        <ul>
-            <li><strong>检索与理解的时序倒错</strong>：传统 RAG 在大模型开始思考之前，先用用户的原始 Query 去向量数据库做一轮粗糙的 Top-K 检索。但用户的问题往往是模糊的，模型在未深入分析之前，根本不知道自己真正缺失的关键信息是什么。</li>
-            <li><strong>上下文窗口污染</strong>：把 20 篇相关性可疑的长文档一股脑塞进 Context，不仅消耗了大量昂贵带宽，更引发了大模型经典的“迷失在中间（Lost in the Middle）”注意力涣散。</li>
-        </ul>
-
-        <h3>2. Search-o1 的内生性思维链搜索算子</h3>
         <p>
-            由前沿学者提出的 <strong>Search-o1</strong> 彻底重构了这一交互形态：
+            Search-o1 把搜索变成了思维链内部的自发调用：模型先展开自主思维链推理，推导到某一步发现依赖一个高精度事实（比如某季度的晶圆良率数据）且内部置信度不足时，自发生成一个搜索标记（如 <code>&lt;search&gt;...&lt;/search&gt;</code>）；后台网关拦截该标记发起精准查询，把结果作为观测回注到上下文（<code>&lt;observation&gt;...&lt;/observation&gt;</code>）；模型读入这一客观事实后，继续向下一步推导。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">新范式：搜索作为思维链内部的自发系统调用（RPC）</div>
-            在 Search-o1 架构中，大模型不再是被动喂养文献的阅读器，而是一个主动发起探索的智力实体：
-            <br><br>
-            • 模型首先展开自主长思维链（CoT）推理；<br>
-            • 当推导进行到某一步，模型发现当前步骤依赖一个高精度事实数据（例如“2025年Q3台积电 N3P 制程的晶圆良率数据”）且内部权重置信度不足时，模型自发生成特殊控制标记：
-            <br>
-            <code>&lt;search&gt;TSMC N3P wafer yield Q3 2025 official financial report&lt;/search&gt;</code><br>
-            • 后台搜索网关拦截该标记，发起精准引擎查询，抓取前三个结构化结果作为环境观测回注：
-            <br>
-            <code>&lt;observation&gt;TSMC reported N3P yield reached 78% in September 2025 earnings call...&lt;/observation&gt;</code><br>
-            • 模型读入该客观事实，在思维链中继续向下一步数学推导迈进。
-            <br><br>
-            <strong>效能跃迁</strong>：
-            在权威的长程复杂研究基准 <strong>GAIA</strong> 与 <strong>BrowseComp</strong> 上，这种将搜索作为内部微观算子的深度研究智能体，在复杂多跳信息溯源上的综合得分直接超越了所有传统单阶段 RAG 系统 40 个百分点以上。
-        </div>
+        <p>
+            在长程复杂研究基准 GAIA 与 BrowseComp 上，这种把搜索当作内部微观算子的深度研究 Agent，综合得分超越了传统单阶段 RAG 系统 40 个百分点以上。
+        </p>
     </section>
 
     <footer class="document-footer">

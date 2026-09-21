@@ -19,71 +19,39 @@
 
 <article>
     <header>
-        <h1>第九讲：Agentic 评测科学：长周期任务度量、GDPVal 真实经济价值与自评病理学</h1>
-        <p class="subtitle">告别 MMLU 刷榜数字游戏、长程毅力断崖与大模型裁判的自恋自洽病理学</p>
+        <h1>第九讲：Agentic 评测科学：长周期任务度量与 GDPVal 真实经济价值</h1>
+        <p class="subtitle">告别 MMLU 刷榜数字游戏，直面长程任务的成功率断崖与裁判模型的自评偏差</p>
         <div class="author-meta">
             核心文献：<em>Measuring AI Ability to Complete Long Tasks (2025)</em> · <em>GDPVal (2025)</em> · <em>DeepScholar-Bench</em><br>
-            主讲教授：Aakanksha Chowdhery & Azalia Mirhoseini · 深入解构智能体评测科学（Agent Evaluation & Benchmarks）
+            主讲教授：Aakanksha Chowdhery & Azalia Mirhoseini · 智能体评测科学（Agent Evaluation & Benchmarks）
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “如果你用一道选择题去测试一个想要成为外科医生的学生，他哪怕拿到了 100 分，你敢让他走进手术室切开你的腹腔吗？在过去的三年里，整个人工智能学术界都在用选择题和单行代码补全自欺欺人。当 Agent 踏入需要连续工作四小时、容忍上百次网络波动与环境不确定性的真实经济世界时，所有的学术基准都在瞬间沦为废纸。”
-            <footer>,  Azalia Mirhoseini, Stanford CS329A 讲堂批判</footer>
-        </blockquote>
-    </div>
-
     <section>
-        <h2>一、 评测科学的至暗时刻：为什么传统 Benchmark 全面失效？</h2>
+        <h2>一、 为什么传统 Benchmark 全面失效</h2>
         <p>
-            在第九讲的开篇，两位导师对当前大模型领域的评估生态展开了前所未有的猛烈抨击。
+            主流大模型实验室长期靠公布 MMLU、GSM8K、HumanEval 的排行榜得分证明自己技术领跑，但工业界的真实体感已经与之撕裂：一个基准测试得分超过 90% 的模型，被丢进一个包含 5 万行历史遗留代码的企业代码库去修复一个异步死锁 Bug 时，表现往往接近于零。据斯坦福基准监测数据，MMLU 与 GSM8K 的测试集在各大实验室的预训练数据中已被严重污染，模型很多时候不是在推理，而是在背题。
         </p>
 
-        <!-- 通俗注释：各大 Benchmark 全景百科指南 -->
-        <div class="guide-box">
-            <div class="guide-box-title">【通俗白话全景百科】一文读懂 AI 领域各大 Benchmark（基准测试）的前世今生！</div>
-            <p>
-                每次看 AI 科技新闻，各家大模型都在吹嘘自己在各大 Benchmark 上“碾压同行”。这些英文缩写到底测的是什么？为什么说它们大多在“刷分自嗨”？
-            </p>
-            <ul>
-                <li><strong>1. MMLU（大学多任务语言理解，选择题之王）</strong>：<br>
-                包含初等数学、历史、计算机、法律等 57 个学科的<strong>四选一单选题</strong>。在 2023 年曾被当成大模型的“智商金标准”。但现在各大厂商得分全都飙到了 88%~92% 以上。为什么失效了？因为四选一有 25% 的蒙题概率，更恶劣的是，各大实验室在预训练爬网页时，早就把这套题库和标准答案偷偷喂给模型背下来了（数据污染）！现实中没有哪个公司会雇佣一个只会做四选一单选题的员工。</li>
-
-                <li><strong>2. GSM8K（小学数学应用题 8,000 题）</strong>：<br>
-                “小红有 5 个西瓜，吃了 2 个，又买了 4 个，现在有几个？”考的就是这种单步小学算术。目前任何一个哪怕只有 7B 参数的轻量模型都能考 95 分以上，完全测不出模型的长链条复杂推理能力。</li>
-
-                <li><strong>3. HumanEval / MBPP（单函数 Python 代码测试）</strong>：<br>
-                给一个函数名和一行注释，让模型写 10~20 行简单的 Python 代码（比如反转字符串、斐波那契数列）。现实中真正的软件工程包含成千上万个文件、复杂的依赖和持续集成，光会写单函数根本不能证明能当程序员。</li>
-
-                <li><strong>4. SWE-bench / SWE-bench Verified（工业级 GitHub 代码修复，真正的照妖镜！）</strong>：<br>
-                <strong>当今全球公认最硬核的“AI 程序员考场”！</strong>评测团队直接从 12 个著名的真实开源仓库（如 Django、SymPy、Sphinx）中拉取 2294 个真实的 Bug Issue。模型面对的是几十万行真实代码，必须自己找文件、定位 Bug、改动数个关联代码文件，并确保所有官方单元测试（Unit Tests）全部亮绿灯！很多在 MMLU 考 90 分的模型，在 SWE-bench 上得分甚至不到 15%。目前顶尖的 Claude 3.5 Sonnet / 3.7 也只能达到 40%~60% 左右。</li>
-
-                <li><strong>5. GAIA（通用真实世界多模态助手基准）</strong>：<br>
-                由 Meta 和 Hugging Face 设计，模拟人类高级助理在电脑前的真实工作。任务需要组合网页搜索、阅读几十页的 PDF 财报、操作复杂 Excel 计算。非常考验 Agent 的耐心与长程规划。</li>
-
-                <li><strong>6. GDPVal（真实经济价值基准，终极大考）</strong>：<br>
-                不再看做对几道题，而是直接算经济账：看 AI 能否完成投行财务估值、芯片 Verilog 编写、跨国并购反垄断审查等具有真实 GDP 贡献的高薪工作，并对比人类薪资与单次 AI 推理成本，计算真实的投入产出比（ROI）。</li>
-            </ul>
-        </div>
+        <h3>主要 Benchmark 一览</h3>
+        <ul>
+            <li><strong>MMLU</strong>：57 个学科的四选一单选题，曾被视为智商金标准，如今各家得分普遍在 88%~92% 以上，四选一本身有 25% 蒙对概率，加上数据污染，已难以反映真实能力。</li>
+            <li><strong>GSM8K</strong>：小学数学应用题，7B 级的轻量模型也能考到 95 分以上，测不出复杂推理能力。</li>
+            <li><strong>HumanEval / MBPP</strong>：单函数 Python 代码测试，只要求写十几行代码，无法反映真实软件工程中跨文件、有依赖关系的开发能力。</li>
+            <li><strong>SWE-bench / SWE-bench Verified</strong>：从 Django、SymPy 等 12 个真实开源仓库中抽取的 2294 个真实 Bug，要求模型在几十万行代码里定位并修复问题、跑通全部单元测试。很多在 MMLU 上考 90 分的模型，在 SWE-bench 上得分不到 15%；即使是 Claude 3.5/3.7 Sonnet 也只能做到 40%~60% 左右。</li>
+            <li><strong>GAIA</strong>：由 Meta 和 Hugging Face 设计，模拟人类高级助理在电脑前的真实工作，需要组合网页搜索、阅读长篇 PDF、操作 Excel，考验的是耐心与长程规划。</li>
+            <li><strong>GDPVal</strong>：不再看做对几道题，而是直接算经济账——对比人类完成同类工作的薪资与 AI 推理成本，计算真实的投入产出比。</li>
+        </ul>
 
         <p>
-            长期以来，全球主流大模型实验室通过公布 <strong>MMLU（大规模多任务语言理解）</strong>、<strong>GSM8K（小学数学）</strong> 与 <strong>HumanEval（单函数代码补全）</strong> 的排行榜得分来证明自己的“技术领跑”。
-            然而，工业界与学术界的真实体感却出现了灾难性的撕裂：在基准测试上得分超过 90% 的模型，在被丢进一个包含 50,000 行历史遗留代码的企业代码库中尝试修复一个复杂的异步死锁 Bug 时，其表现往往令人绝望地接近于零。
-            <label for="sn-bench-saturation" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-bench-saturation" class="margin-toggle"/>
-            <span class="sidenote">据斯坦福基准监测数据，MMLU 与 GSM8K 的测试集在各大前沿实验室的预训练数据集中经历了严重的污染（Data Contamination）。模型并不是在推理，而是在以极其精巧的高维插值方式背诵考题。</span>
-        </p>
-
-        <p>
-            要评估自演进 Agent 的真正智商，必须建立一套全新的评测科学, , <strong>面向长周期复杂环境（Long-Horizon）与真实经济价值（Economically Valuable Tasks）的实战度量衡</strong>。
+            要评估自演进 Agent 的真正能力，必须建立一套面向长周期复杂环境与真实经济价值的新度量衡。
         </p>
     </section>
 
     <section>
-        <h2>二、 真实的长程难度断崖：时间维度的指数雪崩</h2>
+        <h2>二、 长程难度断崖</h2>
         <p>
-            在里程碑论文《Measuring AI Ability to Complete Long Tasks (2025)》中，研究者首次对“任务长度（Task Horizon）”给出了基于人类认知劳动时间的标准化定义：
+            在《Measuring AI Ability to Complete Long Tasks》（2025）中，研究者首次按人类完成时间给任务分级：
         </p>
 
         <pre><code>Task Horizon Taxonomy:
@@ -93,67 +61,47 @@
   • Tier 4 (Long Tasks):    人类专家耗时 4-8 小时以上（如完成端到端全栈功能开发、系统迁移）</code></pre>
 
         <p>
-            实测数据揭示了一条令人背脊发凉的<strong>长程难度断崖曲线（The Horizon Cliff）</strong>：
-            <label for="mn-horizon-cliff" class="margin-toggle">&#8853;</label>
-            <input type="checkbox" id="mn-horizon-cliff" class="margin-toggle"/>
-            <span class="marginnote"><strong>长任务成功率断崖</strong>：<br>
-            • 在 Tier 1（< 5分钟）任务上，前沿模型成功率高达 <strong>92.4%</strong>。<br>
-            • 在 Tier 2（15-30分钟）任务上，成功率急剧下跌至 <strong>51.2%</strong>。<br>
-            • 在 Tier 3（1-2小时）任务上，成功率暴跌至 <strong>14.8%</strong>。<br>
-            • 在 Tier 4（4-8小时）的长程真实任务上，当前最顶尖的 Agent 成功率跌破 <strong>3.5%</strong>！</span>
+            实测数据显示出一条陡峭的成功率断崖：Tier 1 任务上前沿模型成功率高达 92.4%，Tier 2 骤降到 51.2%，Tier 3 暴跌至 14.8%，到了 Tier 4，当前最顶尖 Agent 的成功率也跌破 3.5%。
         </p>
 
-        <h3>长任务的三大特征性死亡陷阱</h3>
+        <h3>长任务的三个死亡陷阱</h3>
         <ul>
-            <li><strong>过早宣告完工（Premature Termination Pathology）</strong>：统计显示，超过 60% 的 Tier 4 任务失败不是因为模型死机，而是因为模型在刚刚修改了一个无足轻重的注释或第一行代码后，便自信满满地输出：“我已成功完成了整个系统的端到端重构”，断然终止了推理循环！</li>
-            <li><strong>上下文漂移与目标遗忘（Context Drift）</strong>：当与环境交互超过 40 个轮次后，模型的长注意力机制出现不可逆的稀释，开始频繁忘记最初用户设定的硬性约束条件。</li>
-            <li><strong>死循环重试（Infinite Retry Loops）</strong>：在遇到难以解决的环境异常时，缺乏长远重规划能力的 Agent 会陷入“报错 &rarr; 原地执行相同指令 &rarr; 再次报错”的神经质死循环中，直到消耗完全部 Token 预算。</li>
+            <li><strong>过早宣告完工</strong>：超过 60% 的 Tier 4 任务失败并非因为模型死机，而是模型刚改完一处无关紧要的代码，就自信地宣布"已完成整个系统重构"，提前终止了推理循环。</li>
+            <li><strong>上下文漂移</strong>：与环境交互超过 40 个轮次后，模型的长注意力机制出现不可逆的稀释，开始频繁忘记最初设定的约束条件。</li>
+            <li><strong>死循环重试</strong>：遇到难以解决的异常时，缺乏重规划能力的 Agent 会陷入"报错—原地重试—再报错"的循环，直到耗尽 Token 预算。</li>
         </ul>
     </section>
 
     <section>
-        <h2>三、 GDPVal：以真金白银衡量的真实经济价值</h2>
+        <h2>三、 GDPVal：以真实经济价值衡量</h2>
         <p>
-            为了彻底告别学术玩具题，由斯坦福等顶尖机构联合推出的 <strong>GDPVal 基准（Evaluating AI Model Performance on Real-World Economically Valuable Tasks, 2025）</strong>，开创了用“劳动价值论”衡量 AI 智能的新时代。
+            GDPVal（Evaluating AI Model Performance on Real-World Economically Valuable Tasks, 2025）不再统计模型答对了多少道题，而是把测试用例与真实 GDP 贡献的核心行业岗位挂钩：半导体行业的 Verilog/RTL 模块编写与审查、金融投行基于招股说明书构建的 LBO/DCF 财务估值模型、生命科学中 RNA-seq 数据的生物信息学分析、企业法务的跨国并购反垄断审查等。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">核心范式：从学术准确率（Accuracy）转向单位有效劳动成本（Cost per Valid Labor Unit）</div>
-            GDPVal 不再统计模型答对了多少道数学题，而是直接将测试用例与全球真实 GDP 贡献的核心行业岗位挂钩：
-            <br><br>
-            • <strong>半导体行业</strong>：根据芯片设计规范自动编写与审查可综合的 Verilog/RTL 模块；<br>
-            • <strong>金融投行</strong>：基于上百页招股说明书与 SEC 10-K 文件，自主构建三张报表联动的完整财务估值模型（LBO/DCF）；<br>
-            • <strong>生命科学</strong>：对高通量测序（RNA-seq）原始 FastQ 数据流设计生物信息学分析 Pipeline 并生成合规质控报告；<br>
-            • <strong>企业法务</strong>：跨国并购案中的反垄断合规审查与数百份复杂劳动合同的风险条款穿透比对。
-            <br><br>
-            <strong>颠覆性评估指标</strong>：
+        <p>
+            其核心指标是：
+        </p>
+        <p>
             $$\text{Economic ROI} = \frac{\text{Human Labor Value Equivalent}}{\text{Agent Inference \& Tool API Cost} \times (1 / \text{Success Rate})}$$
-            <br>
-            <strong>公式通俗白话解读</strong>：<br>
-            • <strong>分子</strong>：这项工作由高薪人类专家完成的市场价值（如投行分析师做一个复杂财务模型收费 500 美元）；<br>
-            • <strong>分母</strong>：AI 调 API 的单次成本乘以重试次数（如单次消耗 2 美元，但成功率只有 20%，平均要重试 5 次耗资 10 美元）；<br>
-            • <strong>结论</strong>：只有当任务成功率突破临界点、让重试成本大幅降低时，AI 替代人类劳动的真实经济 ROI 才会真正爆发！
-        </div>
+        </p>
+        <p>
+            分子是人类专家完成同一工作的市场价值（比如投行分析师做一份复杂财务模型收费 500 美元），分母是 AI 调用 API 的单次成本乘以因失败而产生的重试次数（如单次成本 2 美元、成功率仅 20%，平均重试 5 次即耗资 10 美元）。只有当任务成功率突破临界点、重试成本大幅降低，AI 替代人类劳动的经济 ROI 才会真正显现。
+        </p>
     </section>
 
     <section>
-        <h2>四、 大模型裁判的病理学：LLM-as-a-Judge 的自恋与欺骗</h2>
+        <h2>四、 大模型裁判的偏差</h2>
         <p>
-            在第九讲的尾声，导师对当前工业界极度依赖的<strong>“大模型当裁判（LLM-as-a-Judge）”</strong>进行了极其深刻的批判。
+            讲座后半部分对工业界普遍依赖的"大模型当裁判（LLM-as-a-Judge）"做法提出了批判。大规模盲测量化出四种系统性偏差：
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">反直觉警示：揭开 AI 裁判的四大自恋病理学</div>
-            研究团队在大规模盲测中量化了 LLM 裁判的四个系统性认知扭曲：
-            <br><br>
-            1. <strong>字数偏见（Verbosity Bias）</strong>：面对两份解答，一份言简意赅、直击要害（50字），另一份充斥着空洞的废话套话与格式化排版（500字），LLM 裁判有超过 <strong>78% 的概率</strong>将更高分数给予字数更多的长篇废话！<br>
-            2. <strong>自相迎合与自恋偏见（Self-Enhancement Bias）</strong>：如果用 GPT 系列模型作为裁判，它会系统性地给 GPT 生成的文本打出比 Claude 或开源模型高出 15% 的高分；反之，若用 Claude 当裁判，它同样更偏好自己家族特有的文风与用词习惯！<br>
-            3. <strong>位置偏见（Position Bias）</strong>：在成对比较中，仅仅是将解答 A 和解答 B 的先后顺序对调，LLM 裁判的判决发生翻转的概率高达 <strong>24%</strong>。<br>
-            4. <strong>谄媚综合征（Sycophancy）</strong>：裁判模型极易受到用户 Prompt 中情绪色彩的绑架。如果提问暗示“这是一个天才学者提出的新颖观点”，裁判模型的批改标准会瞬间大幅放宽。
-            <br><br>
-            <strong>结论</strong>：
-            试图用一个大模型去评判另一个大模型，若无外部沙盒的确定性物理接地（Grounding），最终必然演化为两只大模型在虚妄词藻中的互吹与内卷。<strong>代码的退出码、单元测试的断言、形式化证明器的内核反馈，才是自演进 Agent 唯一值得信赖的终极裁判。</strong>
-        </div>
+        <ul>
+            <li><strong>字数偏见</strong>：面对一份 50 字的简洁回答和一份 500 字的空洞长文，LLM 裁判有超过 78% 的概率把更高分数给长文。</li>
+            <li><strong>自相迎合</strong>：用 GPT 系列模型当裁判，它会系统性地给 GPT 生成的文本打出比 Claude 或开源模型高约 15% 的分数；反之亦然。</li>
+            <li><strong>位置偏见</strong>：仅仅调换两份答案的先后顺序，裁判判决翻转的概率高达 24%。</li>
+            <li><strong>谄媚综合征</strong>：如果提问暗示"这是一位天才学者的新颖观点"，裁判模型的评分标准会明显放宽。</li>
+        </ul>
+        <p>
+            这说明用一个大模型评判另一个大模型，若缺乏外部沙盒的确定性接地，最终只会演化为两个模型在词藻上的互吹。代码的退出码、单元测试的断言、形式化证明器的内核反馈，才是自演进 Agent 值得信赖的终极裁判。
+        </p>
     </section>
 
     <footer class="document-footer">

@@ -23,108 +23,88 @@
         <p class="subtitle">单向线性思维链的破产、UCT 探索与利用平衡方程及有向无环图并行化革命</p>
         <div class="author-meta">
             核心文献：<em>LATS (Zhou et al., 2023)</em> · <em>SPRINT (Mirhoseini et al., 2025)</em> · <em>AB-MCTS (2025)</em><br>
-            主讲教授：Azalia Mirhoseini & Aakanksha Chowdhery · 深入解构长程规划（Planning & Tree Search）
+            主讲教授：Azalia Mirhoseini & Aakanksha Chowdhery · 深入解构长程规划与树搜索
         </div>
     </header>
-
-    <div class="epigraph">
-        <blockquote>
-            “人类最伟大的思维产物从来不是从第一个字一气呵成写到最后一个字的线性流水账。真正的深思熟虑充满着假设的分岔、死胡同前的断然回溯、以及多个独立子问题的并行拆解。将大模型强行禁锢在单向因果注意力掩码（Causal Mask）中，是对机器智能最残忍的束缚。”
-            <footer>,  Azalia Mirhoseini, Stanford CS329A 课堂导论</footer>
-        </blockquote>
-    </div>
 
     <section>
         <h2>一、 线性思维链（CoT）在长程复杂规划中的破产</h2>
         <p>
-            自 2022 年 Wei 等人提出思维链（Chain of Thought, CoT）以来，大模型展示出了令人惊艳的“逐步思考”能力。然而，在第五讲中，导师一针见血地指出了 CoT 的致命软肋：<strong>它是一个纯粹的贪婪贪心算法（Greedy Search）。</strong>
+            自 2022 年 Wei 等人提出思维链（Chain of Thought, CoT）以来，大模型展示出了令人惊艳的"逐步思考"能力。然而，在第五讲中，导师一针见血地指出了 CoT 的致命软肋：它是一个纯粹的贪婪算法。
         </p>
 
-        <!-- 通俗注释：通俗拆解树搜索与思维链的局限 -->
-        <div class="guide-box">
-            <div class="guide-box-title">【通俗白话拆解】什么是“蒙特卡洛树搜索（MCTS）”？为什么不能“一条道走到黑”？</div>
-            <p>
-                <strong>普通大模型的思考方式</strong>，就像下象棋时“只看眼前这一步，看到能吃兵就立刻吃”，完全不顾三步之后自己的帅会被将死。这就是“线性单向思考”的致命弱点, , 一旦第 3 步走错，后面写几千字全是在死胡同里撞墙。<br><br>
-                <strong>真正的推理大师（如 AlphaGo 与具备树搜索的 Agent）</strong>，在动手前会在脑海中画出一张<strong>“决策树”</strong>：
-                “如果我选方案 A（分枝1），环境会报错还是通过？如果报错，能不能回溯到分岔口改走方案 B（分枝2）？”
-                遇到容易的步骤迅速单线前进，遇到关键分水岭展开多路径试探，这就是“树搜索”带来质变的核心逻辑。
-            </p>
-        </div>
+        <h3>为什么树搜索不能"一条道走到黑"？</h3>
+        <p>
+            普通大模型的思考方式，就像下象棋时只看眼前这一步，看到能吃兵就立刻吃，完全不顾三步之后自己的帅会被将死——这是线性单向思考的致命弱点，一旦第 3 步走错，后面写几千字全是在死胡同里撞墙。
+        </p>
+        <p>
+            真正的推理大师（如 AlphaGo 与具备树搜索的 Agent），在动手前会在脑海中画出一张决策树：如果选方案 A，环境会报错还是通过？如果报错，能不能回溯到分岔口改走方案 B？遇到容易的步骤迅速单线前进，遇到关键分水岭展开多路径试探，这就是树搜索带来质变的核心逻辑。
+        </p>
 
         <p>
-            在真实的软件重构、算法设计或自动化科学实验中，决策空间是一个极度庞大的分枝拓扑图。
-            如果在第 3 个关键决策点上，模型面临方案 A（重构数据库底层索引）与方案 B（编写业务层缓存补丁）的选择，一旦自回归解码选择了 A，整个后续的几千个 Token 便被彻底锁死在方案 A 的路径下。
-            <label for="sn-cot-dead-end" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-cot-dead-end" class="margin-toggle"/>
-            <span class="sidenote">即便模型在第 15 步意识到方案 A 会引发严重的死锁异常，纯线性 CoT 也无法在时间维度上“倒带”。它唯一的应对方式就是在后文中绝望地尝试缝缝补补，最终生成一份臃肿不堪且充满逻辑硬伤的劣质解答。</span>
+            在真实的软件重构、算法设计或自动化科学实验中，决策空间是一个极度庞大的分枝拓扑图。如果在第 3 个关键决策点上，模型面临方案 A（重构数据库底层索引）与方案 B（编写业务层缓存补丁）的选择，一旦自回归解码选择了 A，整个后续的几千个 Token 便被彻底锁死在方案 A 的路径下。即便模型在第 15 步意识到方案 A 会引发严重的死锁异常，纯线性 CoT 也无法在时间维度上"倒带"，唯一的应对方式就是在后文中绝望地尝试缝缝补补，最终生成一份臃肿不堪且充满逻辑硬伤的劣质解答。
         </p>
     </section>
 
     <section>
         <h2>二、 LATS 框架：统一思考、动作与规划的蒙特卡洛树搜索</h2>
         <p>
-            由 Andy Zhou 等人提出、并在 Stanford CS329A 讲堂上深度剖析的 <strong>LATS（Language Agent Tree Search）</strong>，代表了当前大模型推理与规划融合的最前沿高度。
+            由 Andy Zhou 等人提出、并在 Stanford CS329A 讲堂上深度剖析的 LATS（Language Agent Tree Search），代表了当前大模型推理与规划融合的最前沿高度。
         </p>
         <p>
-            LATS 打破了传统 Tree of Thoughts（ToT）仅在纯文本概念空间空转的局限，首次将<strong>语言模型作为状态转移函数、蒙特卡洛树搜索（MCTS）作为控制内核、代码执行器作为物理世界判决器</strong>完美结合为一体：
+            LATS 打破了传统 Tree of Thoughts（ToT）仅在纯文本概念空间空转的局限，首次将<strong>语言模型作为状态转移函数、蒙特卡洛树搜索作为控制内核、代码执行器作为物理世界判决器</strong>结合为一体：
         </p>
 
         <h3>LATS 四大核心循环步骤</h3>
-        <ul>
-            <li><strong>1. 选择（Selection）</strong>：利用针对大模型微调的<strong>树形上限置信区间（UCT）公式</strong>，在现有搜索树中寻找最有潜力的叶子节点：
-            <pre><code>UCT(s, a) = Q(s, a) + c_explore * sqrt( ln(N(s)) / N(s, a) )</code></pre>
-            其中 <i>Q</i>(<i>s</i>, <i>a</i>) 代表该节点由过程奖励模型与历史成功率计算出的累计价值，<i>N</i>(<i>s</i>, <i>a</i>) 代表访问频次。这保证了模型既不会死磕单一局部最优，也不会盲目随机漫步。</li>
-            <li><strong>2. 扩展（Expansion）</strong>：在选中的状态节点上，驱动语言模型提出 <i>b</i> 个互斥的候选动作（Actions）或假设思考（Thoughts），生成树的新一层分支。</li>
-            <li><strong>3. 模拟与环境评估（Simulation / Rollout）</strong>：将每个候选分支的动作喂入外部沙盒（如 Bash 命令行或 Python 解释器），获取真实物理观测，并结合 PRM 进行价值打分。</li>
-            <li><strong>4. 反思与回溯反向传播（Reflection & Backpropagation）</strong>：如果某个分支在执行后遭遇失败，LATS 不会简单丢弃该节点，而是<strong>要求大模型针对失败报错生成一段精炼的自我反思（Verbal Reflection）</strong>，并将反思文本作为元状态沿搜索树反向回传，写入父节点的上下文中，防止其他分支重蹈覆辙！</li>
-        </ul>
-        <label for="mn-lats-results" class="margin-toggle">&#8853;</label>
-        <input type="checkbox" id="mn-lats-results" class="margin-toggle"/>
-        <span class="marginnote"><strong>基准飞跃</strong>：在需要复杂工具调用的 WebShop 与多跳推理基准上，LATS 的绝对任务成功率比 ReAct 提升了 18.2%，比无规划的 CoT 提升了 31.5%，证明了搜索与反思结合的降维打击能力。</span>
+        <ol>
+            <li><strong>选择</strong>：利用针对大模型微调的树形上限置信区间（UCT）公式，在现有搜索树中寻找最有潜力的叶子节点：
+                <pre><code>UCT(s, a) = Q(s, a) + c_explore * sqrt( ln(N(s)) / N(s, a) )</code></pre>
+                其中 <i>Q</i>(<i>s</i>, <i>a</i>) 代表该节点由过程奖励模型与历史成功率计算出的累计价值，<i>N</i>(<i>s</i>, <i>a</i>) 代表访问频次，这保证了模型既不会死磕单一局部最优，也不会盲目随机漫步。</li>
+            <li><strong>扩展</strong>：在选中的状态节点上，驱动语言模型提出 <i>b</i> 个互斥的候选动作或假设思考，生成树的新一层分支。</li>
+            <li><strong>模拟与环境评估</strong>：将每个候选分支的动作喂入外部沙盒（如 Bash 命令行或 Python 解释器），获取真实物理观测，并结合 PRM 进行价值打分。</li>
+            <li><strong>反思与回溯</strong>：如果某个分支在执行后遭遇失败，LATS 不会简单丢弃该节点，而是要求大模型针对失败报错生成一段精炼的自我反思，并将反思文本作为元状态沿搜索树反向回传，写入父节点的上下文中，防止其他分支重蹈覆辙。</li>
+        </ol>
+        <p>
+            在需要复杂工具调用的 WebShop 与多跳推理基准上，LATS 的绝对任务成功率比 ReAct 提升了 18.2%，比无规划的 CoT 提升了 31.5%，证明了搜索与反思结合的能力。
+        </p>
     </section>
 
     <section>
         <h2>三、 SPRINT 架构：交织规划与并行执行的范式革命</h2>
         <p>
-            尽管 MCTS 威力强大，但它面临着工业界最痛恨的致命弱点：<strong>极度惊人的延迟（Latency）与高昂的 Token 开销</strong>。逐个节点的顺序扩展使得单次任务耗时高达数分钟。
+            尽管 MCTS 威力强大，但它面临着工业界最痛恨的致命弱点：延迟极高、Token 开销昂贵。逐个节点的顺序扩展使得单次任务耗时高达数分钟。
         </p>
         <p>
-            在 2025 年 6 月由 Azalia Mirhoseini 教授主导发布的重磅研究 <strong>SPRINT（Enabling Interleaved Planning and Parallelized Execution in Reasoning Models）</strong> 中，斯坦福团队展示了一种彻底改写推理流水线的优雅架构：
+            在 2025 年 6 月由 Azalia Mirhoseini 教授主导发布的重磅研究 SPRINT（Enabling Interleaved Planning and Parallelized Execution in Reasoning Models）中，斯坦福团队展示了一种彻底改写推理流水线的架构。
         </p>
 
-        <div class="sharp-box">
-            <div class="sharp-box-title">核心创新：将线性推理链重构为有向无环图（DAG）并行执行</div>
-            在传统的长链条思考中，大量中间步骤在计算图上根本没有数据依赖性。例如在分析一份上市公司财报时，计算资产负债率与提取管理层薪酬完全可以同时进行。
-            <br><br>
-            <strong>SPRINT 的运行机理</strong>：
-            <br>
-            1. <strong>交织宏观规划（Interleaved Planning）</strong>：主控推理模型首先生成高阶规划，自动识别当前任务拓扑中所有相互独立的子任务（Subtasks），并将其打包为<strong>并行执行有向无环图（Execution DAG）</strong>。<br>
-            2. <strong>异步并行击穿（Parallel Execution）</strong>：系统瞬间唤醒多个并发 Worker Agent，同时对无依赖的子任务展开推演与代码执行，计算吞吐量直接跑满 GPU 的批处理（Batching）队列。<br>
-            3. <strong>动态结果汇聚与重规划</strong>：当所有并行子任务返回确定性结果后，主控模型摄入汇总上下文，进行二次评估并规划下一阶段的有向图。
-            <br><br>
-            <strong>实测效能</strong>：
-            在复杂数学证明与系统级代码修复上，SPRINT 在<strong>保持甚至超越单一长 CoT 准确率的同时，将关键路径上的顺序 Token 延迟削减了整整 68%</strong>！
-        </div>
+        <h3>将线性推理链重构为有向无环图并行执行</h3>
+        <p>
+            在传统的长链条思考中，大量中间步骤在计算图上根本没有数据依赖性。例如在分析一份上市公司财报时，计算资产负债率与提取管理层薪酬完全可以同时进行。SPRINT 的运行机理分三步：
+        </p>
+        <ol>
+            <li><strong>交织宏观规划</strong>：主控推理模型首先生成高阶规划，自动识别当前任务拓扑中所有相互独立的子任务，并将其打包为并行执行有向无环图（DAG）。</li>
+            <li><strong>异步并行击穿</strong>：系统瞬间唤醒多个并发 Worker Agent，同时对无依赖的子任务展开推演与代码执行，计算吞吐量直接跑满 GPU 的批处理队列。</li>
+            <li><strong>动态结果汇聚与重规划</strong>：当所有并行子任务返回确定性结果后，主控模型摄入汇总上下文，进行二次评估并规划下一阶段的有向图。</li>
+        </ol>
+        <p>
+            实测效能：在复杂数学证明与系统级代码修复上，SPRINT 在保持甚至超越单一长 CoT 准确率的同时，将关键路径上的顺序 Token 延迟削减了 <strong>68%</strong>。
+        </p>
     </section>
 
     <section>
         <h2>四、 深度反思：变宽（Wider）还是变深（Deeper）？</h2>
         <p>
-            在第五讲的结尾，导师抛出了推理架构设计中最经典的终极抉择：<strong>面对有限的测试期浮点预算，我们究竟应该让搜索树变宽（增加分枝数 <i>b</i>），还是让搜索树变深（增加推演深度 <i>d</i>）？</strong>
+            在第五讲的结尾，导师抛出了推理架构设计中最经典的抉择：面对有限的测试期浮点预算，我们究竟应该让搜索树变宽（增加分枝数 <i>b</i>），还是让搜索树变深（增加推演深度 <i>d</i>）？
         </p>
 
-        <div class="sharp-box">
-            <div class="sharp-box-title">反直觉结论：固定宽度搜索是计算资源的巨大浪费, , 自适应分枝（AB-MCTS）</div>
-            工业界早期的树搜索通常设置固定的超参数（如每步生成 5 个分枝，搜索深度为 8）。
-            <br><br>
-            <strong>《Wider or Deeper? (2025)》论文揭示了这种设计的极度低效</strong>：
-            在推导的某些平凡步骤（如化简一个简单的二次多项式），策略网络本身的注意力分布极度集中（香农熵极低），生成 5 个分支纯属冗余废话，此时分枝因子应当收缩为 <i>b</i> = 1；
-            而在关键的猜想提出节点（分岔路口），策略熵急剧飙升，若仅保留 2-3 个分支极易遗漏关键灵感，此时必须瞬间将分枝因子拉大至 <i>b</i> = 16 展开广度探索。
-            <br><br>
-            <strong>自适应分枝树搜索（Adaptive Branching Tree Search, AB-MCTS）</strong>：
-            动态监测模型在当前节点的<strong>预测分布熵（Predictive Entropy）与价值模型方差</strong>。
-            当熵值低于阈值时，毫不犹豫地深度优先单线突击；当熵值超标时，自适应裂变宽度并行覆盖。这种动态弹性策略使得每一度电、每一个浮点运算都精准轰击在逻辑推导的真实瓶颈之上。
-        </div>
+        <h3>固定宽度搜索是一种巨大的浪费</h3>
+        <p>
+            工业界早期的树搜索通常设置固定的超参数（如每步生成 5 个分枝，搜索深度为 8）。《Wider or Deeper? (2025)》论文揭示了这种设计的低效：在推导的某些平凡步骤（如化简一个简单的二次多项式），策略网络本身的注意力分布极度集中，生成 5 个分支纯属冗余，此时分枝因子应当收缩为 <i>b</i> = 1；而在关键的猜想提出节点，策略熵急剧飙升，若仅保留 2-3 个分支极易遗漏关键灵感，此时必须将分枝因子拉大至 <i>b</i> = 16 展开广度探索。
+        </p>
+        <p>
+            自适应分枝树搜索（AB-MCTS）动态监测模型在当前节点的预测分布熵与价值模型方差：当熵值低于阈值时，深度优先单线突击；当熵值超标时，自适应裂变宽度并行覆盖。这种动态弹性策略使得每一份算力都精准用在逻辑推导的真实瓶颈之上。
+        </p>
     </section>
 
     <footer class="document-footer">

@@ -27,183 +27,81 @@
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “当我们走出只包含网页文本的数字沙盒，让 AI 去解决国际数学奥赛的未解难题、去管理全球数据中心的吉瓦级光纤通信、去驱动实体机械臂在重力场中折叠衣物时，所有的浮华与泡沫都会被无情剥离。智能不是会说话，智能是在物理与数学的硬质规律面前，永不停息地自我超越与纠错。”
-            <footer>,  斯坦福 CS329A 闭门研讨会总结致辞</footer>
-        </blockquote>
-    </div>
-
     <section>
         <h2>一、 顶尖特邀嘉宾研讨谱系</h2>
         <p>
-            在 Stanford CS329A 的学期日程中，除了九大核心技术专题外，两位主讲导师利用其在全球前沿实验室与工业界的深厚人脉，将六位身处人工智能最深水区的领军人物请上了斯坦福 Skilling Auditorium 的讲台。
-        </p>
-        <p>
-            这些嘉宾的输出脱离了面向公众的技术公关话术，以极其严苛的工程实测、甚至尚未公开的前沿未解难题，系统勾勒出了未来十年自演进智能的技术蓝图。
+            除了九大核心技术专题外，两位主讲导师邀请了六位身处人工智能最深水区的领军人物走上斯坦福 Skilling Auditorium 的讲台。他们的分享脱离了面向公众的技术公关话术，用严苛的工程实测和尚未公开的前沿问题，勾勒出了未来十年自演进智能的技术蓝图。
         </p>
     </section>
 
-    <!-- 1. Denny Zhou -->
     <section id="guest-denny-zhou">
-        <h2>二、 Denny Zhou（Google DeepMind）：思维链本质与数学推理的终极界限</h2>
-        <h3 id="denny-background">学术图谱与产业角色</h3>
+        <h2>二、 Denny Zhou（Google DeepMind）：思维链的计算本质</h2>
         <p>
-            <strong>Denny Zhou</strong> 是 Google DeepMind 推理研究团队（Reasoning Team）的总负责人，也是当代大模型思维链（Chain of Thought, CoT）、Least-to-Most Prompting 与 Self-Consistency（自洽性）机制的核心开创者。
+            Denny Zhou 是 Google DeepMind 推理研究团队（Reasoning Team）的总负责人，也是思维链（Chain of Thought, CoT）、Least-to-Most Prompting 与 Self-Consistency 机制的核心开创者。在题为《LLM Reasoning》的讲座中，他澄清了一个常见的误解：思维链不是模型在“自言自语”，而是 Transformer 在时间轴上动态展开出的一套额外计算层。
         </p>
-
-        <!-- 通俗注释：通俗拆解思维链本质 -->
-        <div class="guide-box">
-            <div class="guide-box-title">【通俗白话拆解】思维链（CoT）到底是什么？为什么 Denny Zhou 说它不是“自言自语”？</div>
-            <p>
-                外界以为大模型的“思维链（CoT）”只是让 AI 像人类一样在屏幕上“自言自语、碎碎念”。<br><br>
-                <strong>Denny Zhou 指出了背后的计算本质</strong>：<br>
-                一个固定层数（比如 32 层）的 Transformer 网络，算力深度是锁死的，很多复杂的递归运算（哪怕只是数括号有没有成对匹配）在单次计算中根本算不出来。
-                而模型每在屏幕上吐出一个中间 Token，<strong>就等于在时间维度上给模型临时多插了一层神经网络计算！</strong>
-                输出 500 个词的思考链，就相当于把网络从 32 层临时拉长到了 532 层。这就是为什么让模型多打草稿、多输出思维链，复杂逻辑推理能力会瞬间暴涨。
-            </p>
-        </div>
-
         <p>
-            在题为《LLM Reasoning》的特邀讲座中，Denny Zhou 深入剖析了 Transformer 架构在进行复杂多步符号推理时的物理本质：
-            <label for="sn-denny-depth" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-denny-depth" class="margin-toggle"/>
-            <span class="sidenote">从电路复杂性理论（Circuit Complexity）来看，固定 <i>L</i> 层的 Transformer 在单次前向传播中只能表达 TC<sup>0</sup> 复杂性类别的计算。如果不展开思维链生成中间 Token，模型甚至无法在数学上判定一个括号序列是否合法匹配。</span>
+            一个固定 <i>L</i> 层的 Transformer，单次前向传播只能表达电路复杂性理论中 TC<sup>0</sup> 类别的计算——如果不展开中间 Token，模型甚至无法在数学上判定一个括号序列是否合法匹配。而模型每吐出一个中间 Token，就相当于在这套固定网络上临时多插了一层计算：输出 500 个词的思考链，等于把网络从 32 层临时拉长到了 532 层。这正是“多打草稿”能显著提升复杂推理能力的原因。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">Denny Zhou 核心犀利洞见：思维链本质上是动态计算图的时间展开</div>
-            外界普遍以为 CoT 是让大模型“模仿人类说话时的自言自语”。
-            <br><br>
-            Denny 纠正了这个浅薄的拟人化误区：<strong>思维链不是语言交流，思维链是 Transformer 借用外部自回归序列在时间轴上动态虚拟出的一套“无限深度深层网络”。</strong>
-            <br><br>
-            每一个中间 Token 的生成，本质上是在原本固定的 <i>L</i> 层前向网络之上，额外增加了一层递归计算层。
-            如果一个数学问题需要 500 次非线性状态转移，模型就必须在外部展开 500 个 Token 的思考链条。
-            <strong>未来的自演进模型，必须摆脱自然语言对思维的污染</strong>, , 真正的思维中间态应当由不可读但高信息密度的潜空间隐式 Token（Latent Tokens）构成，将推理吞吐量提升两个数量级。
-        </div>
-    </section>
+        <p>
+            Denny 认为，未来的自演进模型应当摆脱自然语言对思维过程的束缚，让中间推理由不可读但信息密度更高的潜空间隐式 Token（Latent Tokens）构成，从而把推理吞吐量提升两个数量级。
+        </p>
     </section>
 
-    <!-- 2. Thang Luong -->
     <section id="guest-thang-luong">
-        <h2>三、 Thang Luong（Google DeepMind）：AlphaProof、AlphaGeometry 与奥赛金牌破壁</h2>
-        <h3 id="thang-background">学术图谱与产业角色</h3>
+        <h2>三、 Thang Luong（Google DeepMind）：AlphaProof 与奥赛金牌</h2>
         <p>
-            <strong>Thang Luong</strong> 是 Google DeepMind 首席科学家兼研究总监。他领衔主导的 <strong>AlphaGeometry 2</strong> 与 <strong>AlphaProof</strong> 团队，在 2024 年国际数学奥林匹克竞赛（IMO 2024）中首次实现了银牌级水平，并在 2025 年依托 Gemini 神经符号架构彻底斩获了人类历史上的首枚 <strong>IMO 金牌标杆（Gold Medal Standard）</strong>！
+            Thang Luong 是 Google DeepMind 首席科学家兼研究总监，领衔的 AlphaGeometry 2 与 AlphaProof 团队在 2024 年国际数学奥林匹克竞赛（IMO）上首次达到银牌水平，2025 年依托 Gemini 神经符号架构拿下了人类历史上首枚 IMO 金牌标准的成绩。
         </p>
-
         <p>
-            在题为《Towards AI Superhuman Reasoning: AlphaProof, AlphaGeometry & Gemini IMO Gold Medal》的演讲中，Thang 系统公开了这一神级系统背后的核心技术内核：
+            他指出，自然语言数学推导充满语义多义性和难以自我发现的细微谬误——一道 IMO 级别的题目，只要第 14 步引理中有一个隐式条件未被验证，后面写得再华丽也毫无意义。AlphaProof 的解法是让两套系统分工：Gemini 扮演“直觉生成器”，在几何与代数空间中提出可能成立的辅助线与变形猜想；每一步都被翻译成形式化数学语言 Lean 4 的代码，由 Lean 内核充当“严密法官”——编译报错即判定为假，通过类型检查即为真理，再用自博弈强化学习持续迭代。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">Thang Luong 核心犀利洞见：神经符号双系统与形式化语言 Lean 的绝对统治力</div>
-            为什么大模型玩自然语言数学推导注定无法达到人类大师水准？
-            <br><br>
-            Thang 指出：<strong>自然语言充满了语义多义性与无法自我发现的细微谬误。</strong>
-            在 IMO 级别的问题面前，只要第 14 步引理中有一个隐式条件未被充分验证，后面写得再华丽也是毫无意义的零分废纸。
-            <br><br>
-            <strong>AlphaProof 的终极闭环</strong>：
-            1. <strong>神经直觉生成器（Gemini）</strong>：扮演数学家的“直觉与灵感”，负责在广袤无垠的几何拓扑中提出可能成立的辅助线、代数变形猜想；<br>
-            2. <strong>形式化数学证明内核（Lean）</strong>：扮演冷酷无情的“严密法官”。Gemini 提出的每一个步骤全部被翻译为形式化数学语言 <strong>Lean 4</strong> 的代码；<br>
-            3. <strong>自博弈强化学习</strong>：如果 Lean 内核编译报错，证明步骤立即被判定为假；如果 Lean 成功通过内核类型检查（Type-checked），该步便成为绝对真理！
-            <br><br>
-            <strong>结论</strong>：
-            AlphaProof 证明了，<strong>当大模型完全戒断对自然语言文本的依赖，转而全面拥抱具备形式化编译器的数学语言时，超人类智能便不再是遥不可及的科幻假想。</strong>
-        </div>
+        <p>
+            Thang 的结论是：当大模型戒断对自然语言文本的依赖，转而拥抱带有形式化编译器的数学语言时，超越人类的数学推理能力就不再是遥不可及的设想。
+        </p>
     </section>
 
-    <!-- 3. Melvin Johnson -->
     <section id="guest-melvin-johnson">
-        <h2>四、 Melvin Johnson（Google DeepMind）：从 Chatbot 到 Agent 的后训练范式演进</h2>
-        <h3 id="melvin-background">学术图谱与产业角色</h3>
+        <h2>四、 Melvin Johnson（Google DeepMind）：从 Chatbot 到 Agent 的后训练转向</h2>
         <p>
-            <strong>Melvin Johnson</strong> 是 Google DeepMind 的杰出科学家（Distinguished Scientist），过去十年主导了 Google 机器翻译、多语言模型与 Gemini 后训练（Post-training）的核心架构演进。
+            Melvin Johnson 是 Google DeepMind 的杰出科学家，过去十年主导了 Google 机器翻译、多语言模型与 Gemini 后训练架构的演进。他提出的问题是：为什么用微调 Chatbot 的方法去微调 Agent 必然失败？
         </p>
         <p>
-            Melvin 直击当前工业界的最大痛点：<strong>为什么用微调聊天机器人（Chatbot）的方法微调 Agent 必然失败？</strong>
+            传统 RLHF 优化的是人类单次交互的愉悦感——模型被教导要立刻回复、语气礼貌笃定，不能沉默超过几秒。但一个优秀的 Agent 需要的品格恰恰相反：面对复杂的数据库迁移任务，它应该能心平气和地尝试多种方案，容忍连续几十次工具报错并默默自纠错，而不是第一时间抛出一段未经检验的漂亮空话。Melvin 认为，后训练必须从偏好对齐全面转向执行对齐，让奖励模型的唯一标尺变成任务的实际交付结果。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">Melvin Johnson 核心犀利洞见：后训练必须彻底转向“延迟与耐挫力优化”</div>
-            • <strong>Chatbot 优化的毒药</strong>：传统 RLHF 优化的是“人类单次交互的愉悦感”, , 模型被教导要立刻给出回复、要礼貌谄媚、要语气笃定、绝不能沉默超过 2 秒钟。<br>
-            • <strong>Agent 核心品格的截然相反</strong>：真正的 Agent 需要的是<strong>极强的抗挫折力（Frustration Tolerance）与长周期静默推演（Silent Computation）</strong>。一个优秀的 Agent 在面对复杂数据库迁移时，应该心平气和地尝试 10 种方案，容忍连续 20 次工具报错并默默自纠错，而不是在第一秒钟就轻率地向用户吐出一段未经检验的漂亮空话。<br>
-            <strong>后训练演进方向</strong>：从偏好对齐（Preference Alignment）全面转向<strong>执行对齐（Execution Alignment）</strong>，奖励模型的唯一标尺是任务的实际物理交付。
-        </div>
     </section>
 
-    <!-- 4. Junchen Jiang -->
     <section id="guest-junchen-jiang">
-        <h2>五、 Junchen Jiang（UChicago / LMCache）：内存层物理救赎与分布式 KV Cache 革命</h2>
-        <h3 id="junchen-background">学术图谱与产业角色</h3>
+        <h2>五、 Junchen Jiang（UChicago / LMCache）：长上下文的内存墙</h2>
         <p>
-            <strong>Junchen Jiang</strong> 是芝加哥大学副教授、前沿推理缓存系统 <strong>LMCache</strong> 联合创始人，也是系统与网络顶会（NSDI、SIGCOMM）的权威学者。
+            Junchen Jiang 是芝加哥大学副教授、推理缓存系统 LMCache 联合创始人。在《Augmenting Agents with Memory》讲座中，他把焦点从算法理论拉回到底层显存的物理现实：一个 70B 参数模型在 100 万 Token 上下文下，仅存放 KV Cache 所需的 GPU 显存就高达数百吉字节，足以占满一整台 8 卡 H100 服务器的 HBM，首字延迟因此飙升至数十秒，推理成本暴涨上百倍。
         </p>
         <p>
-            在题为《Augmenting Agents with Memory》的讲座中，Junchen 将全场的焦点从抽象的算法理论狠狠拽回到底层的<strong>硅片显存物理现实</strong>中：
+            他的解法是像操作系统管理虚拟内存一样，为 Agent 的长期记忆做分层存储：活跃上下文留在昂贵的 GPU HBM 中，次活跃的历史背景压缩后卸载到主机 CPU DRAM 或高速 NVMe SSD，多个并发 Agent 之间共享只读知识的 KV Cache。没有这样的分布式缓存系统，长记忆 Agent 只能停留在纸面上。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">Junchen Jiang 核心犀利洞见：长上下文 Agent 将在 GPU 内存墙前全军覆没</div>
-            工业界普遍宣称拥有 100 万到 200 万 Token 的上下文窗口，并以此兜售长记忆 Agent。
-            <br><br>
-            Junchen 给出了冷酷的硬件账本：
-            <br>
-            一个 70B 参数的模型，在 100 万 Token 上下文下，单单是存放 <strong>KV Cache（键值缓存）</strong> 所需要的 GPU 显存就高达 <strong>数百吉字节（GB）</strong>！这直接霸占了整台 8 卡 H100 服务器的全部 HBM 高带宽显存，单次首字延迟（TTFT）飙升至数十秒，推理成本暴涨上百倍。
-            <br><br>
-            <strong>解法：操作系统化虚拟内存管理（LMCache / CacheBlend）</strong>：
-            Agent 的长期记忆绝不能每次从头算注意力，而必须像操作系统的页面文件一样实现<strong>层级存储解耦（Hierarchical Memory Paging）</strong>：
-            • 活跃上下文驻留在昂贵的 GPU HBM；<br>
-            • 次活跃的系统状态与长历史背景经过结构化压缩为语义“卡带（Cartridges）”，卸载到主机的 CPU DRAM 或高速 NVMe SSD 中；<br>
-            • 多个并发 Agent 之间共享只读知识底座的 KV Cache。
-            没有底层的分布式缓存系统，长记忆 Agent 永远只是不可落地的纸上谈兵。
-        </div>
     </section>
 
-    <!-- 5. Misha Laskin -->
     <section id="guest-misha-laskin">
-        <h2>六、 Misha Laskin（Reflection AI）：异步强化学习与自主智能体落地教训</h2>
-        <h3 id="misha-background">学术图谱与产业角色</h3>
+        <h2>六、 Misha Laskin（Reflection AI）：异步强化学习的落地教训</h2>
         <p>
-            <strong>Misha Laskin</strong> 是 Reflection AI 联合创始人兼 CEO，曾任 DeepMind 强化学习前沿科学家，并在 UC 伯克利获得人工智能博士学位。
-        </p>
-        <p>
-            Misha 分享了构建万级别生产级 Agent 时遭遇的真实工程陷阱：
+            Misha Laskin 是 Reflection AI 联合创始人兼 CEO，曾任 DeepMind 强化学习科学家。他分享了构建大规模生产级 Agent 时遇到的两个真实陷阱：
         </p>
         <ul>
-            <li><strong>同步编排的组织性瘫痪</strong>：绝大多数开源 Agent 框架采用同步阻塞循环（A 调完 B，B 调完 C）。在真实网络中，只要其中一个外部 API 发生 3 秒的延迟抖动，整个智能体蜂群的吞吐量就会归零。Reflection AI 全面采用基于事件驱动的<strong>异步 Actor-Critic 架构</strong>。</li>
-            <li><strong>生产环境的数据漂移残酷性</strong>：在沙盒中训练完美的 Agent，一进生产环境面对真实用户的脏数据与多变接口，性能会瞬间折损一半。唯一有效的解决方案是构建<strong>端到端持续在线强化学习（Online RL）</strong>，让 Agent 每天从真实生产中的失败日志中自发更新 LoRA 适配层。</li>
+            <li><strong>同步编排的瘫痪</strong>：多数开源 Agent 框架采用同步阻塞循环，只要一个外部 API 出现几秒延迟，整个智能体蜂群的吞吐量就会归零。Reflection AI 转向了事件驱动的异步 Actor-Critic 架构。</li>
+            <li><strong>生产环境的数据漂移</strong>：在沙盒中训练完美的 Agent，一进生产环境面对真实用户的脏数据就会性能折半。唯一有效的解法是持续在线强化学习，让 Agent 每天从生产环境的失败日志中更新自己的 LoRA 适配层。</li>
         </ul>
     </section>
 
-    <!-- 6. Danny Driess -->
     <section id="guest-danny-driess">
-        <h2>七、 Danny Driess（Physical Intelligence）：物理世界的具身终局与 π0 流模型</h2>
-        <h3 id="danny-background">学术图谱与产业角色</h3>
+        <h2>七、 Danny Driess（Physical Intelligence）：具身智能与 π0 流模型</h2>
         <p>
-            <strong>Danny Driess</strong> 是具身智能超级独角兽 <strong>Physical Intelligence（Pi）</strong> 的创始团队成员，也是 Google 标志性具身模型 <strong>PaLM-E</strong> 的第一作者。
+            Danny Driess 是具身智能公司 Physical Intelligence 的创始团队成员，也是 Google 具身模型 PaLM-E 的第一作者。在压轴讲座《Multimodal AI Agents in Robotics》中，他带来了这门课最大的一次视角切换：从数字比特走向物理原子。语言模型犯错，无非是抛出一个异常或重新生成一次字符串；但机械臂把一个玻璃杯摔在地上，这个错误永远无法撤销。
         </p>
         <p>
-            在压轴的《Multimodal AI Agents in Robotics》讲座中，Danny 带来了整门课程最震撼的跨越, , 从数字比特走向物理原子：
+            传统机器人策略把连续动作切成离散 Token，面对折叠衣物、精确插拔这类精细操作时容易产生动作抖动。Physical Intelligence 的 π0（Pi-Zero）把视觉语言基座与流匹配（Flow Matching）连续动作头结合起来：以 1-3 Hz 的频率用视觉语言模型做宏观语义推理（找到目标、识别材质、规划抓取角度），再以 50 Hz 的高频用流匹配头直接输出多自由度机械关节的连续扭矩与速度。
         </p>
-
-        <div class="sharp-box">
-            <div class="sharp-box-title">Danny Driess 核心犀利洞见：物理世界没有幻觉的容身之地, , π0 与流匹配（Flow Matching）</div>
-            大语言模型在软件世界里犯错了，无非是抛出一个 Exception 或者重新生成一次字符串。
-            <br><br>
-            <strong>但在真实的物理机器人世界里，物理定律是不可逆的</strong>：
-            如果机械臂将一个昂贵的玻璃杯摔在花岗岩地面上，熵增定理决定了这个错误永远无法撤销。
-            <br><br>
-            <strong>Physical Intelligence 的突破性架构：π0（Pi-Zero）</strong>：
-            传统机器人策略试图将连续动作切碎为离散 Token，但这在面对极度精细的操作（如折叠柔软的衣物、将插头精准插入插座）时会引发严重的动作抖动与频率失真。
-            <br><br>
-            π0 破天荒地将大语言视觉基座与<strong>流匹配（Flow Matching / Diffusion）</strong>连续动作头相结合：
-            • <strong>高层慢思考（1-3 Hz）</strong>：利用视觉语言大模型进行宏观语义推理（“找到脏衣服，识别材质，规划抓取角”）；<br>
-            • <strong>底层快动作（50 Hz）</strong>：利用连续流匹配头直接以 50 毫秒的高频吐出多自由度机械关节的连续扭矩与速度向量！
-            <br><br>
-            <strong>终局启示</strong>：
-            物理现实是自演进 AI 最伟大的也是最残酷的训练场。因为在重力和热力学定律面前，任何谄媚、作弊和虚妄的统计偏见都会被撞得粉身碎骨。只有在物理具身世界中活下来的智能体，才配被称为真正的 AGI。
-        </div>
+        <p>
+            Danny 的结论是：物理现实是自演进 AI 最残酷的训练场，因为在重力和热力学定律面前，任何统计偏见都无法蒙混过关——只有在物理世界中真正站得住脚的智能体，才配被称为 AGI。
+        </p>
     </section>
 
     <footer class="document-footer">

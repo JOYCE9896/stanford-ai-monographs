@@ -62,10 +62,7 @@
     <section>
         <h2>背景与问题定义</h2>
         <p>
-            固定权重的模型在部署后不再更新。面对单轮事实问答尚可应付，但面对多步骤的长程任务时，自回归生成的误差会随步数累积。
-            <label for="sn-compounding-error" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-compounding-error" class="margin-toggle"/>
-            <span class="sidenote">误差复合机制：若单步决策成功率为 <i>p</i>，连续进行 <i>T</i> 步无纠错决策时，全局成功率为 <i>P</i> = <i>p</i><sup><i>T</i></sup>。即使每步成功率为 0.98，连续执行 50 步后的成功率也仅约为 36.4%。</span>
+            固定权重的模型在部署后不再更新。面对单轮事实问答尚可应付，但面对多步骤的长程任务时，自回归生成的误差会随步数累积：若单步成功率为 <i>p</i>，连续 <i>T</i> 步无纠错决策的全局成功率为 <i>P</i> = <i>p</i><sup><i>T</i></sup>，即使每步成功率高达 0.98，连续 50 步后成功率也会降到约 36.4%。
         </p>
         <p>
             因此，构建具有自主演进能力的 Agent 需要三大支撑：测试期算力的高效分配、独立可靠的过程验证器（PRM）、以及模型基于环境真实反馈（如代码编译器报错）的强化学习闭环。

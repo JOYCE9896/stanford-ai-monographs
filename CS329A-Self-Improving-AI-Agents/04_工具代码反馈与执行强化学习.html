@@ -27,31 +27,21 @@
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “语言是人类用来交流概念的极其模糊、高度容错的符号系统；但代码不是。代码在编译器面前是冷酷无情的布尔对立, , 要么退出码为 0，要么抛出不可隐瞒的运行时异常。让大模型脱离纯文本遐想、接入执行环境沙盒的那一刻，才是智能真正产生物理锚定的分水岭。”
-            <footer>,  Azalia Mirhoseini, Stanford CS329A 讲堂实录</footer>
-        </blockquote>
-    </div>
-
     <section>
         <h2>一、 认知具身化：摆脱纯语言漫游的幻觉怪圈</h2>
         <p>
-            在传统的大模型对话体系中，大模型生存在一个纯粹由字符构成的封闭虚拟空间里。无论它的思维链写得多么天花乱坠，只要它断言“234 × 567 = 132,688”或者臆造了一个根本不存在的 Linux 系统调用命令，语言模型自己完全感知不到任何不协调。
-            <label for="sn-pure-nlp-flaw" class="margin-toggle sidenote-number"></label>
-            <input type="checkbox" id="sn-pure-nlp-flaw" class="margin-toggle"/>
-            <span class="sidenote">实验表明，即使最先进的基座模型在进行 5 位数乘法或深度嵌套 JSON 解析时，纯注意力机制的内部计算精度仍受限于固定的前向网络层数（<i>O</i>(1) 计算图深度），无法模拟任意图灵机状态转移。</span>
+            在传统的大模型对话体系中，大模型生存在一个纯粹由字符构成的封闭虚拟空间里。无论它的思维链写得多么天花乱坠，只要它断言"234 × 567 = 132,688"或者臆造了一个根本不存在的 Linux 系统调用命令，语言模型自己完全感知不到任何不协调。实验表明，即使最先进的基座模型在进行 5 位数乘法或深度嵌套 JSON 解析时，纯注意力机制的内部计算精度仍受限于固定的前向网络层数，无法模拟任意图灵机状态转移。
         </p>
 
         <p>
-            第四讲的核心命题正是<strong>“认知具身化（Cognitive Embodiment）”</strong>：如何利用外部工具（Tools）、代码解释器（Code Interpreters/REPL）与沙盒环境（Sandboxes），为大模型接入能够给出硬性因果反馈（Causal Feedback）的客观裁判。
+            第四讲的核心命题正是认知具身化（Cognitive Embodiment）：如何利用外部工具、代码解释器与沙盒环境，为大模型接入能够给出硬性因果反馈的客观裁判。
         </p>
     </section>
 
     <section>
         <h2>二、 ReAct 范式：思考与动作的交织闭环</h2>
         <p>
-            由 Yao 等人（2022）提出的 <strong>ReAct（Reasoning + Acting）</strong> 架构，奠定了当今所有现代 Agent 系统的底层控制循环。
+            由 Yao 等人（2022）提出的 ReAct（Reasoning + Acting）架构，奠定了当今所有现代 Agent 系统的底层控制循环。
         </p>
 
         <pre><code>Trajectory Loop of ReAct:
@@ -61,101 +51,72 @@
   • Thought_{t+1}: 摄入真实观测结果，对比预期，更新信念状态，发起下一步行动</code></pre>
 
         <p>
-            在 CS329A 的对比消融实验中，导师展示了 ReAct 对传统单一路径的彻底碾压：
-            <label for="mn-react-ablation" class="margin-toggle">&#8853;</label>
-            <input type="checkbox" id="mn-react-ablation" class="margin-toggle"/>
-            <span class="marginnote"><strong>控制实验对比</strong>：<br>
-            • <strong>纯思考（CoT-only）</strong>：因无法获取外部状态，在 HotpotQA 等多跳问答基准上频繁发生事实幻觉与虚构逻辑。<br>
-            • <strong>纯动作（Act-only）</strong>：如同无头苍蝇，缺乏长期目标规划，连续调用搜索引擎数十次仍无法收敛。<br>
-            • <strong>ReAct 交织架构</strong>：成功率提升 34% 以上，且轨迹的可解释性与调试透明度达到 100%。</span>
+            在 CS329A 的对比消融实验中，导师展示了 ReAct 对传统单一路径的彻底碾压：纯思考（CoT-only）因无法获取外部状态，在 HotpotQA 等多跳问答基准上频繁发生事实幻觉；纯动作（Act-only）如同无头苍蝇，缺乏长期目标规划；而 ReAct 交织架构的成功率比二者提升 34% 以上，且轨迹的可解释性与调试透明度达到 100%。
         </p>
     </section>
 
     <section>
         <h2>三、 RLEF 体系：将报错堆栈重塑为密集强化学习奖励</h2>
         <p>
-            传统强化学习在代码生成领域的最大痛苦在于<strong>奖励极度稀疏（Sparse Reward）</strong>：一段 200 行的代码，只要其中一个缩进或者变量命名错误，整个程序就崩溃，给出的回报就是冰冷的 <i>R</i> = 0。
+            传统强化学习在代码生成领域的最大痛苦在于<strong>奖励极度稀疏</strong>：一段 200 行的代码，只要其中一个缩进或者变量命名错误，整个程序就崩溃，给出的回报就是冰冷的 <i>R</i> = 0。
         </p>
         <p>
-            斯坦福前沿引入的 <strong>RLEF（Reinforcement Learning from Execution Feedback）</strong> 彻底攻克了这一顽疾。它将 Python 虚拟机的运行时反馈深度嵌入到策略梯度优化中：
+            斯坦福前沿引入的 RLEF（Reinforcement Learning from Execution Feedback）彻底攻克了这一顽疾。它将 Python 虚拟机的运行时反馈深度嵌入到策略梯度优化中：
         </p>
 
-        <div class="sharp-box">
-            <div class="sharp-box-title">核心算法：RLEF 阶梯式奖励重塑方程（Reward Shaping）</div>
+        <h3>RLEF 阶梯式奖励重塑</h3>
+        <p>
             不再采用单一的通过/失败二元奖励，RLEF 构建了一个连续的语义反馈函数：
-            <br><br>
-            $$R(\tau) = R_{\text{syntax}} + R_{\text{compilation}} + R_{\text{runtime\_progress}} + R_{\text{unit\_pass}}$$
-            <br>
-            1. <strong>语法层（Syntax Level）</strong>：若代码成功通过 AST（抽象语法树）解析，给予基础奖励 +0.1；若发生 `SyntaxError`，直接将错误行号与标记反向编码进惩罚项。<br>
-            2. <strong>执行层（Execution Level）</strong>：若程序无崩溃运行完毕，给予 +0.3；若抛出 `IndexError`、`TypeError` 或 `ZeroDivisionError`，提取 Traceback 深度作为连续距离惩罚。<br>
-            3. <strong>逻辑层（Unit Test Pass Rate）</strong>：
-            $$R_{\text{unit\_pass}} = \frac{\text{Passed Test Cases}}{\text{Total Test Cases}} \in [0, 1.0]$$
-            <br>
-            <strong>质变飞轮</strong>：
-            RLEF 训练出来的模型自发掌握了高级人类工程师的核心素质, , <strong>“阅读报错信息的能力”</strong>。当模型遇到 `KeyError: 'user_id'` 时，它不会茫然重写整份代码，而是极其精准地向上回溯两行，增加字典判空防护代码！
-        </div>
+        </p>
+        $$R(\tau) = R_{\text{syntax}} + R_{\text{compilation}} + R_{\text{runtime\_progress}} + R_{\text{unit\_pass}}$$
+        <ol>
+            <li><strong>语法层</strong>：若代码成功通过 AST（抽象语法树）解析，给予基础奖励 +0.1；若发生 SyntaxError，直接将错误行号与标记反向编码进惩罚项。</li>
+            <li><strong>执行层</strong>：若程序无崩溃运行完毕，给予 +0.3；若抛出 IndexError、TypeError 或 ZeroDivisionError，提取 Traceback 深度作为连续距离惩罚。</li>
+            <li><strong>逻辑层</strong>：
+                $$R_{\text{unit\_pass}} = \frac{\text{Passed Test Cases}}{\text{Total Test Cases}} \in [0, 1.0]$$
+            </li>
+        </ol>
+        <p>
+            RLEF 训练出来的模型自发掌握了高级工程师的核心素质——阅读报错信息的能力。当模型遇到 <code>KeyError: 'user_id'</code> 时，它不会茫然重写整份代码，而是精准地向上回溯两行，增加字典判空防护代码。
+        </p>
     </section>
 
     <section>
         <h2>四、 颠覆性认知：为什么 Python REPL 是比 50 个专用工具强万倍的终极脚手架？</h2>
 
-        <div class="sharp-box">
-            <div class="sharp-box-title">反直觉工程铁律：工具过度仪装（Tool Over-Instrumentation）的致命毒性</div>
-            许多商业 Agent 框架热衷于向模型提供琳琅满目的“工具箱”, , 一个做数学运算的 Calculator 工具、一个查天气的 API 工具、一个做字符串统计的 WordCounter 工具、一个数据库查询工具……一口气往 System Prompt 里塞入 40 到 60 个 JSON Schema。
-            <br><br>
-            Aakanksha 教授在课上直言：<strong>这是工程架构上极度愚蠢的灾难设计。</strong>
-            <br><br>
-            实验数据显示：当向大模型注入的工具定义超过 15 个时，模型的工具选择准确率呈断崖式下跌，大量上下文被冗长无用的 JSON 定义吞噬，且极易引发参数命名幻觉。
-            <br><br>
-            <strong>真正的最优解：给 Agent 一个 Python REPL 沙盒环境即可。</strong>
-            <br><br>
-            <strong>底层物理真相</strong>：
-            Python 本身就是一个具备图灵完备性的元工具（Meta-Tool）。
-            如果需要算乘法，模型自己写 `print(234 * 567)`；
-            如果需要爬取网页，模型自己写 `import requests; res = requests.get(...)`；
-            如果需要多步数据过滤，模型自己导入 `pandas` 进行向量化处理。
-            代码将散乱的 API 接口统一归拢为一套结构严谨、具备强类型与局部作用域的通用认知脚手架，Agent 的推理有效性获得了数量级的跃迁。
-        </div>
+        <h3>工具过度仪装的代价</h3>
+        <p>
+            许多商业 Agent 框架热衷于向模型提供琳琅满目的"工具箱"——一个做数学运算的 Calculator 工具、一个查天气的 API 工具、一个做字符串统计的 WordCounter 工具、一个数据库查询工具……一口气往 System Prompt 里塞入 40 到 60 个 JSON Schema。
+        </p>
+        <p>
+            Aakanksha 教授在课上直言，这是工程架构上极度愚蠢的设计：实验数据显示，当向大模型注入的工具定义超过 15 个时，模型的工具选择准确率呈断崖式下跌，大量上下文被冗长无用的 JSON 定义吞噬，且极易引发参数命名幻觉。
+        </p>
+        <p>
+            真正的最优解是给 Agent 一个 Python REPL 沙盒环境。Python 本身就是一个具备图灵完备性的元工具：如果需要算乘法，模型自己写 <code>print(234 * 567)</code>；如果需要爬取网页，模型自己写 <code>import requests; res = requests.get(...)</code>；如果需要多步数据过滤，模型自己导入 <code>pandas</code> 进行向量化处理。代码将散乱的 API 接口统一归拢为一套结构严谨、具备强类型与局部作用域的通用认知脚手架，Agent 的推理有效性获得了数量级的跃迁。
+        </p>
     </section>
 
     <section>
-        <h2>五、 Constitutional AI：脱离人类介入的“宪法自我精炼”</h2>
+        <h2>五、 Constitutional AI：脱离人类介入的"宪法自我精炼"</h2>
         <p>
-            第四讲的最后，导师系统解析了 Anthropic 著名的 <strong>Constitutional AI（基于宪法的自演进对齐）</strong>。
+            第四讲的最后，导师系统解析了 Anthropic 著名的 Constitutional AI（基于宪法的自演进对齐）。
         </p>
 
-        <!-- 通俗注释：Anthropic Claude 核心后训练护城河大揭秘 -->
-        <div class="guide-box">
-            <div class="guide-box-title">【核心解密】Anthropic 的独门绝技：Claude 后训练与 Constitutional AI 到底是怎么运作的？</div>
-            <p>
-                很多人好奇：<strong>为什么 Anthropic 的 Claude 3.5 Sonnet / 3.7 在编写代码、逻辑推理和遵循复杂指令上，公认大幅超越同时代其他大模型？</strong>
-            </p>
-            <p>
-                核心秘密就在于 Anthropic 率先摒弃了低端的人类标注外包，发明了 <strong>Constitutional AI（宪法自对齐）与 RLAIF（AI 反馈强化学习）</strong>：
-            </p>
-            <ul>
-                <li><strong>1. 为什么不用传统人类外包打分（RLHF）？</strong><br>
-                OpenAI 早期训练依靠成千上万名人类外包工人打分。但人类工人有两个致命伤：第一，看不懂高难度的算法架构和长代码；第二，工人天生喜欢啰嗦客套、字数多的假大空回答（Sycophancy Bias）。这导致模型变得像油腔滑调的销售，一写硬核代码就报错。</li>
-                <li><strong>2. 宪法自对齐的四步飞轮：</strong><br>
-                • <strong>立宪法（Constitution）</strong>：科学家把严谨性原则、逻辑准则、无证据不妄言的铁律写成“宪法手册”；<br>
-                • <strong>自我审查（Critique）</strong>：模型生成初稿代码后，立刻调用宪法原则：“审查当前代码是否存在边界条件溢出或类型未校验”；<br>
-                • <strong>自我修改（Revision）</strong>：根据审查意见自己重写代码；<br>
-                • <strong>代码沙盒实测强化（RLEF）</strong>：将修改后的代码丢进 Docker 沙盒真跑一遍。成功通过所有断言测试的代码自动成为强化学习的正样本。</li>
-                <li><strong>结论</strong>：Claude 不是天生懂编程，而是在后训练阶段通过数亿次“自我反思 + 真实运行报错 + 修正”闭环，在硅片沙盒中锤炼出了顶级工程师的直觉！</li>
-            </ul>
-        </div>
-
+        <h3>Anthropic 的 Constitutional AI 是如何运作的？</h3>
         <p>
-            在传统的价值观对齐中，数百名人类外包工必须对每一句话进行主观打分；而在 Constitutional AI 体系下，对齐被形式化为<strong>基于高阶宪法原则（Constitution）的自我批评与自修复闭环</strong>：
+            Anthropic 的 Claude 3.5 Sonnet / 3.7 在编写代码、逻辑推理和遵循复杂指令上，公认大幅超越同时代其他大模型。核心秘密在于 Anthropic 率先摒弃了人类标注外包，发明了 Constitutional AI（宪法自对齐）与 RLAIF（AI 反馈强化学习）。
+        </p>
+        <p>
+            OpenAI 早期训练依靠成千上万名人类外包工人打分，但人类工人有两个致命伤：一是看不懂高难度的算法架构和长代码，二是天生喜欢啰嗦客套、字数多的假大空回答（Sycophancy Bias），这导致模型变得像油腔滑调的销售，一写硬核代码就报错。Constitutional AI 用模型自身的"自我审查 + 自我修改 + 沙盒实测"取代了这套外包流程，形式化来看，这一闭环包含四步：
         </p>
         <ul>
             <li><strong>生成初稿</strong>：模型就特定提示生成未经打磨的原始回复 <i>y</i><sub>0</sub>。</li>
-            <li><strong>宪法审判与自我反思</strong>：系统调用预设的原则（如“请审查回复中是否包含无证据的绝对论断，指出其缺陷”），驱动模型生成批判文本 <i>c</i><sub>1</sub>。</li>
+            <li><strong>宪法审判与自我反思</strong>：系统调用预设的原则（如"请审查回复中是否包含无证据的绝对论断，指出其缺陷"），驱动模型生成批判文本 <i>c</i><sub>1</sub>。</li>
             <li><strong>自主修正</strong>：模型根据批评文本 <i>c</i><sub>1</sub> 重写输出，得到改进版 <i>y</i><sub>1</sub>。</li>
             <li><strong>强化学习提纯（RLAIF）</strong>：由模型充当偏好比较器，在大量由宪法规则驱动的成对输出 (<i>y</i><sub>0</sub>, <i>y</i><sub>1</sub>) 上训练偏好模型，彻底淘汰高昂脆弱的人类标注劳动力。</li>
         </ul>
         <p>
-            至此，环境的真实物理反馈（代码沙盒）与形式化的元认知原则（宪法反思）成功合流，构筑起自演进 Agent 坚不可摧的底层执行基石。
+            至此，环境的真实物理反馈（代码沙盒）与形式化的元认知原则（宪法反思）成功合流，构筑起自演进 Agent 坚实的底层执行基石。
         </p>
     </section>
 

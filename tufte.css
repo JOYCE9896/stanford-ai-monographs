@@ -7,6 +7,8 @@
    Strict Constraint: Exactly 2 font sizes across the entire webpage:
      --fs-heading: 1.35rem (h1, h2, h3)
      --fs-body:    1.05rem (everything else)
+   No decorative boxes, sidenotes, or blockquotes — plain headings and
+   paragraphs only.
    ========================================================================== */
 
 :root {
@@ -58,7 +60,6 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     max-width: 1350px;
-    counter-reset: sidenote-counter;
     line-height: 1.75;
 }
 
@@ -157,31 +158,6 @@ nav.top-nav a:hover {
     color: var(--link-hover);
 }
 
-div.epigraph {
-    margin: 2em 0;
-}
-
-div.epigraph > blockquote,
-blockquote {
-    font-size: var(--fs-body);
-    line-height: 1.75;
-    font-style: italic;
-    margin: 1.5em 0;
-}
-
-blockquote p {
-    width: 55%;
-    font-size: var(--fs-body);
-}
-
-blockquote footer {
-    width: 55%;
-    font-size: var(--fs-body);
-    font-style: normal;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-}
-
 section > dl,
 section > ol,
 section > ul,
@@ -196,62 +172,6 @@ dl, ol, ul {
 li {
     font-size: var(--fs-body);
     margin-top: 0.4rem;
-}
-
-/* Minimal notes instead of flashy colored boxes */
-.sharp-box,
-.guide-box {
-    width: 55%;
-    box-sizing: border-box;
-    border-left: 2px solid var(--border-color);
-    padding: 0.8rem 1.2rem;
-    margin: 1.8rem 0;
-    font-size: var(--fs-body);
-    line-height: 1.75;
-}
-
-.sharp-box p,
-.guide-box p {
-    width: 100%;
-    margin: 0.4rem 0;
-    font-size: var(--fs-body);
-}
-
-.sharp-box ul,
-.guide-box ul,
-.sharp-box ol,
-.guide-box ol {
-    width: 100%;
-    padding-inline-start: 5%;
-    font-size: var(--fs-body);
-}
-
-.sharp-box-title,
-.guide-box-title {
-    font-size: var(--fs-body);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.lecture-card {
-    width: 55%;
-    box-sizing: border-box;
-    border-top: 1px solid var(--border-color);
-    padding: 1.2rem 0;
-    margin: 1.5rem 0;
-}
-
-.lecture-card p {
-    width: 100%;
-    font-size: var(--fs-body);
-    margin: 0.4rem 0;
-}
-
-.lecture-tag {
-    display: inline-block;
-    color: var(--text-muted);
-    font-size: var(--fs-body);
-    margin-bottom: 0.3rem;
 }
 
 table {
@@ -303,12 +223,6 @@ pre > code {
     width: 100%;
 }
 
-span.newthought {
-    letter-spacing: 0.04em;
-    font-size: var(--fs-body);
-    font-weight: 600;
-}
-
 hr {
     display: block;
     height: 1px;
@@ -327,61 +241,6 @@ hr {
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border-color);
     line-height: 1.6;
-}
-
-.sidenote,
-.marginnote {
-    float: right;
-    clear: right;
-    margin-right: -60%;
-    width: 50%;
-    margin-top: 0.2rem;
-    margin-bottom: 1rem;
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    vertical-align: baseline;
-    position: relative;
-    color: var(--text-muted);
-    text-align: left;
-}
-
-.sidenote-number {
-    counter-increment: sidenote-counter;
-}
-
-.sidenote-number:after,
-.sidenote:before {
-    position: relative;
-    vertical-align: baseline;
-}
-
-.sidenote-number:after {
-    content: counter(sidenote-counter);
-    font-size: var(--fs-body);
-    top: -0.35rem;
-    left: 0.1rem;
-    color: var(--text-muted);
-}
-
-.sidenote:before {
-    content: counter(sidenote-counter) ". ";
-    font-size: var(--fs-body);
-    top: 0;
-    color: var(--text-muted);
-}
-
-input.margin-toggle {
-    display: none;
-}
-
-label.sidenote-number {
-    display: inline-block;
-    max-height: 2rem;
-    cursor: pointer;
-}
-
-label.margin-toggle:not(.sidenote-number) {
-    display: none;
 }
 
 footer.document-footer {
@@ -432,37 +291,8 @@ a:hover {
     section > ul,
     dl, ol, ul,
     nav.top-nav,
-    div.epigraph > blockquote,
-    div.epigraph > blockquote > p,
-    div.epigraph > blockquote > footer,
-    blockquote p,
-    blockquote footer,
-    .sharp-box,
-    .guide-box,
-    .lecture-card,
     pre,
     footer.document-footer {
         width: 100%;
-    }
-
-    label.margin-toggle:not(.sidenote-number) {
-        display: inline;
-    }
-
-    .sidenote,
-    .marginnote {
-        display: none;
-    }
-
-    .margin-toggle:checked + .sidenote,
-    .margin-toggle:checked + .marginnote {
-        display: block;
-        float: none;
-        clear: both;
-        width: 100%;
-        margin: 0.8rem 0;
-        position: relative;
-        padding: 0.6rem 0.8rem;
-        border-left: 2px solid var(--border-color);
     }
 }
