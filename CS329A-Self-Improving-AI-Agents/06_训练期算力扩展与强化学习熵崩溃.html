@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六讲：训练期算力扩展与强化学习熵崩溃 | 斯坦福 CS329A 专论</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS329A: Lecture 06</span>
+    <a href="07_开放式演进与AI科学家全自动研发.html">下一讲：开放式演进 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第六讲：训练期算力自举：STaR 推理飞轮、DeepSeekMath GRPO 与 DAPO 熵防御</h1>
+        <p class="subtitle">扔掉 Critic 价值网络的优雅减法、组相对优势优化与非对称梯度裁剪的物理机制</p>
+        <div class="author-meta">
+            核心文献：<em>STaR (Zelikman et al.)</em> · <em>DeepSeekMath (Shao et al.)</em> · <em>DAPO System (2025)</em><br>
+            主讲教授：Aakanksha Chowdhery & Azalia Mirhoseini · 深入解构训练期强化学习缩放（Train-Time Scaling）
+        </div>
+    </header>
+
+    <div class="epigraph">
+        <blockquote>
+            “测试期的搜索探索无论多么绚丽，如果不能被系统性地蒸馏并固化回神经网络的前向权重中，模型就永远只是一台用昂贵电费堆砌起来的高延时临时计算机。真正的自演进，必须完成‘搜索外循环 &rarr; 权重内循环’的自举对弈闭环。”
+            <footer>— Aakanksha Chowdhery, Stanford CS329A 讲堂实录</footer>
+        </blockquote>
+    </div>
+
+    <section>
+        <h2>一、 训练期自举：如何拔着自己的头发离开地球？</h2>
+        <p>
+            在前几讲中，我们见证了测试期计算（Test-time Compute）在单题解题上的惊人威力。然而，若每一次面对用户提问都需要在后台展开 10,000 次蒙特卡洛采样或多步树搜索，其商业推理成本（COGS）与响应延迟将彻底杀死绝大多数实际业务。
+        </p>
+        <p>
+            因此，自演进 AI 系统的核心圣杯变成了：<strong>如何让模型在推理时消耗大量搜索算力探索出的“真理路径”，反哺并沉淀为模型参数本身所具备的“直觉本能”？</strong>
+        </p>
+        <p>
+            由 Eric Zelikman 等人提出的 <strong>STaR（Self-Taught Reasoner）</strong> 开创了这一先河。其核心思想是“用推理自举推理”：
+            <label for="sn-star-loop" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-star-loop" class="margin-toggle"/>
+            <span class="sidenote">STaR 引入了极其精妙的<strong>合理化提示（Rationalization）</strong>：当模型无法独立做出正确推导时，环境先将最终正确答案作为提示提供给模型，引导模型“反向倒推”出完整的逻辑链条，随后将这条自洽路径加入微调集，从而突破冷启动障碍。</span>
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 GRPO：抛弃 Critic 价值网络的数学革命</h2>
+        <p>
+            在过去数年中，近端策略优化（PPO）是强化学习对齐的唯一黄金法则。然而，在以千亿参数大模型为基座的训练中，PPO 的系统开销沉重到令人窒息：
+        </p>
+
+        <!-- 通俗注释：通俗拆解强化学习与 GRPO -->
+        <div class="guide-box">
+            <div class="guide-box-title">【通俗白话拆解】什么是 Actor-Critic？DeepSeek 的 GRPO 到底神在哪里？</div>
+            <p>
+                如果你听过强化学习，通常会被里面的“策略网络（Actor）”和“价值网络（Critic）”搞得云里雾里：
+            </p>
+            <ul>
+                <li><strong>传统的 PPO（配随身私教）</strong>：大模型自己是做题学生（Actor）。为了让它知道每一步做对没有，PPO 必须在显存里<strong>额外塞进一个体量一模一样的私教模型（Critic）</strong>，时时刻刻盯着学生打分。这直接导致 GPU 显存消耗翻倍，而且私教自己经常看花眼打错分。</li>
+                <li><strong>DeepSeek 的 GRPO（组内同学互评）</strong>：DeepSeek 做出了一次天才级的减法——<strong>把私教直接辞退！</strong>同一个题目，让模型一口气写出 8 个不同的解答（组成一个 8 人学习小组）。计算这 8 个解答的平均分，凡是比组内平均分高的解答就狠狠奖励，比平均分低的就惩罚。根本不需要额外的私教模型，显存直接省出一半，训练吞吐量翻倍！</li>
+            </ul>
+        </div>
+
+        <ul>
+            <li><strong>显存翻倍与通信拥堵</strong>：PPO 必须在训练 Actor 策略网络的同时，额外加载一个同等体量的 Critic 价值网络 <i>V</i><sub>ϕ</sub>(<i>s</i>)，用于估计每个 Token 的基线价值。这直接将集群的显存需求与梯度同步通信量翻了一倍。</li>
+            <li><strong>Critic 在长文本上的拟合崩溃</strong>：在成千上万个 Token 的长思维链中，Critic 网络极其难以精准预测每个中间 Token 的连续价值期望，导致方差剧烈震荡，策略梯度频繁发散。</li>
+        </ul>
+
+        <h3>DeepSeekMath 的破局之刃：组相对策略优化（GRPO）</h3>
+        <p>
+            由 Shao 等人（2024）在《DeepSeekMath》中提出的 <strong>GRPO（Group Relative Policy Optimization）</strong>，以极其纯粹的数学减法彻底扔掉了 Critic 网络！
+        </p>
+
+        <pre><code>GRPO Algorithm Mechanism:
+For each prompt q:
+  1. Sample a group of G candidate outputs: {o_1, o_2, ..., o_G} ~ \pi_{old}(· | q)
+  2. Evaluate deterministic ground-truth rewards: {R_1, R_2, ..., R_G}
+  3. Compute Group Relative Advantage for each candidate i:
+     A_i = ( R_i - mean({R}) ) / ( std({R}) + \epsilon )
+  4. Optimize Actor Policy directly with PPO-style clipping & KL penalty</code></pre>
+
+        <p>
+            GRPO 的目标函数写为：
+            <label for="mn-grpo-loss" class="margin-toggle">&#8853;</label>
+            <input type="checkbox" id="mn-grpo-loss" class="margin-toggle"/>
+            <span class="marginnote"><strong>GRPO 优化目标</strong>：<br>
+            $$\mathcal{J}(\theta) = \mathbb{E}\left[ \frac{1}{G}\sum_{i=1}^G \min\left( r_i(\theta) A_i, \text{clip}(r_i(\theta), 1\pm\epsilon) A_i \right) - \beta D_{\text{KL}}(\pi_\theta || \pi_{\text{ref}}) \right]$$<br>
+            其中比率 <i>r</i><sub><i>i</i></sub>(θ) = π<sub>θ</sub>(<i>o</i><sub><i>i</i></sub>|<i>q</i>) / π<sub>old</sub>(<i>o</i><sub><i>i</i></sub>|<i>q</i>)。完全由同组样本的相对均值充当基线，无需任何额外的参数网络！</span>
+        </p>
+
+        <p>
+            这一优雅设计不仅为万卡集群省下了数百吉字节的高昂显存，更使得强化学习训练的吞吐量飙升了整整一倍以上。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 致命的病理学：强化学习中的“熵崩溃（Entropy Collapse）”</h2>
+        <p>
+            然而，当各前沿团队兴高采烈地将 GRPO 规模化放大到更大计算量时，所有人都迎头撞上了一堵无形的物理墙——<strong>策略熵崩溃（Entropy Collapse）</strong>。
+        </p>
+
+        <div class="sharp-box">
+            <div class="sharp-box-title">病理诊断：为什么模型会突然失去思考灵性，沦为僵死的复读机？</div>
+            在强化学习训练到特定中后期（通常在数千步迭代后），研究者观察到模型的<strong>输出香农熵（Policy Entropy）出现断崖式坍缩</strong>。
+            <br><br>
+            <strong>通俗大白话比喻</strong>：
+            “熵”代表可能性的多样性。一个学生如果在某次模考中偶然靠“选择题全部选 C”碰巧得了及格分，在缺乏正确引导下，他就会坚信“选 C 是保底神技”。从此外界无论怎么出题，他脑子里除了 C 再也想不到别的选项——他的思维多样性彻底死绝了，这就是“熵崩溃”。
+            <br><br>
+            <strong>底层致病机理分析</strong>：
+            在标准的 PPO/GRPO 中，梯度的裁剪范围是对称的（例如 ε = 0.2，即将重要性权重严格限制在 [0.8, 1.2]）。
+            当模型偶然在一道代数题中通过某条特定格式的模板（比如在开头写死“让我们分三步分析…”）获得了微弱正奖励后，由于对称裁剪在抑制劣解方面极度激进，模型会迅速将该模板中每一个固定 Token 的概率推向 <strong>0.9999</strong>。
+            <br><br>
+            一旦策略熵趋近于零，策略网络就彻底<strong>丧失了在概率空间中探索全新解题路径的能力</strong>！
+            此后无论给它输入什么题目，它都会机械化地套用极少数几种固化模板，面对稍有变动的长尾新题瞬间暴毙。这种灾难性的探索能力灭绝，被称为 RL 强化学习的“脑死亡”。
+        </div>
+    </section>
+
+    <section>
+        <h2>四、 DAPO 系统的解药：非对称“Clip-Higher”与探索力庇护</h2>
+        <p>
+            在 2025 年开源的分布式大规模强化学习系统 <strong>DAPO（An Open-Source LLM Reinforcement Learning System at Scale）</strong> 中，研究者为这一顽疾开出了一剂极其精妙的解药：<strong>非对称梯度裁剪（Clip-Higher）</strong>。
+        </p>
+
+        <div class="sharp-box">
+            <div class="sharp-box-title">核心创新：以非对称容忍度庇护低概率探索芽苗</div>
+            传统对称裁剪假设：鼓励（Advantage > 0）与抑制（Advantage < 0）应该拥有相同的边界幅度 ±0.2。
+            <br><br>
+            DAPO 颠覆了这一平衡，采用了<strong>非对称截断空间</strong>：
+            <br><br>
+            $$\text{clip}\left( r_i(\theta), 1 - \epsilon_{\text{low}}, 1 + \epsilon_{\text{high}} \right)$$
+            其中将下限严格锚定在 ε<sub>low</sub> = 0.2，而将上限大幅放宽至 <strong>ε<sub>high</sub> = 0.28 ~ 0.35</strong>！
+            <br><br>
+            <strong>数学直觉背后的惊天逆转</strong>：
+            那些真正蕴含着创造性与突破性思维的创新推理步骤，在模型早期的先验中往往属于<strong>极低概率事件（Low-Probability Tokens）</strong>。
+            放宽上界（Clip-Higher），允许那些获得了极高客观奖励（如攻克了此前从未解开的难题）的创新罕见路径，在单次反向传播中获得更大跨度的概率抬升空间，从而冲破主流高概率平庸路径的重重阻碍！
+            <br><br>
+            <strong>实验战果</strong>：
+            DAPO 实测数据显示，引入 Clip-Higher 后，策略网络的探索熵在整个万步训练周期内始终维持在健康的平稳区间，模型自发演化出了长达数万 Token 的<strong>“自主回溯、验算重推与顿悟时刻（Aha Moment）”</strong>，成功打破了困扰学术界已久的强化学习早衰魔咒。
+        </div>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p><a href="05_多步规划树搜索与自适应分枝.html">&larr; 返回第五讲</a> | <a href="index.html">返回主目录</a> | <a href="07_开放式演进与AI科学家全自动研发.html">阅读第七讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

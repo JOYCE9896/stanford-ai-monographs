@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一讲：自演进闭环与静态模型终结 | 斯坦福 CS329A 专论</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS329A: Lecture 01</span>
+    <a href="02_测试期算力缩放与反复采样极限.html">下一讲：测试期算力扩展定律 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第一讲：自演进智能闭环、静态模型终结与 Agentic 状态机范式跃迁</h1>
+        <p class="subtitle">解构预训练神话的物理天花板、长链决策误差复合律与自主学习状态机的数学重塑</p>
+        <div class="author-meta">
+            主讲导师：Aakanksha Chowdhery（Google PaLM 领衔作者）& Azalia Mirhoseini（AlphaChip 奠基人 / Stanford 助理教授）<br>
+            深度解构：自我提升循环（The Self-Improvement Loop）与智能体系统架构
+        </div>
+    </header>
+
+    <div class="epigraph">
+        <blockquote>
+            “任何无法根据自身输出后果修改内部表示的计算系统，都只能被称为高级插值器，而绝非自主智能体。当前大语言模型工业界犯下的最大教条错误，就是试图用静态只读的概率分布去对抗动态开放的物理宇宙。”
+            <footer>— Azalia Mirhoseini, Stanford CS329A 讲堂第一课</footer>
+        </blockquote>
+    </div>
+
+    <section>
+        <h2>一、 导师学术图谱与产业观察视界</h2>
+        <p>
+            理解 Stanford CS329A 的开篇立论，首先必须理解两位主讲教授在过去五年深度学习前沿工程中积累的血泪认知。
+        </p>
+        <p>
+            <span class="newthought">Aakanksha Chowdhery 教授</span>是 Google 旗舰模型 PaLM（Pathways Language Model, 540B）的首席论文领衔作者，并曾主导 Gemini 预训练与系统级放大的端到端工程。她亲身经历了参数规模从百亿（10B）、千亿（100B）一路推进至万亿（1T+）的完整历史区间。
+            <label for="sn-chowdhery-exp" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-chowdhery-exp" class="margin-toggle"/>
+            <span class="sidenote">PaLM 论文（Chowdhery et al., 2022）首次展示了在 6144 块 TPU v4 芯片上利用 Pathways 框架进行双向数据与流水线并行训练的物理极限，但也首次确认了单纯依靠参数扩增在复杂多步算术与符号推理上出现的收益钝化现象。</span>
+            正是这种亲手触碰万卡集群物理边界的经历，使她成为硅谷最早清醒认识到“预训练暴利期已告终结”的顶尖科学家之一。
+        </p>
+        <p>
+            <span class="newthought">Azalia Mirhoseini 教授</span>则是斯坦福大学计算机系助理教授，Scaling Intelligence 实验室主任。她早年开创的 <strong>AlphaChip（利用深度强化学习自动进行芯片微架构平面规划）</strong>曾登上《Nature》封面，将人类顶尖物理工程师需要数月完成的先进制程布局布线压缩至数小时内，并被 Google 全面应用于从 TPU v2 到 TPU v5e 的量产芯片设计中。随后她在 Anthropic 与 Google 深度参与了 Claude 与 Gemini 架构设计。
+            作为跨越了底层硅片硬件布局与顶层大模型架构的学者，Azalia 从第一性原理出发指出：<strong>没有自主试错环境与确定性奖励反馈的纯监督学习，是无法突破人类既有认知边界的。</strong>
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：从静态概率查表到状态机自演进闭环</h2>
+        <p>
+            在开篇讲座中，导师系统解构了现代生成式 AI 的基础技术栈，并精准指出了现有三段式范式（Pretraining &rarr; Supervised Fine-Tuning &rarr; RLHF）的内生性绝症：
+        </p>
+
+        <!-- 通俗注释：读懂大模型训练三大阶段与后训练的爆发 -->
+        <div class="guide-box">
+            <div class="guide-box-title">【通俗白话拆解】什么是“预训练”、“微调”与“后训练（Post-Training）”？</div>
+            <p>
+                如果你第一次接触这些词汇，可以用<strong>培养一名顶尖外科医生</strong>的过程来理解：
+            </p>
+            <ul>
+                <li><strong>预训练（Pre-training）</strong>：让医学生通读世界上所有的医学书籍与论文。此时他知道人体各个器官的名字，但他<strong>从未真正拿过手术刀</strong>。如果你让他诊断，他只是按记忆概率胡乱联想。</li>
+                <li><strong>监督微调（SFT）</strong>：老主任医生拿出几百份经典手术病历范文，让医学生抄写模仿。他学会了标准格式，但遇到没见过的突发大出血，依然会手忙脚乱。</li>
+                <li><strong>后训练强化学习（Post-training RL）</strong>：让医生在极其逼真的手术模拟人沙盒中亲自操刀！做对了给出奖励，切破血管给出严重警报。<strong>这就是为什么 Anthropic 的 Claude 系列（如 Claude 3.5 Sonnet）写代码和推理极强——Anthropic 把主要精力从盲目扩大预训练堆算力，全面转向极度精细的后训练（接入代码沙盒、执行反馈与宪法对齐）</strong>。</li>
+            </ul>
+        </div>
+
+        <h3>1. 静态预训练范式的三大物理极限</h3>
+        <ul>
+            <li><strong>数据之墙（The Data Wall）</strong>：根据 Chinchilla 最优计算配比，当模型参数达到数千亿时，所需要的独立同分布（i.i.d.）高质量人类文本总量将突破 10<sup>14</sup> Token。互联网上可供抓取的合法、无污染人类语言存量在 2025 年已被各家前沿实验室彻底扫荡殆尽。继续依靠爬取低质网文甚至合成垃圾数据，只会导致自食恶果的“模型崩溃（Model Collapse）”。</li>
+            <li><strong>曝光偏差（Exposure Bias）与分布漂移</strong>：自回归模型在训练期采用教师强制（Teacher Forcing），即每一步的输入都是人类提供的标准黄金上下文 <i>y</i><sub>&lt;<i>t</i></sub><sup>*</sup>；然而在实际生成时，模型每一步输入的是自身上一步的预测值 <i>ŷ</i><sub>&lt;<i>t</i></sub>。一旦在第 5 步产生微小偏差，模型便瞬间跌入未曾训练过的未知状态空间，引发雪崩式胡言乱语。</li>
+            <li><strong>人类反馈强化学习（RLHF）的平庸上限</strong>：RLHF 的本质是让人类众包工人（Labelers）或现有人类价值观充当判决者。人类标注者本能地偏好排版工整、态度谦卑、字数冗长的回答（Sycophancy Bias）。更致命的是，<strong>人类根本无法为超出人类智力极限的复杂数理推导提供正确奖励</strong>，RLHF 只能逼近人类平均水平，绝无可能催生超人类智能。</li>
+        </ul>
+
+        <h3>2. 自演进 Agent（Self-Improving Agent）的马尔可夫数学建模</h3>
+        <p>
+            导师提出，真正的 Agent 不是一个单向的序列转换函数 <i>P</i>(<i>Y</i>|<i>X</i>)，而是一个嵌入在动态环境中的马尔可夫决策过程（MDP）。一个能够实现自主提升的 Agent 系统必须由一个五元组严格定义：
+        </p>
+
+        <pre><code>M = &lang; S, A, T, R, &Omega;, O &rang;
+where:
+  • S: 环境真实状态空间（如操作系统沙盒、代码仓库、物理寄存器）
+  • A: Agent 可执行的离散动作空间（代码执行、工具调用、搜索查询）
+  • T(s' | s, a): 环境动态状态转移概率（如运行 bash 脚本后的系统文件变更）
+  • R(s, a): 环境给出的确定性客观奖励（如单元测试通过率、编译返回值）
+  • &Omega;: 观测空间；O(o | s): 观测发射概率</code></pre>
+
+        <p>
+            在此基础上，所谓的<strong>“自演进闭环（The Self-Improvement Loop）”</strong>包含四个缺一不可的动力学环节：
+            <label for="mn-self-improve-loop" class="margin-toggle">&#8853;</label>
+            <input type="checkbox" id="mn-self-improve-loop" class="margin-toggle"/>
+            <span class="marginnote"><strong>自演进四步动力学环</strong>：<br>
+            1. <strong>探索采样（Exploration）</strong>：策略 π<sub>θ</sub> 在特定任务分布下展开多路径尝试。<br>
+            2. <strong>物理判决（Verification）</strong>：脱离人类主观打分，由代码沙盒或形式化系统给出绝对判定。<br>
+            3. <strong>反思归因（Credit Assignment）</strong>：准确定位导致失败的关键决策节点。<br>
+            4. <strong>权重蒸馏（Internalization）</strong>：将高算力搜寻出的最优路径更新进模型参数。</span>
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心犀利输出与颠覆性认知</h2>
+
+        <div class="sharp-box">
+            <div class="sharp-box-title">反直觉第一律：为什么“更聪明的基座模型”根本无法自发解决长程任务？</div>
+            工业界有一种极其普遍的迷信：只要我们把 GPT-4 升级到 GPT-5、GPT-6，Agent 在长程复杂任务上的失败率就会自然消失。
+            <br><br>
+            Aakanksha 教授给出了无情的数学否定：<strong>这在概率论上是不可能的。</strong>
+            <br><br>
+            假设一个软件工程任务需要 Agent 连续执行 30 次决策（读取依赖、编写代码、修改配置、运行测试、解决冲突）。即便未来超级大模型的单步决策准确率高达令人难以置信的 <strong>98%</strong>，在缺乏自纠错闭环的情况下，全局任务成功率仅为：
+            <br>
+            $$P(\text{Success}) = 0.98^{30} \approx 54.5\%$$
+            如果任务链条延长至 100 步（这在任何企业级真实项目中再寻常不过），全局成功率将直接雪崩至 <strong>13.2%</strong>！
+            <br><br>
+            <strong>结论</strong>：单步智力（Single-step IQ）的提升在复合指数衰减面前不值一提。解决长程任务的唯一解法不是把 0.98 提高到 0.985，而是<strong>构建具备中途环境校验（Checkpoints）、自我回溯（Backtracking）与动态重规划（Re-planning）能力的 Agentic 状态机架构</strong>。
+        </div>
+
+        <div class="sharp-box">
+            <div class="sharp-box-title">反直觉第二律：错误轨迹的价值远远高于正确轨迹</div>
+            在传统的监督微调（SFT）中，AI 工程师对训练数据有洁癖，只挑选人类专家写出的最精简、最优雅的正确代码片段来微调模型。
+            <br><br>
+            Azalia 指出：<strong>这种方法培养出来的模型是极度脆弱的“温室花朵”。</strong>
+            当模型在真实世界中遇到一个语法错误或逻辑异常时，它从未在训练集中见过“如何从灾难中恢复”的过程，因此会立刻陷入惊恐式的重复循环或产生幻觉。
+            <br><br>
+            真正强大的自演进 Agent，其核心训练语料必须大量包含<strong>“尝试 &rarr; 遭遇致命报错 &rarr; 读取环境反馈 &rarr; 做出反思推断 &rarr; 修正方案 &rarr; 最终通关”</strong>的完整试错轨迹。大模型不是通过被告知正确答案变聪明的，而是通过在沙盒中亲历一千种失败后自己走出来的。
+        </div>
+    </section>
+
+    <section>
+        <h2>四、 结论背后的实验与数学基石</h2>
+        <p>
+            上述颠覆性认知的得出，绝非哲学推演，而是基于严密的控制变量实证研究：
+        </p>
+
+        <h3>1. 教师强制（Teacher-Forcing）在长链条中的误差累积实验</h3>
+        <p>
+            Chowdhery 团队在多种不同规模的大模型（8B、70B、540B）上进行了多步数学推理（GSM8K 与 MATH 衍生数据集）的分步误差分析。实验显示：
+            <label for="sn-gsm-bench-intro" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-gsm-bench-intro" class="margin-toggle"/>
+            <span class="sidenote"><strong>Benchmark 知识点</strong>：<strong>GSM8K</strong> 是包含 8,000 道小学三年级算术应用题的基准。由于难度极低且题目被各大厂商严重“背诵刷分”，如今 95%+ 的得分已无法代表模型具有真正的通用长链逻辑。</span>
+        </p>
+        <ul>
+            <li>在纯生成模式下，模型的单步置信度（Token-level Log-Probability）与真实逻辑正确性在步骤大于 7 步后出现严重的<strong>相关性断崖（Correlation Breakdown）</strong>。</li>
+            <li>大模型倾向于以极高的概率输出完全错误的中间推导，即在发生逻辑硬伤时其注意力分布依然极度平滑，这证明自回归语言模型无法依靠自身的内生先验感知逻辑断裂，必须依赖外部形式化验证系统输入客观梯度。</li>
+        </ul>
+
+        <h3>2. 强化学习微调在复杂环境下的收敛相变</h3>
+        <p>
+            Azalia 实验室基于 AlphaChip 与 SWE-bench 环境的训练对比表明：使用传统 PPO（近端策略优化）直接在无约束环境终局奖励（Sparse Binary Reward）上训练时，策略梯度的方差随任务步长呈超多项式爆炸（<i>O</i>(<i>T</i><sup>2</sup>)），导致探索效率在步长大于 15 步后几乎降至随机漫步水平。
+            <label for="sn-swe-bench-intro" class="margin-toggle sidenote-number"></label>
+            <input type="checkbox" id="sn-swe-bench-intro" class="margin-toggle"/>
+            <span class="sidenote"><strong>Benchmark 知识点</strong>：<strong>SWE-bench</strong> 是工业级真实软件工程基准。它直接从真实的 GitHub 开源项目中抽取 Bug 报告，要求 Agent 自主阅读数万行真实代码、定位缺陷、修改文件并跑通自动化测试。这是目前最严苛的“实战程序员”大考。</span>
+        </p>
+        <p>
+            这从严谨的强化学习数学推导上证明了：<strong>端到端黑盒自演进是伪命题，自演进必须解耦为“测试期搜索策略”与“训练期过程奖励模型（PRM）”的协同进化</strong>，这也为本门课程后续九讲的技术展开奠定了无可辩驳的坚实基石。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS329A: Self-Improving AI Agents &copy; Academic Year 2025&ndash;2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="02_测试期算力缩放与反复采样极限.html">阅读第二讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>
