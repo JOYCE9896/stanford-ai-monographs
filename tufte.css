@@ -7,13 +7,15 @@
    Strict Constraint: Exactly 2 font sizes across the entire webpage:
      --fs-heading: 1.35rem (h1, h2, h3)
      --fs-body:    1.05rem (everything else)
-   No decorative boxes, sidenotes, or blockquotes — plain headings and
-   paragraphs only.
+   Single centered reading column — no decorative boxes, sidenotes, or
+   blockquotes, and no left-margin reserved for marginalia that no
+   longer exists.
    ========================================================================== */
 
 :root {
     --fs-heading: 1.35rem;
     --fs-body: 1.05rem;
+    --content-width: 720px;
 
     --font-main: "Newsreader", "Noto Serif SC", serif;
 
@@ -51,15 +53,13 @@ html {
 }
 
 body {
-    width: 87.5%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 12.5%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
     font-family: var(--font-main);
     font-size: var(--fs-body);
     background-color: var(--bg-color);
     color: var(--text-color);
-    max-width: 1350px;
     line-height: 1.75;
 }
 
@@ -82,7 +82,6 @@ h1, h2, h3 {
     font-weight: 600;
     line-height: 1.35;
     color: var(--text-color);
-    width: 55%;
 }
 
 h1 {
@@ -105,16 +104,12 @@ h3 {
 
 /* ==========================================================================
    2. Body & All Other Elements (var(--fs-body))
+   All elements are full-width within the single centered column above.
    ========================================================================== */
 
 p,
-section > p,
-article > p,
 footer,
-section > footer,
-table,
-section > table {
-    width: 55%;
+table {
     font-size: var(--fs-body);
 }
 
@@ -133,11 +128,9 @@ p.subtitle {
     margin-top: 0.4rem;
     margin-bottom: 1.5rem;
     line-height: 1.6;
-    width: 55%;
 }
 
 nav.top-nav {
-    width: 55%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -158,11 +151,7 @@ nav.top-nav a:hover {
     color: var(--link-hover);
 }
 
-section > dl,
-section > ol,
-section > ul,
 dl, ol, ul {
-    width: 55%;
     -webkit-padding-start: 5%;
     padding-inline-start: 5%;
     font-size: var(--fs-body);
@@ -178,7 +167,7 @@ table {
     border-collapse: collapse;
     margin: 1.8rem 0;
     font-size: var(--fs-body);
-    width: 55%;
+    width: 100%;
 }
 
 th, td {
@@ -207,7 +196,6 @@ code {
 }
 
 pre {
-    width: 55%;
     box-sizing: border-box;
     padding: 1rem;
     background: var(--code-bg);
@@ -226,7 +214,6 @@ pre > code {
 hr {
     display: block;
     height: 1px;
-    width: 55%;
     border: 0;
     border-top: 1px solid var(--border-color);
     margin: 2em 0;
@@ -237,7 +224,6 @@ hr {
     font-size: var(--fs-body);
     color: var(--text-muted);
     margin-bottom: 1.8rem;
-    width: 55%;
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border-color);
     line-height: 1.6;
@@ -249,7 +235,6 @@ footer.document-footer {
     padding-top: 1.2rem;
     font-size: var(--fs-body);
     color: var(--text-muted);
-    width: 55%;
 }
 
 a:link,
@@ -263,36 +248,21 @@ a:hover {
     color: var(--link-hover);
 }
 
+/* KaTeX ships its own centering for .katex-display; this only keeps a
+   formula wider than the column scrollable instead of spilling past it. */
 .katex {
     font-size: 1em !important;
 }
 
-/* Responsive / Mobile View */
-@media (max-width: 760px) {
-    body {
-        width: 90%;
-        padding-left: 5%;
-        padding-right: 5%;
-    }
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1.5rem 0;
+}
 
-    h1, h2, h3,
-    hr,
-    p,
-    p.subtitle,
-    .author-meta,
-    section > p,
-    article > p,
-    footer,
-    section > footer,
-    table,
-    section > table,
-    section > dl,
-    section > ol,
-    section > ul,
-    dl, ol, ul,
-    nav.top-nav,
-    pre,
-    footer.document-footer {
-        width: 100%;
+/* Responsive / Mobile View */
+@media (max-width: 480px) {
+    body {
+        padding: 0 1rem;
     }
 }
