@@ -12,52 +12,44 @@
 <body>
 
 <nav class="top-nav">
-    <span>Stanford University &mdash; Department of Computer Science</span>
-    <span>CS329A: Autumn / Academic Year 2025&ndash;2026</span>
+    <span>Stanford University (Department of Computer Science)</span>
+    <span>CS329A: Autumn / Academic Year 2025-2026</span>
 </nav>
 
 <article>
     <header>
-        <h1>自演进 AI Agent 的范式跃迁</h1>
-        <p class="subtitle">告别静态权重神话：解构测试期算力缩放、鲁棒过程验证与自主递归进化的终极法则</p>
+        <h1>CS329A: 自演进 AI Agent 技术研读</h1>
+        <p class="subtitle">测试期算力扩展、过程验证与模型自主迭代机制</p>
         <div class="author-meta">
-            主讲教授：Aakanksha Chowdhery（Google PaLM 领衔作者）& Azalia Mirhoseini（AlphaChip 奠基人 / Stanford 助理教授）<br>
-            课程代码：Stanford CS329A · 全套 10 篇万字长文专论与前沿嘉宾思想总揽
+            主讲：Aakanksha Chowdhery（Google PaLM 共同一作）、Azalia Mirhoseini（AlphaChip 共同一作，斯坦福助理教授）<br>
+            课程代码：Stanford CS329A · 全套 10 篇课程笔记与特邀嘉宾研讨纪要
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “过去十年，整个人工智能工业界被‘预训练时代’的辉煌幻觉所催眠：人们相信只要堆砌更多的互联网网页、更多的浮点运算与更大的变压器参数，通往 AGI 的康庄大道便会自然铺就。然而，现实是残酷的：人类高质量纯文本已被耗尽，静态权重在面对动态物理世界与长链条决策时表现出惊人的脆弱与僵死。<br><br>
-            真正的通用智能绝不是一张静态的概率转移矩阵，而是一个能够在与环境交互、试错纠偏与自我反思中持续重塑自身的动态自适应实体。当模型能够自己生成数据、自己验证对错、并在测试期动态分配思考算力时，AI 才真正踏上了自我提升的不可逆飞轮。”
-            <footer>— Aakanksha Chowdhery & Azalia Mirhoseini, Stanford CS329A 开篇导论</footer>
-        </blockquote>
-    </div>
-
-    <!-- 初学者通识指南与核心黑话破壁 -->
+    <!-- 初学者通识指南与核心概念 -->
     <div class="guide-box">
-        <div class="guide-box-title">【写在前面 · 核心通识导航】非技术读者如何轻松看懂本课程？</div>
+        <div class="guide-box-title">【导读说明】核心概念与基准测试背景</div>
         <p>
-            Stanford CS329A 探讨的是大模型由“只会聊天的玩具”进化为“能自主干活的超级员工”的最硬核底层科学。如果你觉得课程术语较多，请先记住以下三个通俗常识：
+            Stanford CS329A 讨论大语言模型如何从单次问答交互，发展为具有自主试错与自我改进能力的系统。以下是阅读课程时常见的核心概念：
         </p>
         <ul>
             <li>
-                <strong>1. 什么是“预训练”与“后训练（Post-Training）”？为什么 Claude 写代码和推理那么强？</strong><br>
-                • <strong>预训练（Pre-training）</strong>：好比一个书生把国家图书馆里所有网页、书本、论文死记硬背了一遍。他肚子里全都是词汇，但他是个“只会顺着往下接话的算命先生”，既不懂逻辑对错，也不知道怎么分步解决难题，而且人类公开的高质量网页在 2025 年已经被各大实验室彻底挖空了。<br>
-                • <strong>后训练（Post-training）</strong>：这是让书生脱胎换骨的“魔鬼训练营”！通过强化学习（RL）、精选示范和环境反馈，教会模型严密思考。<strong>Anthropic 的 Claude（如 Claude 3.5 / 3.7 Sonnet）之所以在写代码和深度推理上封神，核心不是因为预训练模型比别人大，而是因为其后训练做到了极致</strong>：发明了“宪法对齐（Constitutional AI）”，不靠廉价人类外包工打分，而是制定严谨原则让 AI 自己审查修改输出；并接入代码沙盒与单元测试做执行强化学习（RLEF），让模型在数万次报错中学会自己找 Bug。
+                <strong>1. 什么是预训练与后训练（Post-Training）？为什么 Claude 在代码与推理中表现突出？</strong><br>
+                • <strong>预训练（Pre-training）</strong>：模型在大规模通用文本上做自回归预测（Next-token prediction），学习语言常识与统计模式。此时模型具备广度，但缺乏多步推理的准确性与自我检验能力。<br>
+                • <strong>后训练（Post-training）</strong>：包括监督微调（SFT）和基于人类或环境反馈的强化学习（RL）。<strong>Anthropic 的 Claude 系列在代码编写与长程推理上表现突出，关键在于后训练流程的打磨</strong>：提出了宪法对齐（Constitutional AI），通过预设原则引导模型进行自我审查与修正，减少对人工标注的依赖；同时结合代码执行沙盒提供即时反馈（RLEF），让模型在执行报错中学习定位并修复问题。
             </li>
             <li>
-                <strong>2. 各大 Benchmark（基准测试排行榜）到底在测什么？为什么说以前的分数都在“骗人”？</strong><br>
-                • <strong>MMLU（多学科选择题）</strong>：57个学科的四选一单选题。大厂模型动辄刷到 90+ 分，但由于四选一能蒙，且题目早被各家偷偷放进训练集背下来了（数据污染），考高分并不代表真聪明。<br>
-                • <strong>GSM8K（小学数学）</strong>：8,000 道小学应用题。难度太低，现在的模型几乎全部 95+，早已失去辨识度。<br>
-                • <strong>HumanEval / MBPP（单函数编程）</strong>：考几十行基础 Python 小算法，就像考驾照只考科目一，根本解决不了真实工程问题。<br>
-                • <strong>SWE-bench / SWE-bench Verified（真实 GitHub 代码修复）</strong>：<strong>当今最硬核的工业级基准！</strong>直接从真实开源项目（如 Django、SymPy）拉取复杂 Issue 和上万行代码，要求 AI 自己定位 Bug、改代码并跑通单元测试。能把这个基准考到 50% 以上的，才是真正的顶级 AI 程序员！<br>
-                • <strong>GAIA（通用多模态助手基准）</strong>：模拟人类真实打工人，要求 AI 跨越网页浏览、Excel 数据核算、多模态图表完成长任务。<br>
-                • <strong>GDPVal（真实经济价值基准）</strong>：直接衡量 AI 能否接管投行财务建模、芯片 RTL 代码设计等高薪岗位，并折算单次任务的算力成本。
+                <strong>2. 各大 Benchmark（评测基准）分别测试什么？</strong><br>
+                • <strong>MMLU（多学科选择题）</strong>：覆盖 57 个学科的单选题，考察知识记忆与广泛常识。由于选项有限且题目可能存在训练集泄漏，高分并不完全代表复杂推理能力。<br>
+                • <strong>GSM8K（小学数学）</strong>：约 8,000 道基础应用题，当前主流前沿模型多数已接近满分，辨识度逐渐降低。<br>
+                • <strong>HumanEval / MBPP（函数级代码生成）</strong>：针对短小 Python 函数的单元测试，主要测试基础语法与常用算法。<br>
+                • <strong>SWE-bench / SWE-bench Verified（实际 GitHub Issue 修复）</strong>：工业级基准测试。直接从真实开源项目（如 Django、SymPy）提取 Issue，要求模型在大型代码库中定位 Bug、编写补丁并通过项目现有的单元测试。<br>
+                • <strong>GAIA（通用助手基准）</strong>：侧重多步工具调用与多模态检索，要求模型结合网页浏览、表格处理与跨模态信息完成任务。<br>
+                • <strong>GDPVal（经济价值与专业任务基准）</strong>：评估模型在金融建模、硬件描述语言等专业工作流程中的完成度与算力开销。
             </li>
             <li>
-                <strong>3. 什么是“测试期算力（Test-Time Compute）”与“自演进（Self-Improvement）”？</strong><br>
-                过去的大模型像抢答器，用户一敲回车，模型必须在 0.5 秒内吐出字来。而“测试期算力”就像给考生发草稿纸：遇到难题允许模型反复思考几分钟、多尝试几种解法（反复采样与树搜索），在沙盒里跑一遍测试，确认无误再提交。当模型能自己写代码、自己跑测试纠错时，它就开启了不需要人类投喂数据的“自我演进飞轮”。
+                <strong>3. 什么是测试期算力（Test-Time Compute）与自演进（Self-Improvement）？</strong><br>
+                传统推理在用户输入后以固定单向生成输出。测试期算力扩展允许模型在作答前分配更多计算资源，例如生成多条候选解、结合蒙特卡洛树搜索（MCTS）进行剪枝、或在代码沙盒中运行校验。通过将环境反馈或自动化验证机制引入训练与推理环节，模型能够在无需新增人工标注的情况下实现性能迭代。
             </li>
         </ul>
     </div>

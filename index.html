@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stanford AI Monographs | 斯坦福前沿人工智能深度专论文集</title>
+    <title>Stanford AI Monographs | 斯坦福前沿人工智能研读笔记文集</title>
     <link rel="stylesheet" href="tufte.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -12,86 +12,75 @@
 <body>
 
 <nav class="top-nav">
-    <span>Stanford University &mdash; Academic Year 2025&ndash;2026</span>
-    <span>Curated by Joyce · Open Source Project</span>
+    <span>Stanford University (2025-2026)</span>
+    <span>Notes curated by Joyce (<a href="https://github.com/JOYCE9896/stanford-ai-monographs" target="_blank">GitHub</a>)</span>
 </nav>
 
 <article>
     <header>
         <h1>Stanford AI Monographs</h1>
-        <p class="subtitle">斯坦福前沿人工智能深度学术专论文集 · 从底层技术物理极限到万亿资本商业范式</p>
+        <p class="subtitle">斯坦福大学前沿人工智能课程研读笔记（CS329A 与 MS&E 435）</p>
         <div class="author-meta">
-            开源作者：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>） · 严格遵循 Edward Tufte 经典书籍排印规范与 Newsreader / 思源宋体字学体系<br>
-            项目定位：非官方学术专论合集、核心概念通识解构与播客实录深度追踪（持续更新）
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>） · 基于 Tufte CSS 排版规范与 Newsreader / 思源宋体<br>
+            内容形式：学术课程笔记整理、技术背景补充与行业播客访谈纪要
         </div>
     </header>
 
-    <div class="epigraph">
-        <blockquote>
-            “人工智能的历史不是由公关通稿和发布会演讲写就的，而是由硅片上的热力学散热极限、测试期算力在海量采样中的指数幂律、以及重工业电网在真实世界的残酷摩擦所决定的。理解 AGI 的真正演进，必须同时穿透顶层的技术状态机与底层的资本能量流。”
-            <footer>— 专论文集题记</footer>
-        </blockquote>
-    </div>
-
     <section>
-        <h2>文集总览：两大旗舰专论专题</h2>
+        <h2>课程概览</h2>
         <p>
-            本专论文集系统整合了斯坦福大学在 2025–2026 学年最新开设的两门最硬核的前沿学术研讨课程。全套内容摒弃了浮躁的营销话术与玩具级测试，直击技术内核与资本本质，并配备了针对非技术读者的小白通识注释系统。
+            本文集整理了斯坦福大学 2025-2026 学年的两门 AI 主题研讨课程。一门侧重强化学习与模型自主演进算法，另一门探讨数据中心能耗、硬件成本与产业投资周期。正文中对涉及的论文和评测基准补充了背景说明。
         </p>
 
         <!-- 专题一：CS329A -->
-        <div class="lecture-card" style="border-left: 4px solid #8b261e; padding-left: 1.5rem; background: var(--box-bg); margin: 2.5rem 0;">
-            <span class="lecture-tag">Flagship Series 01 · 计算机科学系前沿研究生课程</span>
-            <h3><a href="CS329A-Self-Improving-AI-Agents/index.html">Stanford CS329A: 自演进 AI Agent 的范式跃迁 &rarr;</a></h3>
+        <div class="lecture-card" style="border-left: 4px solid #8b261e; padding-left: 1.5rem; background: var(--box-bg); margin: 2rem 0;">
+            <span class="lecture-tag">专题 01 · 计算机科学系前沿研讨</span>
+            <h3><a href="CS329A-Self-Improving-AI-Agents/index.html">CS329A: Self-Improving AI Agents（自演进智能体） &rarr;</a></h3>
             <p>
-                <strong>课程全称</strong>：<em>CS329A: Self-Improving AI Agents</em><br>
-                <strong>主讲导师</strong>：Aakanksha Chowdhery 教授（Google PaLM 首席作者）& Azalia Mirhoseini 教授（AlphaChip 奠基人 / Stanford 助理教授）<br>
-                <strong>专论规模</strong>：全套 10 讲万字深度专论 + 7 组硅谷领袖 12 场闭门深度播客全记录<br>
-                <strong>核心穿透</strong>：
-                解构“预训练神话”的物理终局；拆解测试期算力扩展定律（Test-Time Compute Scaling）与 Pass@k 指数幂律；揭秘为什么 Anthropic 的 Claude 系列依靠 <strong>Constitutional AI（宪法自对齐）</strong> 与 <strong>RLEF（代码沙盒报错强化学习）</strong> 实现推理断层领跑；系统科普 MMLU、GSM8K、SWE-bench、GAIA 到 GDPVal 真实经济价值基准的全景进化史；深入 DeepSeek GRPO 为什么能甩掉 Critic 显存、以及强化学习如何防御致命的“策略熵崩溃”。
+                <strong>主讲</strong>：Aakanksha Chowdhery（Google PaLM 共同一作）、Azalia Mirhoseini（AlphaChip 共同一作，斯坦福助理教授）<br>
+                <strong>内容规模</strong>：10 讲技术笔记 + 12 场主讲人与研究者访谈纪要<br>
+                <strong>技术主题</strong>：预训练数据的瓶颈与序列累积误差；测试期算力扩展与 Pass@k 采样规律；过程奖励模型（PRM）与结果奖励模型（ORM）；代码沙盒反馈强化学习（RLEF）与 Anthropic Constitutional AI 流程；树搜索（MCTS）在多步推理中的应用；DeepSeek GRPO 算法原理与策略熵衰减；评测基准历史（从 MMLU、GSM8K 到 SWE-bench 与 GAIA）。
             </p>
             <p>
-                <a href="CS329A-Self-Improving-AI-Agents/index.html"><strong>👉 点击直达进入 CS329A 专论主目录</strong></a>
+                <a href="CS329A-Self-Improving-AI-Agents/index.html"><strong>进入 CS329A 目录</strong></a>
             </p>
         </div>
 
         <!-- 专题二：MS&E 435 -->
-        <div class="lecture-card" style="border-left: 4px solid #204e79; padding-left: 1.5rem; background: var(--guide-bg); margin: 2.5rem 0;">
-            <span class="lecture-tag" style="color: #204e79;">Flagship Series 02 · 管理科学与工程系产业资本研讨</span>
-            <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">Stanford MS&E 435: AI 超级周期的经济学真相 &rarr;</a></h3>
+        <div class="lecture-card" style="border-left: 4px solid #204e79; padding-left: 1.5rem; background: var(--guide-bg); margin: 2rem 0;">
+            <span class="lecture-tag" style="color: #204e79;">专题 02 · 管理科学与工程系研讨</span>
+            <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">MS&E 435: Economics of the AI Supercycle（AI 经济学） &rarr;</a></h3>
             <p>
-                <strong>课程全称</strong>：<em>MS&E 435: Economics of the AI Supercycle (Spring 2026)</em><br>
-                <strong>主讲导师</strong>：Apoorv Agrawal（Altimeter Capital 合伙人）<br>
-                <strong>专论规模</strong>：全套 9 讲万字深度全景专论 + 8 组顶级嘉宾 15 场深度实战播客解构<br>
-                <strong>核心穿透</strong>：
-                揭秘万亿美元资本狂潮下的<strong>“倒三角利润池陷阱”</strong>（为什么应用层亏损补贴底层电网与英伟达？）；深入 GPU 经济学、HBM 内存墙与机器智力边际成本归零；吉瓦级（GW）AI 工厂建造、美国电网排期与大型升压变压器断供危机；企业级 AI 落地真相与软件生产率 J 曲线；Vibe Coding 意图编程革命与软件可塑性悖论；逆转埃隆定律的生命科学 AI 湿实验室 API 化。
+                <strong>主讲</strong>：Apoorv Agrawal（Altimeter Capital 合伙人）<br>
+                <strong>内容规模</strong>：9 讲产业笔记 + 15 场基础设施与投资人访谈纪要<br>
+                <strong>讨论主题</strong>：生成式 AI 的可变推理成本与应用层利润率；GPU 折旧周期与内存带宽瓶颈；吉瓦级数据中心建设、电网排期与变压器供应链；企业软件应用中的生产率 J 曲线效应；芯片先进制程产能分配与推理模型硬件需求变化；意图驱动编程对软件工程门槛的影响；生物制药干湿闭环实验。
             </p>
             <p>
-                <a href="MSE435-Economics-of-the-AI-Supercycle/index.html"><strong>👉 点击直达进入 MS&E 435 专论主目录</strong></a>
+                <a href="MSE435-Economics-of-the-AI-Supercycle/index.html"><strong>进入 MS&E 435 目录</strong></a>
             </p>
         </div>
     </section>
 
     <section>
-        <h2>排版美学与工程特性</h2>
+        <h2>排版与阅读支持</h2>
         <ul>
-            <li><strong>典雅排印系统</strong>：英文采用 Neoclassical Variable Serif 字体 <strong>Newsreader</strong>，中文深度适配<strong>思源宋体（Noto Serif SC）</strong>，代码统一采用 <strong>JetBrains Mono</strong>。</li>
-            <li><strong>严格 3 字号规范</strong>：全站 CSS 严格锁死在 3 种层级字号以内（标题大字号、正文中字号、边注小字号），彻底告别字体杂乱与视觉噪音。</li>
-            <li><strong>原生矢量数学公式</strong>：深度集成轻量 KaTeX 引擎，所有概率转移矩阵、损失函数与经济 ROI 公式均支持无噪点矢量渲染，告别字符乱码。</li>
-            <li><strong>小白友好通识体系</strong>：针对高深学术词汇（PRM、RLAIF、GRPO、SWE-bench 等）注入白话比喻盒，让非技术读者亦能轻松穿透技术骨髓。</li>
+            <li><strong>字体系统</strong>：正文西文使用 Newsreader，中文搭配思源宋体（Noto Serif SC），代码使用 JetBrains Mono。</li>
+            <li><strong>字号规范</strong>：全站仅保留 3 种字号（大号 1.55rem 用于标题，正文 1.10rem，小号 0.88rem 用于旁注和表格），控制排版杂乱。</li>
+            <li><strong>公式与图表</strong>：数学推导基于 KaTeX 矢量渲染，并保留了适合窄屏阅读的纯文本备选标记。</li>
+            <li><strong>背景注释</strong>：正文中通过提示框对 PRM、RLAIF、GRPO 以及测试基准做了背景补充，降低阅读门槛。</li>
         </ul>
     </section>
 
     <section>
-        <h2>版权说明与致谢（Academic Attribution）</h2>
+        <h2>声明与致谢</h2>
         <p>
-            本专论文集为个人学术研究与学习笔记整理，遵循 <strong>CC BY-NC-SA 4.0</strong> 国际知识共享协议（署名-非商业性使用-相同方式共享）。课程原始内容与学术观点之著作权分别归属于斯坦福大学计算机系、管理科学与工程系、各讲主讲教授及特邀嘉宾所有。
+            本文集为个人学术研读整理，按 <strong>CC BY-NC-SA 4.0</strong> 许可共享（署名、非商业性使用、相同方式共享）。原始讲座内容与学术观点版权归斯坦福大学、授课教师及演讲嘉宾所有。
         </p>
     </section>
 
     <footer class="document-footer">
-        <p>Stanford AI Monographs &copy; 2026 · Curated with care by Joyce</p>
-        <p>Hosted on GitHub Pages · Open-source scholarly knowledge repository</p>
+        <p>Stanford AI Monographs (2025-2026) · Curated by Joyce</p>
+        <p><a href="https://github.com/JOYCE9896/stanford-ai-monographs" target="_blank">View on GitHub</a></p>
     </footer>
 </article>
 
