@@ -7,11 +7,15 @@
    Strict Constraint: Exactly 2 font sizes across the entire webpage:
      --fs-heading: 1.35rem (h1, h2, h3)
      --fs-body:    1.05rem (everything else)
+   Single centered reading column — no decorative boxes, sidenotes, or
+   blockquotes, and no left-margin reserved for marginalia that no
+   longer exists.
    ========================================================================== */
 
 :root {
     --fs-heading: 1.35rem;
     --fs-body: 1.05rem;
+    --content-width: 720px;
 
     --font-main: "Newsreader", "Noto Serif SC", serif;
 
@@ -49,16 +53,13 @@ html {
 }
 
 body {
-    width: 87.5%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 12.5%;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
     font-family: var(--font-main);
     font-size: var(--fs-body);
     background-color: var(--bg-color);
     color: var(--text-color);
-    max-width: 1350px;
-    counter-reset: sidenote-counter;
     line-height: 1.75;
 }
 
@@ -81,7 +82,6 @@ h1, h2, h3 {
     font-weight: 600;
     line-height: 1.35;
     color: var(--text-color);
-    width: 55%;
 }
 
 h1 {
@@ -104,16 +104,12 @@ h3 {
 
 /* ==========================================================================
    2. Body & All Other Elements (var(--fs-body))
+   All elements are full-width within the single centered column above.
    ========================================================================== */
 
 p,
-section > p,
-article > p,
 footer,
-section > footer,
-table,
-section > table {
-    width: 55%;
+table {
     font-size: var(--fs-body);
 }
 
@@ -132,11 +128,9 @@ p.subtitle {
     margin-top: 0.4rem;
     margin-bottom: 1.5rem;
     line-height: 1.6;
-    width: 55%;
 }
 
 nav.top-nav {
-    width: 55%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -157,36 +151,7 @@ nav.top-nav a:hover {
     color: var(--link-hover);
 }
 
-div.epigraph {
-    margin: 2em 0;
-}
-
-div.epigraph > blockquote,
-blockquote {
-    font-size: var(--fs-body);
-    line-height: 1.75;
-    font-style: italic;
-    margin: 1.5em 0;
-}
-
-blockquote p {
-    width: 55%;
-    font-size: var(--fs-body);
-}
-
-blockquote footer {
-    width: 55%;
-    font-size: var(--fs-body);
-    font-style: normal;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-}
-
-section > dl,
-section > ol,
-section > ul,
 dl, ol, ul {
-    width: 55%;
     -webkit-padding-start: 5%;
     padding-inline-start: 5%;
     font-size: var(--fs-body);
@@ -198,67 +163,11 @@ li {
     margin-top: 0.4rem;
 }
 
-/* Minimal notes instead of flashy colored boxes */
-.sharp-box,
-.guide-box {
-    width: 55%;
-    box-sizing: border-box;
-    border-left: 2px solid var(--border-color);
-    padding: 0.8rem 1.2rem;
-    margin: 1.8rem 0;
-    font-size: var(--fs-body);
-    line-height: 1.75;
-}
-
-.sharp-box p,
-.guide-box p {
-    width: 100%;
-    margin: 0.4rem 0;
-    font-size: var(--fs-body);
-}
-
-.sharp-box ul,
-.guide-box ul,
-.sharp-box ol,
-.guide-box ol {
-    width: 100%;
-    padding-inline-start: 5%;
-    font-size: var(--fs-body);
-}
-
-.sharp-box-title,
-.guide-box-title {
-    font-size: var(--fs-body);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.lecture-card {
-    width: 55%;
-    box-sizing: border-box;
-    border-top: 1px solid var(--border-color);
-    padding: 1.2rem 0;
-    margin: 1.5rem 0;
-}
-
-.lecture-card p {
-    width: 100%;
-    font-size: var(--fs-body);
-    margin: 0.4rem 0;
-}
-
-.lecture-tag {
-    display: inline-block;
-    color: var(--text-muted);
-    font-size: var(--fs-body);
-    margin-bottom: 0.3rem;
-}
-
 table {
     border-collapse: collapse;
     margin: 1.8rem 0;
     font-size: var(--fs-body);
-    width: 55%;
+    width: 100%;
 }
 
 th, td {
@@ -287,7 +196,6 @@ code {
 }
 
 pre {
-    width: 55%;
     box-sizing: border-box;
     padding: 1rem;
     background: var(--code-bg);
@@ -303,16 +211,9 @@ pre > code {
     width: 100%;
 }
 
-span.newthought {
-    letter-spacing: 0.04em;
-    font-size: var(--fs-body);
-    font-weight: 600;
-}
-
 hr {
     display: block;
     height: 1px;
-    width: 55%;
     border: 0;
     border-top: 1px solid var(--border-color);
     margin: 2em 0;
@@ -323,65 +224,9 @@ hr {
     font-size: var(--fs-body);
     color: var(--text-muted);
     margin-bottom: 1.8rem;
-    width: 55%;
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--border-color);
     line-height: 1.6;
-}
-
-.sidenote,
-.marginnote {
-    float: right;
-    clear: right;
-    margin-right: -60%;
-    width: 50%;
-    margin-top: 0.2rem;
-    margin-bottom: 1rem;
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    vertical-align: baseline;
-    position: relative;
-    color: var(--text-muted);
-    text-align: left;
-}
-
-.sidenote-number {
-    counter-increment: sidenote-counter;
-}
-
-.sidenote-number:after,
-.sidenote:before {
-    position: relative;
-    vertical-align: baseline;
-}
-
-.sidenote-number:after {
-    content: counter(sidenote-counter);
-    font-size: var(--fs-body);
-    top: -0.35rem;
-    left: 0.1rem;
-    color: var(--text-muted);
-}
-
-.sidenote:before {
-    content: counter(sidenote-counter) ". ";
-    font-size: var(--fs-body);
-    top: 0;
-    color: var(--text-muted);
-}
-
-input.margin-toggle {
-    display: none;
-}
-
-label.sidenote-number {
-    display: inline-block;
-    max-height: 2rem;
-    cursor: pointer;
-}
-
-label.margin-toggle:not(.sidenote-number) {
-    display: none;
 }
 
 footer.document-footer {
@@ -390,7 +235,6 @@ footer.document-footer {
     padding-top: 1.2rem;
     font-size: var(--fs-body);
     color: var(--text-muted);
-    width: 55%;
 }
 
 a:link,
@@ -404,65 +248,21 @@ a:hover {
     color: var(--link-hover);
 }
 
+/* KaTeX ships its own centering for .katex-display; this only keeps a
+   formula wider than the column scrollable instead of spilling past it. */
 .katex {
     font-size: 1em !important;
 }
 
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1.5rem 0;
+}
+
 /* Responsive / Mobile View */
-@media (max-width: 760px) {
+@media (max-width: 480px) {
     body {
-        width: 90%;
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-
-    h1, h2, h3,
-    hr,
-    p,
-    p.subtitle,
-    .author-meta,
-    section > p,
-    article > p,
-    footer,
-    section > footer,
-    table,
-    section > table,
-    section > dl,
-    section > ol,
-    section > ul,
-    dl, ol, ul,
-    nav.top-nav,
-    div.epigraph > blockquote,
-    div.epigraph > blockquote > p,
-    div.epigraph > blockquote > footer,
-    blockquote p,
-    blockquote footer,
-    .sharp-box,
-    .guide-box,
-    .lecture-card,
-    pre,
-    footer.document-footer {
-        width: 100%;
-    }
-
-    label.margin-toggle:not(.sidenote-number) {
-        display: inline;
-    }
-
-    .sidenote,
-    .marginnote {
-        display: none;
-    }
-
-    .margin-toggle:checked + .sidenote,
-    .margin-toggle:checked + .marginnote {
-        display: block;
-        float: none;
-        clear: both;
-        width: 100%;
-        margin: 0.8rem 0;
-        position: relative;
-        padding: 0.6rem 0.8rem;
-        border-left: 2px solid var(--border-color);
+        padding: 0 1rem;
     }
 }
