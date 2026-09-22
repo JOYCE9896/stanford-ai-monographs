@@ -1,6 +1,6 @@
 # Stanford AI 课程
 
-> 斯坦福大学 2025-2026 学年七门 AI 前沿课程的个人研读笔记，覆盖技术机制、系统工程、产业经济、公开研讨、法律治理与经典 NLP 六个维度。
+> 斯坦福大学 2025-2026 学年八门 AI 前沿课程的个人研读笔记，覆盖技术机制、系统工程、产业经济、公开研讨、法律治理、前沿系统栈与经典 NLP 七个维度。
 
 [![GitHub Pages](https://img.shields.io/badge/Reading-GitHub%20Pages-8b261e?style=flat-square&logo=github)](https://joyce9896.github.io/stanford-ai-monographs/)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-204e79?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -31,6 +31,7 @@
 | [EE392B: Industrial AI](https://joyce9896.github.io/stanford-ai-monographs/EE392B-Industrial-AI/) | Daniel O'Neill、Dimitry Gorinevsky | 制造业、军工、半导体等垂直行业的 AI 落地工程 |
 | [CS283: Governing Artificial Intelligence](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/) | Nathaniel Persily、Rob Reich、Anka Reuel、Sanmi Koyejo | AI 治理的法律、政策与制度设计 |
 | [CS224N: NLP with Deep Learning](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/) | Christopher Manning | 从词向量、Transformer 到推理训练，斯坦福最长寿的 NLP 课 |
+| [CS153: Frontier Systems](https://joyce9896.github.io/stanford-ai-monographs/CS153-Frontier-Systems/) | Anjney Midha、Michael Abbott | 从能源、硅片拓扑、多模态仿真到千倍效能工程师的前沿系统全栈 |
 
 ---
 

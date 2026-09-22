@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三讲：流匹配视觉生成与世界仿真系统 | 斯坦福 CS153 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="02_端到端语音大模型与低延迟交互系统.html">&larr; 上一讲</a>
+    <span>Stanford CS153: Lecture 03</span>
+    <a href="04_多模态统一智能与物理世界仿真.html">下一讲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第三讲：流匹配视觉生成与世界仿真系统</h1>
+        <p class="subtitle">从扩散模型到整流流匹配（Flow Matching）、连续动力学系统与物理世界生成</p>
+        <div class="author-meta">
+            主讲导师：Andreas Blattmann（Black Forest Labs 联合创始人兼研究科学家，Stable Diffusion 与 FLUX 核心架构师）<br>
+            深度解构：整流流匹配数学机理、扩散模型演化及跨模态物理交互仿真
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲座背景与核心议题</h2>
+        <p>
+            Black Forest Labs（BFL）由前 Stability AI 核心研究团队创立，其发布的 FLUX 系列模型在图像与视频生成领域确立了新的技术标准。Andreas Blattmann 在本讲中全面拆解了从潜在扩散模型（Latent Diffusion Models, LDM）向整流流匹配（Rectified Flow Matching）范式转移的理论动因。
+        </p>
+        <p>
+            Blattmann 强调，视觉模型的演进正在越过单纯的"数字内容创作"（Content Creation）阶段。早期的风格迁移、营销配图与插画生成只是视觉表征学习的初级副产物；现代高分辨率视觉骨干网络实质上正在演化为理解三维空间、物理接触力学、光影遮挡与动力学规律的连续世界仿真系统。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 系统机制与技术拆解</h2>
+        <p>
+            本讲技术核心在于阐释生成动力学方程的几何本质：
+        </p>
+        <ul>
+            <li><strong>扩散模型的弯曲轨迹困境</strong>：传统去噪扩散概率模型（DDPM）假定前向加噪过程遵循布朗运动，逆向去噪过程则试图在弯曲的高维概率流形上还原原始数据。这导致逆向求解常微分方程（ODE）或随机微分方程（SDE）时轨迹弯曲剧烈，需要多达 50 至 100 次离散步长计算，推理开销沉重且容易在中间步骤累积结构扭曲。</li>
+            <li><strong>整流流匹配（Flow Matching）的直线向量场</strong>：FLUX 等前沿模型采用流匹配框架，直接在先验噪声分布 $p_0$ 与数据真实分布 $p_1$ 之间定义最优传输位移场：
+                $$x_t = (1 - t)x_0 + tx_1, \quad t \in [0, 1]$$
+                通过训练模型拟合恒定速度向量场 $v_t = x_1 - x_0$，将生成轨迹拉直为近乎笔直的测地线。这一数学改造使得模型在仅需 4 至 8 步甚至单步蒸馏推演下，便能精准捕获超高精度的几何结构与细致纹理。</li>
+            <li><strong>跨模态物理噪声耦合</strong>：Blattmann 指出，将视频、音频与物理动作空间统一映射进流匹配表征空间时，动作向量可以直接作为向量场的条件调制信号。通过对多模态动力学协同训练，模型开始表现出因果推断能力，例如根据施力方向准确预测碰撞物体的运动轨迹与碎裂形态。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 反直觉观察与行业误区</h2>
+        <p>
+            外界常直觉地认为，视觉生成模型的任务就是"画出符合人类审美的漂亮像素"。
+        </p>
+        <p>
+            Blattmann 指出，漂亮像素仅仅是数学损失函数收敛的外在表象。当模型被要求在千万级视频片段中预测下一个潜在状态帧时，它无法依靠死记硬背像素网格来维持时间一致性。为了在摄像机旋转、光照突变和物体快速运动时保持画面不崩溃，模型内部必须自主建立对场景深度、重力加速度、透视投影法则与非刚体形变规律的隐式三维表征。换言之，流匹配网络不是画画工具，而是以自监督方式从视觉信息中提取出的一台物理引擎。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 核心洞见与前沿判断</h2>
+        <p>
+            图形渲染管线（光栅化与光线追踪）与生成式神经渲染正在发生历史性合流。未来机器人控制与计算机自主操作（Computer Use）的训练环境，将不再依赖手工编写代码的虚拟游戏引擎，而是由经过大规模流匹配预训练的世界模型实时渲染生成。在具备统一物理常识的视觉基座上接入动作策略头，将是通往具身智能的必经之路。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &copy; Academic Year 2025-2026</p>
+        <nav class="footer-nav">
+            <a href="02_端到端语音大模型与低延迟交互系统.html">&larr; 上一讲</a>
+            <a href="index.html">返回主目录</a>
+            <a href="04_多模态统一智能与物理世界仿真.html">下一讲 &rarr;</a>
+        </nav>
+    </footer>
+</article>
+
+</body>
+</html>

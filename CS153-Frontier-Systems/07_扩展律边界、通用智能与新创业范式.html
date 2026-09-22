@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第七讲：扩展律边界、通用智能与新创业范式 | 斯坦福 CS153 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="06_AI原生企业架构与千倍效能工程师.html">&larr; 上一讲</a>
+    <span>Stanford CS153: Lecture 07</span>
+    <a href="08_风险投资重塑、网络效应与防御壁垒.html">下一讲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第七讲：扩展律边界、通用智能与新创业范式</h1>
+        <p class="subtitle">重构创业方法论、测试期算力新维度、ChatGPT起源偶然性与物理世界接入</p>
+        <div class="author-meta">
+            主讲导师：Sam Altman（OpenAI 联合创始人兼 CEO）<br>
+            深度解构：扩展律认知误区、测试期推理新前沿与下一代科技公司护城河
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲座背景与核心议题</h2>
+        <p>
+            2014 年，Sam Altman 曾在斯坦福开设了风靡全球的 CS183 课程《How to Start a Startup》。时隔十二年重返斯坦福讲台，Altman 感慨当年的创业方法论如今几乎需要全盘重写。过去强调的 MVP 验证循环、线性招聘工程师团队以及依靠复杂代码建立的护城河，在通用智能快速演化的背景下已经发生根本性位移。
+        </p>
+        <p>
+            Altman 深入回顾了 OpenAI 在技术与产品探索中的数个关键决策节点。他特别提到，OpenAI 之所以能够走到今天，核心并不在于掌握了什么秘密算法公式，而在于整个团队在过去数年里，敢于在主流学界和工业界普遍抱持冷嘲热讽的态度下，坚定不移地押注扩展律（Scaling Laws）的物理外推。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 系统机制与技术拆解</h2>
+        <p>
+            Altman 梳理了前沿大模型在工程扩展与产品化探索中的底层机制：
+        </p>
+        <ul>
+            <li><strong>扩展维度的连续跃迁</strong>：针对外界关于"预训练数据已经耗尽，模型提升遭遇天花板"的普遍悲观情绪，Altman 解释了算力缩放的双阶段规律。第一阶段是在海量非结构化文本上进行 Next-token 预测的预训练扩展，这一维度的边际效率确实在放缓；但紧随其后的第二阶段——基于过程奖励的后训练与测试期推理算力（Test-time compute）扩展，打开了全新的算力吸收空间。让模型在思考链中探索多路径验证，能够持续产生高质量认知增益。</li>
+            <li><strong>ChatGPT 的偶发性突破机理</strong>：Altman 罕见地揭秘了 ChatGPT 的诞生内幕。最初 OpenAI 面向企业客户推广 GPT-3.5 API 时，大部分开发者甚至无法将 API 跑通到满足商业业务的标准。然而团队后台监测到一种异常行为：开发者们为了试探模型能力，直接用私有 API 编写简单的聊天脚本与模型不停对话。OpenAI 敏锐捕捉到了这一信号，将早已研发完成的 GPT-4 暂缓，仅用较小规模的对话微调版本上线了 ChatGPT，在极短时间内爆发为现象级入口。</li>
+            <li><strong>物理现实接入与世界模型（World Models）</strong>：Altman 确认，通往完整 AGI 的道路必须包含对真实物理世界的具身交互。单纯的语言模型在符号推演上表现惊人，但在面对机器人抓取、精密装配等空间力学场景时缺乏触觉与连续动力学闭环。世界模型与强化学习的结合将是填补这一拼图的下一步重点。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 反直觉观察与行业误区</h2>
+        <p>
+            在过去五年里，科技界最常见且代价最惨痛的战略错误，就是<strong>押注扩展律（Scaling Laws）将会停滞</strong>。
+        </p>
+        <p>
+            Altman 直言不讳地指出，整整一代顶尖科学家和技术管理者因过分拘泥于自身已有的理论偏见，坚信纯统计模型绝不可能涌现出真正的逻辑、代码综合与高级常识。他们早早下结论认为模型到了 10B、100B 就会撞墙。然而严谨的对数线性图表表明，性能增益曲线一直在平稳延续。很多初创公司花费巨资针对现有大模型的缺陷去开发修补性补丁软件，结果当下一代更大规模的基础模型发布时，这些耗资千万的周边业务在一天之内被全部抹平。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 核心洞见与前沿判断</h2>
+        <p>
+            边际认知劳动的成本正以指数级速度奔向零。在这种现实下，软件工程师与创业者的核心竞争力不再是写代码的熟练度，而是对关键真实问题的辨识力、撬动数万张 GPU 资源进行系统化调度的资本运作力、以及与物理世界基础设施（如能源供应、硬件落地）快速整合的综合执行力。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &copy; Academic Year 2025-2026</p>
+        <nav class="footer-nav">
+            <a href="06_AI原生企业架构与千倍效能工程师.html">&larr; 上一讲</a>
+            <a href="index.html">返回主目录</a>
+            <a href="08_风险投资重塑、网络效应与防御壁垒.html">下一讲 &rarr;</a>
+        </nav>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS153: Frontier Systems | 斯坦福课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>CS153 (Spring 2026)</span>
+</nav>
+
+<article>
+    <header>
+        <h1>CS153: Frontier Systems</h1>
+        <p class="subtitle">能源基荷、硅片拓扑、多模态世界模型与万卡集群系统工程全景</p>
+        <div class="author-meta">
+            主讲：Anjney Midha（AMP PBC 联合创始人，前 Discord 平台负责人）、Michael Abbott（AMP PBC 联合创始人，前 Apple 工程副总裁、Twitter 工程副总裁）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
+        </div>
+    </header>
+
+    <section>
+        <h2>核心概念说明</h2>
+        <p>
+            Stanford CS153: Frontier Systems 聚焦于当前以大模型与物理仿真为代表的人工智能系统对全球计算底座的"代际重写"（Generational Rewrite）。理解这门课程涉及以下三个核心支柱概念：
+        </p>
+
+        <h3>1. 前沿系统栈（Frontier Systems Stack）的代际推倒与重构</h3>
+        <p>
+            过去十五年建立在虚拟化 CPU、多租户公有云与以太网之上的传统云计算体系，正在被以张量加速器（GPU/TPU）、专用铜缆与光路直接互联（NVLink/OCS）、以及按兆瓦/吉瓦计算供电的专有"AI 工厂"（AI Factories）所彻底颠覆。算力的计价不再遵循摩尔定律式的自然边际成本衰减，而是直接受制于物理变电站排期与全液冷机架工程。
+        </p>
+
+        <h3>2. 物理世界的真实刚性约束（电网、核能、光路互联）</h3>
+        <p>
+            当万卡集群进行分布式参数同步时，传统电包交换机带来的热耗与丢包构成了系统吞吐的主要杀手。计算边界被硬生生推进到微机电系统（MEMS）光开关反射镜的偏转速度，以及核燃料供应链中高丰度低浓缩铀（HALEU）的离心产能上。软硬件协同设计（Co-design）必须深入到热力学与基础物理学底层。
+        </p>
+
+        <h3>3. 单人前沿实验室（The One-Person Frontier Lab）与千倍效能工程</h3>
+        <p>
+            在应用与组织层面，单体工程师借助先进代码智能体、动态上下文解析器与全自动测试沙盒，能够获得相当于过去百人团队的交付效能。软件公司的层级中层管理大幅萎缩，组织形态转变为由极少数系统架构师驾驭自动化代码工厂的极度扁平结构。
+        </p>
+    </section>
+
+    <section>
+        <h2>课程背景与主讲团队</h2>
+        <p>
+            CS153 是斯坦福大学最具行业轰动效应的前沿研讨课程之一（在校内亦被称为"AI Coachella"）。课程前身为 Michael Abbott 与 Anjney Midha 创办的《Security at Scale》，在 2025-2026 学年全面重组升级为《Frontier Systems》。
+        </p>
+        <p>
+            每堂课由主讲导师邀请一位正在一线执掌全球前沿基础设施与基础模型研发的关键领袖进行无保留深度研讨。嘉宾阵容覆盖了计算硬件与数据中心（Jensen Huang、Amin Vahdat）、基础大模型（Sam Altman、Andreas Blattmann、Amit Jain、Mati Staniszewski）、创业生态与组织变革（Garry Tan、Diana Hu、Ben Horowitz、Nikhyl Singhal）、重工业能源支撑（Scott Nolan）、前沿安全攻防（Joe Sullivan）以及期末收官巨头视角的 Satya Nadella。
+        </p>
+    </section>
+
+    <section>
+        <h2>课程目录（13 讲笔记）</h2>
+
+        <h3><a href="01_计算基础设施与前沿系统栈重构.html">01. 计算基础设施与前沿系统栈重构</a></h3>
+        <p>
+            主讲：Anjney Midha（AMP PBC）。拆解传统云计算边际成本递减规律的失效机制、强化学习后训练算力消耗的爆发式增长，以及从通用数据中心向工业化 AI 工厂的系统栈重塑。
+        </p>
+
+        <h3><a href="02_端到端语音大模型与低延迟交互系统.html">02. 端到端语音大模型与低延迟交互系统</a></h3>
+        <p>
+            主讲：Mati Staniszewski（ElevenLabs 联合创始人兼 CEO）。分析 ASR-LLM-TTS 传统级联管线的信息断裂与延迟硬伤，讲解原生多级残差离散音频分词模型、150 毫秒首字节交付及平台层生态壁垒。
+        </p>
+
+        <h3><a href="03_流匹配视觉生成与世界仿真系统.html">03. 流匹配视觉生成与世界仿真系统</a></h3>
+        <p>
+            主讲：Andreas Blattmann（Black Forest Labs 联合创始人兼研究科学家）。解构从弯曲轨迹扩散模型向直觉向量场整流流匹配（Rectified Flow Matching）的数学演变，剖析视觉基座作为物理世界引擎的底层机制。
+        </p>
+
+        <h3><a href="04_多模态统一智能与物理世界仿真.html">04. 多模态统一智能与物理世界仿真</a></h3>
+        <p>
+            主讲：Amit Jain（Luma AI 联合创始人兼 CEO）。对比独立拼装架构与单一 Transformer 共享骨干网络的优劣，揭示代码任务与高维物理世界仿真在建模难度上的本质分野。
+        </p>
+
+        <h3><a href="05_从训练中心到推理计算系统重构.html">05. 从训练中心到推理计算系统重构</a></h3>
+        <p>
+            主讲：Jensen Huang（黄仁勋，NVIDIA 创始人兼 CEO）。深入 Grace Blackwell NVLink 72 机架级超节点体系，讲解预填充与解码计算解耦、全液冷散热工程，并对科幻末日叙事进行工程脱敏。
+        </p>
+
+        <h3><a href="06_AI原生企业架构与千倍效能工程师.html">06. AI原生企业架构与千倍效能工程师</a></h3>
+        <p>
+            主讲：Garry Tan（陈嘉兴，YC 总裁兼 CEO）& Diana Hu（胡德馨，YC 合伙人兼 CTO）。以单人前沿实验室为切入点，拆解软件工厂模式、动态上下文解析器（Resolvers）、防范低质代码的测试金标准与去中层扁平化组织架构。
+        </p>
+
+        <h3><a href="07_扩展律边界、通用智能与新创业范式.html">07. 扩展律边界、通用智能与新创业范式</a></h3>
+        <p>
+            主讲：Sam Altman（OpenAI 联合创始人兼 CEO）。反思 CS183 创业方法论在新时代的失效，阐释扩展律从预训练向测试期算力的维度跃迁，揭示 ChatGPT 的偶发性诞生内幕与物理具身结合路径。
+        </p>
+
+        <h3><a href="08_风险投资重塑、网络效应与防御壁垒.html">08. 风险投资重塑、网络效应与防御壁垒</a></h3>
+        <p>
+            主讲：Ben Horowitz（a16z 联合创始人兼普通合伙人）。剖析纯代码与常规 UI 护城河在生成式智能面前的快速消融，探讨私有市场超大规模资本架构以及投资瓶颈向变电站与硬件实体的位移。
+        </p>
+
+        <h3><a href="09_产品管理范式转移与组织架构重塑.html">09. 产品管理范式转移与组织架构重塑</a></h3>
+        <p>
+            主讲：Nikhyl Singhal（Skip 社区创始人，前 Meta / Google 产品副总裁）。梳理软件产品管理二十年演进，解析 PRD 文档制度与内部汇报剧场的坍塌，重新定义产品经理作为问题空间定义者的新价值。
+        </p>
+
+        <h3><a href="10_核能富集、电网瓶颈与工业基石.html">10. 核能富集、电网瓶颈与工业基石</a></h3>
+        <p>
+            主讲：Scott Nolan（General Matter 创始人兼 CEO）。直击全美铀浓缩环节市场份额不足 0.1% 的脆弱供应链现状，解析核能基荷电力与小型模块化反应堆（SMR）对吉瓦级计算集群的不可替代性，展现 AI 驱动的重工业实体回流。
+        </p>
+
+        <h3><a href="11_每吉瓦价值创造与数据中心光互联网络.html">11. 每吉瓦价值创造与数据中心光互联网络</a></h3>
+        <p>
+            主讲：Amin Vahdat（Google Fellow，系统基础设施副总裁兼总经理）。建立以单瓦特有效产出为核心的度量体系，拆解基于微机电系统（MEMS）的光路交换机（OCS Apollo）、软硬件跨层协同设计与两年前瞻容量锁定困境。
+        </p>
+
+        <h3><a href="12_前沿规模安全韧性与网络攻防博弈.html">12. 前沿规模安全韧性与网络攻防博弈</a></h3>
+        <p>
+            主讲：Joe Sullivan（前 Facebook / Uber / Cloudflare 首席安全官）。以银行新增代码暴增 5 倍的实证案例警示生成代码带来的审计断崖，解析匿名勒索博弈的深层沟通法则与前沿规模下的高管法律责任。
+        </p>
+
+        <h3><a href="13_平台生态变迁、超大规模系统与前沿边界.html">13. 平台生态变迁、超大规模系统与前沿边界</a></h3>
+        <p>
+            主讲：Satya Nadella（微软董事长兼 CEO）。期末收官重磅报告，回顾 2019 年 10 亿美元押注 OpenAI 的历史起点，阐释 Windows 开放平台精神在 Agent 时代的传承、中性原子容错量子计算里程碑与跨越周期的共情领导力。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &middot; Notes curated by Joyce</p>
+    </footer>
+</article>
+
+</body>
+</html>

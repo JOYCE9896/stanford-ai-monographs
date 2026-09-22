@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第十一讲：每吉瓦价值创造与数据中心光互联网络 | 斯坦福 CS153 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="10_核能富集、电网瓶颈与工业基石.html">&larr; 上一讲</a>
+    <span>Stanford CS153: Lecture 11</span>
+    <a href="12_前沿规模安全韧性与网络攻防博弈.html">下一讲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第十一讲：每吉瓦价值创造与数据中心光互联网络</h1>
+        <p class="subtitle">两年资本前瞻锁定期、光路交换（OCS Apollo）与以焦耳为核心的目标函数</p>
+        <div class="author-meta">
+            主讲导师：Amin Vahdat（Google Fellow，系统基础设施副总裁兼总经理，ACM/IEEE Fellow）<br>
+            深度解构：光路交换机（OCS）、TPU 集群拓扑演进、两年容量硬承诺与单瓦特价值
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲座背景与核心议题</h2>
+        <p>
+            Amin Vahdat 作为分布式系统与数据中心网络领域的泰斗级学者，长期领导 Google 涵盖 TPU 自研芯片、超大规模计算网络、Borg 集群调度以及全网光纤骨干的顶层系统架构。在 CS153 讲座中，Vahdat 将数据中心基础设施的设计哲学凝练为一门高度量化的工程学科——<strong>每吉瓦价值交付（Value per Gigawatt）</strong>。
+        </p>
+        <p>
+            Vahdat 指出，在数据中心单体功耗迈入数百兆瓦以至吉瓦级的今天，优化指标已经发生了彻底位移。单纯追求单芯片峰值算力（Peak TFLOPS）已无意义，因为若没有与之匹配的网络通信与散热能效，数万颗昂贵芯片将在通信等待与降频保护中严重闲置。系统架构师必须将能源视作首要约束，重新设计从光子路由到张量分配的每一个层级。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 系统机制与技术拆解</h2>
+        <p>
+            Vahdat 详细揭示了 Google 超大规模基础设施运行的底层硬核机制：
+        </p>
+        <ul>
+            <li><strong>光路交换技术（Optical Circuit Switching, OCS）的革命</strong>：传统数据中心网络采用多级电包交换机（Spine-Leaf 架构），光信号在每一级都必须经历昂贵的"光-电-光（O-E-O）"模数转换，不仅消耗海量电能，还引入不可忽视的延迟。Google 在其超级计算机（如 Apollo 架构）中自研部署了基于微机电系统（MEMS）微镜阵列的光路交换机。光束在物理反射镜表面直接偏转，零能耗中继光子流，且能以软件定义方式毫秒级动态重配千万级集群拓扑，绕开故障节点。</li>
+            <li><strong>跨层协同设计（Co-design）的代际积累</strong>：Google 从 TPU v1 一路演进至 TPU v6（Trillium），其核心经验在于芯片逻辑、互联拓扑、编译框架（XLA）与集群调度系统（Borg）的端到端软硬件协同。硬件设计从立项之初就深度绑定 Transformer 与大参数并行算法的通讯模式（如 All-Reduce、All-to-All），使实际训练有效吞吐（MFU）保持行业顶尖水平。</li>
+            <li><strong>两年前瞻容量锁定（The Two-Year Commit Dilemma）</strong>：数据中心物理基础设施的投产周期极长。从变电站审批、厂房打桩、冷却系统配型到服务器机架点亮，通常需要 24 至 36 个月。企业高管今天必须在极高不确定性下签下数十亿美元的两年后容量硬承诺。预测过少，将错失行业浪潮；预测过大，数万张芯片折旧与空转能耗足以拖垮任何跨国巨头。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 反直觉观察与行业误区</h2>
+        <p>
+            许多人想当然地认为，只要给芯片堆上最高的晶体管密度和时钟频率，数据中心的计算速度就一定会更快。
+        </p>
+        <p>
+            Vahdat 揭示了令人震惊的工程反直觉规律：<strong>在吉瓦级超级集群中，限制计算能力的往往不是运算器本身，而是交换机芯片上的电热转换损耗与同步等待开销</strong>。如果使用传统电交换机，当集群规模扩张至数万张卡时，光交换机本身的耗电与发热就会吃掉整个数据中心近三分之一的电力预算。算力提升的真正杀手锏，是将不必要的电包解析剥离，让光子在纯净的反射镜面中以光速直线穿行。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 核心洞见与前沿判断</h2>
+        <p>
+            计算的物理学本质是将能量转化为可用的熵减信息。当超大规模系统的扩展推进至物理电网所能供给的极限时，基础设施团队的核心竞争力在于将系统工程的边界推向纳秒级光电混合、动态自愈拓扑以及端到端能量最优调度。在吉瓦时代的残酷淘汰赛中，最终的胜出者绝非只懂算法模型的团队，而是懂得在严苛热力学边界内将每一焦耳电能压榨出极致认知产出的系统大师。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &copy; Academic Year 2025-2026</p>
+        <nav class="footer-nav">
+            <a href="10_核能富集、电网瓶颈与工业基石.html">&larr; 上一讲</a>
+            <a href="index.html">返回主目录</a>
+            <a href="12_前沿规模安全韧性与网络攻防博弈.html">下一讲 &rarr;</a>
+        </nav>
+    </footer>
+</article>
+
+</body>
+</html>

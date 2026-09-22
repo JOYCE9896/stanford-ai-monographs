@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二讲：端到端语音大模型与低延迟交互系统 | 斯坦福 CS153 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="01_计算基础设施与前沿系统栈重构.html">&larr; 上一讲</a>
+    <span>Stanford CS153: Lecture 02</span>
+    <a href="03_流匹配视觉生成与世界仿真系统.html">下一讲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第二讲：端到端语音大模型与低延迟交互系统</h1>
+        <p class="subtitle">级联管线的语义断裂、150毫秒感知门槛与流式语音平台工程</p>
+        <div class="author-meta">
+            主讲导师：Mati Staniszewski（ElevenLabs 联合创始人兼 CEO）<br>
+            深度解构：端到端流式语音合成、对话语音模型（CSM）与开发者平台壁垒
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲座背景与核心议题</h2>
+        <p>
+            ElevenLabs 创立于 2022 年，起步于 Discord 机器人社区，现已发展为语音合成与实时语音交互领域的核心平台。Mati Staniszewski 在讲座中系统梳理了计算机语音交互的技术演进轨迹，重点探讨了从传统拼凑式级联方案向原生端到端音频大模型过渡过程中的系统设计原则。
+        </p>
+        <p>
+            Mati 回顾了早期创业的资源约束：在算力预算极度拮据、公司面临是否花费 6,000 美元申请专利的抉择时，团队果断放弃专利防御，将全部资金用于算力基础设施与产品交互迭代。通过与 Sesame 团队合作，双方开源了基于原生音频 Token 建模的对话语音模型 CSM（Conversational Speech Model），推动语音交互从单向文本朗读进入双工博弈。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 系统机制与技术拆解</h2>
+        <p>
+            语音工程与纯文本大模型存在根本性差异，核心体现在连续波形表征与极度严苛的时延预算：
+        </p>
+        <ul>
+            <li><strong>解构级联架构的系统性瓶颈</strong>：传统语音机器人采用三段式管线：自动语音识别（ASR）&rarr; 大语言模型（LLM）&rarr; 语音合成（TTS）。该架构存在两大致命缺陷：其一是时延累加，三层排队等待使得首字响应时间常突破 1.5 秒；其二是严重的信息损耗，人类语音中的重音、气口、讽刺语调、方言腔调以及环境回声在转录成 ASCII 文本时全部被剥离，LLM 仅能基于失真文本做出苍白回复。</li>
+            <li><strong>原生端到端离散音频分词</strong>：先进语音模型将音频波形直接编码为多层级残差离散编码向量（Residual Vector Quantization, RVQ）。模型不仅预测下一段词意，更直接自回归生成声学特征片段，使对话停顿、笑声与即兴打断具备天然的原生反应能力。</li>
+            <li><strong>首字节流式交付工程（TTFT &lt; 150ms）</strong>：人机口语交谈中，人类感知迟滞的生理阈值约在 150 到 200 毫秒之间。ElevenLabs 架构重点不在于扩大单体模型参数量，而在于优化投机解码、分块自注意力机制与边缘推理部署，确保在首个音素生成的瞬间即开启流式网络推流。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 反直觉观察与行业误区</h2>
+        <p>
+            许多研发团队认为只要使用规模更大的基座模型，就能自然获得逼真的语音表达能力。
+        </p>
+        <p>
+            Mati 指出这是严重的直觉偏差。在真实人际对话中，人类对用词精准度的容忍度极高，但对听觉时序与语气变化的容忍度极低。哪怕模型给出的分析内容达到博士级水准，若其在接话时出现 400 毫秒的不自然停顿，或用冷冰冰的机械播音腔读出悲伤的故事，交互的真实感与信任度便会瞬间瓦解。音频的核心竞争力不在于模型参数规模，而在于控制端到端网络抖动、情绪韵律的一致性以及打断判定逻辑。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 核心洞见与前沿判断</h2>
+        <p>
+            当底层语音基座模型的合成质量逐步收敛，纯粹的模型算法将不再构成坚不可摧的商业壁垒。真正的护城河沉淀在深度贴合具体工作流的平台层：涵盖面向全球配音演员的分成确权网络、跨 30 余种语言的本地化细微表达微调、以及允许第三方开发者低成本嵌入低延迟音视频流调度的全套生产管线。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &copy; Academic Year 2025-2026</p>
+        <nav class="footer-nav">
+            <a href="01_计算基础设施与前沿系统栈重构.html">&larr; 上一讲</a>
+            <a href="index.html">返回主目录</a>
+            <a href="03_流匹配视觉生成与世界仿真系统.html">下一讲 &rarr;</a>
+        </nav>
+    </footer>
+</article>
+
+</body>
+</html>

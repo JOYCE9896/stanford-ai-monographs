@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第十讲：核能富集、电网瓶颈与工业基石 | 斯坦福 CS153 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="09_产品管理范式转移与组织架构重塑.html">&larr; 上一讲</a>
+    <span>Stanford CS153: Lecture 10</span>
+    <a href="11_每吉瓦价值创造与数据中心光互联网络.html">下一讲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第十讲：核能富集、电网瓶颈与工业基石</h1>
+        <p class="subtitle">铀浓缩供应链断裂、基荷电力刚性约束与AI驱动的重工业回流</p>
+        <div class="author-meta">
+            主讲导师：Scott Nolan（General Matter 创始人兼 CEO，前 SpaceX 推进系统工程师、Founders Fund 合伙人）<br>
+            深度解构：高丰度低浓缩铀（HALEU）、离心机浓缩工程、核电基荷与能源地缘博弈
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲座背景与核心议题</h2>
+        <p>
+            随着前沿计算集群的能耗迈向百兆瓦乃至吉瓦级别，算力扩展的终极边界不可避免地撞上了基础物理定律。Scott Nolan 从康奈尔与斯坦福机械航天工程专业毕业后，早期作为 SpaceX 核心成员参与猎鹰系列火箭推进系统研发，随后长期担任 Founders Fund 投资合伙人。如今他创办了核燃料浓缩企业 General Matter，直面当今 AI 产业最隐秘而致命的硬瓶颈。
+        </p>
+        <p>
+            Nolan 详细展示了 General Matter 在肯塔基州破土动工建设的先进核燃料浓缩工厂。他强调，科技行业长期沉浸在纯软件的虚拟世界中，误以为软件代码能够无限扩展且无需物理锚定；而严酷的工程现实是，数字世界的每一次矩阵乘法，最终都必须由实实在在的电子从物理发电机中泵送出来。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 系统机制与技术拆解</h2>
+        <p>
+            Nolan 从燃料循环到电网排程层层剖析了核能供应链的真实断裂点：
+        </p>
+        <ul>
+            <li><strong>铀浓缩链条的极端脆弱性</strong>：核能发电分为开采、转化、浓缩、燃料制造与反应堆运行五个阶段。令人震惊的实证数据是：<strong>美国本土在浓缩这一核心中游环节的市场份额不到 0.1%</strong>。目前全美商业核电运行高度依赖欧洲财团甚至俄罗斯供应链。当大型数据中心计划部署小型模块化反应堆（SMR）自建电力时，首当其冲遭遇的就是高丰度低浓缩铀（HALEU, 丰度 5%~20%）无燃料可买的死胡同。</li>
+            <li><strong>间歇性可再生能源无法承担基荷负载（Base Load）</strong>：光伏与风电虽然建设成本逐步下降，但其天然具备昼夜与天气波动性。数据中心承载的万卡大规模并行任务，一旦中途断电导致参数同步中断，全量重跑的成本不可承受。现代 AI 工厂需要的是 24 小时×365 天无休、可用率高达 99.999% 的刚性基荷电力，核能是目前已知能量密度最高、且满足零碳排放要求的唯一现实解。</li>
+            <li><strong>高压变压器与输电网排期挤压</strong>：除了发电本身，全美高压变电站与输电走廊的互联排期（Interconnection Queue）已普遍排至 5 到 7 年之后。数据中心选址逻辑彻底从"靠近用户骨干网节点"倒置为"直接坐落在能拿到核电直供与变电站容量的重工业老工业区"。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 反直觉观察与行业误区</h2>
+        <p>
+            社会舆论充斥着"AI 将剥夺大量人类就业机会、摧毁实体产业"的普遍恐慌。
+        </p>
+        <p>
+            Nolan 用亲身实践指出了强烈的反直觉事实：<strong>AI 的极速扩展非但没有杀死物理工业，反而正在以几十年来未见的速度复活重工业制造与实体就业</strong>。为了解决支撑计算所需的铀浓缩和电力供应，在阿巴拉契亚和中西部传统能源产区，数以千计的高端焊接工、离心机装配工、核工程技术人员和高压电网工人正在被成规模重新雇佣。数字世界的算力饥渴，直接转化为了美国实体基础工业重建的强大引擎。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 核心洞见与前沿判断</h2>
+        <p>
+            算力竞争的终局是能源系统竞争。当算法结构与芯片微架构的代际收益逐步收窄时，拥有独立、稳定且低成本吉瓦级电源接入的企业，将拥有对高算力模型的排他性训练特权。未来的科技巨头本质上必须是重能源企业，谁掌握了从铀燃料离心浓缩到机房微电网闭环的物理底座，谁才拥有支撑超大规模人工智能进化的入场门票。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS153: Frontier Systems &copy; Academic Year 2025-2026</p>
+        <nav class="footer-nav">
+            <a href="09_产品管理范式转移与组织架构重塑.html">&larr; 上一讲</a>
+            <a href="index.html">返回主目录</a>
+            <a href="11_每吉瓦价值创造与数据中心光互联网络.html">下一讲 &rarr;</a>
+        </nav>
+    </footer>
+</article>
+
+</body>
+</html>
