@@ -236,6 +236,13 @@ footer.document-footer {
     font-size: var(--fs-body);
     color: var(--text-muted);
 }
+.footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.8rem;
+    font-style: italic;
+}
 
 a:link,
 a:visited {
