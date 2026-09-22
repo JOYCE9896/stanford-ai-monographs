@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS224N: NLP with Deep Learning | 斯坦福课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>CS224N (Winter 2026)</span>
+</nav>
+
+<article>
+    <header>
+        <h1>CS224N: Natural Language Processing with Deep Learning</h1>
+        <p class="subtitle">斯坦福最长寿的 NLP 课程之一，从词向量讲到 DeepSeek R1 式的推理训练</p>
+        <div class="author-meta">
+            主讲：Christopher Manning（斯坦福大学计算机系教授，课程创立者）及多位客座与轮值讲者（Diyi Yang、Yejin Choi 等）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
+        </div>
+    </header>
+
+    <section>
+        <h2>核心概念说明</h2>
+        <p>
+            CS224N 从 2017 年前后开始，就是斯坦福最受欢迎的深度学习课程之一，也是许多人接触"用神经网络处理语言"这件事的第一门课。这门课的特别之处在于它跨越的时间跨度：它没有停留在某一代技术上，而是随着整个领域的演化持续改版，早期版本重点讲 RNN 和词向量，后来加入 Transformer 和 BERT，到了这个 Winter 2026 版本，课程内容已经扩展到预训练、后训练、Agent、推理能力这些今天大语言模型讨论里最前沿的话题，同时保留了词向量、反向传播这些最基础的内容作为开篇。这种"从最基础一路讲到最前沿"的跨度，也是这份笔记试图完整保留的结构。
+        </p>
+        <p>
+            阅读这份笔记前，有几个贯穿全程的概念值得先有个印象：<strong>自然语言处理（NLP）</strong>研究的是让计算机处理人类日常语言这件事，人类语言天生充满歧义，这也是这门学科几十年来的核心难题；<strong>预训练</strong>指在海量无标注文本上，用自动构造出的任务（预测下一个词、填补被遮住的词）训练模型，<strong>后训练</strong>则是在预训练模型的基础上，用指令数据和人类偏好数据，把模型调整成一个听话、有用的助手；<strong>Transformer</strong>是今天几乎所有语言模型共享的底层架构，核心是让序列里任意两个位置都能直接计算相关性，而不需要像早期的循环神经网络那样按顺序一步步传递信息。
+        </p>
+    </section>
+
+    <section>
+        <h2>课程目录（12 讲笔记）</h2>
+
+        <h3><a href="01_NLP发展简史与词向量表示.html">01. NLP发展简史与词向量表示</a></h3>
+        <p>
+            从人工写规则的 ELIZA，到统计语言模型，再到 word2vec 和 GloVe 如何用一个人造的预测任务，让词义自动浮现成向量空间里的几何结构。
+        </p>
+
+        <h3><a href="02_反向传播与神经网络基础.html">02. 反向传播与神经网络基础</a></h3>
+        <p>
+            神经元、非线性激活函数、损失函数与梯度下降，以及反向传播如何用链式法则一次性算出所有参数的梯度。
+        </p>
+
+        <h3><a href="03_语言模型与循环神经网络.html">03. 语言模型与循环神经网络</a></h3>
+        <p>
+            从只能看固定窗口的 n-gram 模型，到能携带任意长度历史信息的 RNN，再到 LSTM 如何用门控机制缓解梯度消失问题。
+        </p>
+
+        <h3><a href="04_Transformer架构详解.html">04. Transformer架构详解</a></h3>
+        <p>
+            自注意力机制的查询、键、值计算，位置编码、前馈网络、掩码这三样自注意力天生缺失的东西，以及多头注意力、残差连接与层归一化。
+        </p>
+
+        <h3><a href="05_预训练的规模系统与数据.html">05. 预训练的规模系统与数据</a></h3>
+        <p>
+            编码器、编码器解码器、纯解码器三种预训练范式的区别，GPT-3 的情境学习现象，以及规模法则背后参数量与数据量的最优配比问题。
+        </p>
+
+        <h3><a href="06_后训练RLHF_SFT与DPO.html">06. 后训练RLHF、SFT与DPO</a></h3>
+        <p>
+            监督微调如何教会模型"该怎么回答"，RLHF 如何用人类偏好训练出奖励模型，以及 DPO 如何把奖励建模和强化学习压缩成一步监督学习。
+        </p>
+
+        <h3><a href="07_高效适配提示工程与PEFT.html">07. 高效适配提示工程与PEFT</a></h3>
+        <p>
+            零样本与小样本提示、思维链推理如何随模型规模涌现，以及 LoRA 如何用两个低秩矩阵近似完整的参数更新。
+        </p>
+
+        <h3><a href="08_智能体工具使用与检索增强生成.html">08. 智能体工具使用与检索增强生成</a></h3>
+        <p>
+            检索增强生成如何用外部文档弥补模型参数记忆的局限，以及 ReAct 框架如何让模型交替进行推理和真实世界的查证动作。
+        </p>
+
+        <h3><a href="09_基准测试与模型评估方法论.html">09. 基准测试与模型评估方法论</a></h3>
+        <p>
+            从 SQuAD 到 MMLU 的基准演变，标注痕迹如何让模型不理解也能拿高分，以及 Goodhart 定律、数据污染、提示敏感性这些评估陷阱。
+        </p>
+
+        <h3><a href="10_推理能力的技术剖析.html">10. 推理能力的技术剖析</a></h3>
+        <p>
+            解码算法与文本退化现象，DeepSeek R1 如何用极简的结果奖励诱导出自我反思能力，以及 GRPO 相比 PPO 省去了什么。
+        </p>
+
+        <h3><a href="11_分词多语言性与可解释性.html">11. 分词多语言性与可解释性</a></h3>
+        <p>
+            SolidGoldMagikarp 故障 token 的真实案例，分词器如何让不同语言的使用者付出不同的真实成本，以及可解释性研究对"模型自我解释"的警惕。
+        </p>
+
+        <h3><a href="12_多模态社会影响与开放问题.html">12. 多模态、社会影响与开放问题（课程总结）</a></h3>
+        <p>
+            为什么校准良好的模型在数学上注定会产生幻觉，Chameleon 式的原生多模态架构，LoRA Without Regret 的发现，以及规模化之外的智能之路。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS224N &middot; Notes curated by Joyce</p>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -1,12 +1,13 @@
 # Stanford AI 课程
 
-斯坦福大学 2025-2026 学年六门 AI 课程的笔记整理：
+斯坦福大学 2025-2026 学年七门 AI 课程的笔记整理：
 * CS329A: Self-Improving AI Agents
 * MS&E 435: Economics of the AI Supercycle
 * CS336: Language Modeling from Scratch
 * CS25: Transformers United V6
 * EE392B: Industrial AI
 * CS283: Governing Artificial Intelligence
+* CS224N: Natural Language Processing with Deep Learning
 
 网页基于 Tufte CSS 排版，正文对涉及的模型训练方法、推理验证机制与评测基准补充了背景说明。
 
@@ -18,6 +19,7 @@
 [![Stanford CS25](https://img.shields.io/badge/Stanford-CS25-2f6f4f?style=flat-square)](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/)
 [![Stanford EE392B](https://img.shields.io/badge/Stanford-EE392B-a3691a?style=flat-square)](https://joyce9896.github.io/stanford-ai-monographs/EE392B-Industrial-AI/)
 [![Stanford CS283](https://img.shields.io/badge/Stanford-CS283-3b3b3b?style=flat-square)](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/)
+[![Stanford CS224N](https://img.shields.io/badge/Stanford-CS224N-8b261e?style=flat-square)](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/)
 
 ---
 
@@ -32,6 +34,7 @@
 * [Stanford CS25: Transformers United V6（9 讲笔记）](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/)
 * [Stanford EE392B: Industrial AI（10 讲笔记）](https://joyce9896.github.io/stanford-ai-monographs/EE392B-Industrial-AI/)
 * [Stanford CS283: Governing Artificial Intelligence（10 讲笔记）](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/)
+* [Stanford CS224N: Natural Language Processing with Deep Learning（12 讲笔记）](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/)
 
 ---
 
@@ -161,6 +164,29 @@
 | 08 | [数据透明度悖论与生成式AI版权战争](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/08_数据透明度悖论与生成式AI版权战争.html) | 开放权重双重效应、OpenAI诉纽约时报案 |
 | 09 | [智能体自主性风险与人机关系的哲学追问](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/09_智能体自主性风险与人机关系的哲学追问.html) | 多智能体涌现风险、图灵测试的当代回响 |
 | 10 | [反垄断诽谤责任认定与AI未来的终极叙事](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/10_反垄断诽谤责任认定与AI未来的终极叙事.html) | AI 市场权力的反垄断应对、课程终极叙事总结 |
+
+---
+
+## Stanford CS224N: Natural Language Processing with Deep Learning
+
+斯坦福最长寿的 NLP 课程之一，从词向量与反向传播讲起，一路覆盖到 2026 年最前沿的推理训练技术。
+
+* 主讲：Christopher Manning（课程创立者），及多位客座与轮值讲者
+
+| 讲次 | 标题 | 主要内容 |
+| :--- | :--- | :--- |
+| 01 | [NLP发展简史与词向量表示](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/01_NLP发展简史与词向量表示.html) | 从规则系统到统计语言模型，word2vec 与 GloVe |
+| 02 | [反向传播与神经网络基础](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/02_反向传播与神经网络基础.html) | 神经元、损失函数、梯度下降与链式法则 |
+| 03 | [语言模型与循环神经网络](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/03_语言模型与循环神经网络.html) | n-gram 模型、RNN 与 LSTM 门控机制 |
+| 04 | [Transformer架构详解](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/04_Transformer架构详解.html) | 自注意力、位置编码、多头注意力、残差连接 |
+| 05 | [预训练的规模系统与数据](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/05_预训练的规模系统与数据.html) | 编码器/解码器范式、情境学习、规模法则 |
+| 06 | [后训练RLHF、SFT与DPO](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/06_后训练RLHF_SFT与DPO.html) | 监督微调、人类偏好奖励建模、DPO 单阶段优化 |
+| 07 | [高效适配提示工程与PEFT](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/07_高效适配提示工程与PEFT.html) | 提示工程、思维链涌现、LoRA 低秩微调 |
+| 08 | [智能体工具使用与检索增强生成](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/08_智能体工具使用与检索增强生成.html) | RAG 检索增强生成、ReAct 推理-行动框架 |
+| 09 | [基准测试与模型评估方法论](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/09_基准测试与模型评估方法论.html) | SQuAD 到 MMLU、标注痕迹、数据污染 |
+| 10 | [推理能力的技术剖析](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/10_推理能力的技术剖析.html) | DeepSeek R1 结果奖励、GRPO 与 PPO 对比 |
+| 11 | [分词多语言性与可解释性](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/11_分词多语言性与可解释性.html) | 故障 token、跨语言分词成本差异、可解释性研究 |
+| 12 | [多模态、社会影响与开放问题](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/12_多模态社会影响与开放问题.html) | 幻觉的数学必然性、原生多模态架构、课程总结 |
 
 ---
 
