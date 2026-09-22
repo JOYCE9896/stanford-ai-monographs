@@ -40,7 +40,7 @@
             <li><strong>HumanEval / MBPP</strong>：单函数 Python 代码测试，只要求写十几行代码，无法反映真实软件工程中跨文件、有依赖关系的开发能力。</li>
             <li><strong>SWE-bench / SWE-bench Verified</strong>：从 Django、SymPy 等 12 个真实开源仓库中抽取的 2294 个真实 Bug，要求模型在几十万行代码里定位并修复问题、跑通全部单元测试。很多在 MMLU 上考 90 分的模型，在 SWE-bench 上得分不到 15%；即使是 Claude 3.5/3.7 Sonnet 也只能做到 40%~60% 左右。</li>
             <li><strong>GAIA</strong>：由 Meta 和 Hugging Face 设计，模拟人类高级助理在电脑前的真实工作，需要组合网页搜索、阅读长篇 PDF、操作 Excel，考验的是耐心与长程规划。</li>
-            <li><strong>GDPVal</strong>：不再看做对几道题，而是直接算经济账——对比人类完成同类工作的薪资与 AI 推理成本，计算真实的投入产出比。</li>
+            <li><strong>GDPVal</strong>：不再看做对几道题，而是直接算经济账，对比人类完成同类工作的薪资与 AI 推理成本，计算真实的投入产出比。</li>
         </ul>
 
         <p>
@@ -68,7 +68,7 @@
         <ul>
             <li><strong>过早宣告完工</strong>：超过 60% 的 Tier 4 任务失败并非因为模型死机，而是模型刚改完一处无关紧要的代码，就自信地宣布"已完成整个系统重构"，提前终止了推理循环。</li>
             <li><strong>上下文漂移</strong>：与环境交互超过 40 个轮次后，模型的长注意力机制出现不可逆的稀释，开始频繁忘记最初设定的约束条件。</li>
-            <li><strong>死循环重试</strong>：遇到难以解决的异常时，缺乏重规划能力的 Agent 会陷入"报错—原地重试—再报错"的循环，直到耗尽 Token 预算。</li>
+            <li><strong>死循环重试</strong>：遇到难以解决的异常时，缺乏重规划能力的 Agent 会陷入"报错→原地重试→再报错"的循环，直到耗尽 Token 预算。</li>
         </ul>
     </section>
 
