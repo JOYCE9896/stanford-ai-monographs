@@ -19,30 +19,30 @@
 <article>
     <header>
         <h1>CS25: Transformers United V6</h1>
-        <p class="subtitle">From Representation Learning to World Modeling —— 斯坦福公开 Transformer 前沿研讨课</p>
+        <p class="subtitle">From Representation Learning to World Modeling，斯坦福公开 Transformer 前沿研讨课</p>
         <div class="author-meta">
-            组织者：Steven Feng（Stanford CS 博士生）、Karan P. Singh（Stanford EE 博士生）、Michael C. Frank（Stanford 心理学教授）、Christopher Manning（Stanford 教授，NLP 组负责人）<br>
+            组织者：Steven Feng（Stanford CS 博士生）、Karan P. Singh（Stanford EE 博士生）、Michael C. Frank（Stanford 人类生物学教授）、Christopher Manning（Stanford NLP 组负责人）<br>
             整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
         </div>
     </header>
 
     <section>
-        <h2>核心概念说明</h2>
+        <h2>背景知识：什么是 Transformer，这门课在做什么</h2>
         <p>
-            CS25（Transformers United）是斯坦福大学自 2021 年秋季开设至今、连续开设六个版本（V1&ndash;V6）的公开研讨课，也是目前学界与工业界公认最具影响力的 Transformer 前沿技术公开课之一。课程没有传统意义上的作业与考试，核心形式是每周邀请一位正活跃在研究或工程一线的从业者，就其近期工作做一场深度技术报告——往季讲者名单中不乏 Geoffrey Hinton、Andrej Karpathy 等业界公认的关键人物，讲者所在机构也横跨 OpenAI、Anthropic、Google DeepMind、NVIDIA 等几乎所有头部 AI 实验室。
+            Transformer 是目前几乎所有主流语言模型（GPT、Claude、Gemini 等）背后使用的神经网络架构，2017 年由 Google 团队在论文《Attention Is All You Need》中提出。它的核心机制是自注意力（self-attention）：处理一段文字时，模型会让序列里的每个词都去"看"其他所有词，并计算出一组权重，决定该更多地参考哪些词来理解当前词的含义。这个机制取代了更早期依赖循环神经网络逐词处理序列的做法，可以并行计算整段序列，训练效率大幅提升，这也是过去几年语言模型能力快速进步的技术基础之一。
         </p>
         <p>
-            课程面向全体斯坦福学生开放选课，同时讲座在 Skilling Auditorium 现场举行的同时，也通过 Zoom 提供完全开放的直播，任何人无需斯坦福大学的学籍身份即可在线参与，这也是 CS25 相比大多数同类课程更具公共影响力的重要原因之一。
+            CS25（Transformers United）是斯坦福大学从 2021 年秋季开设至今的一门公开研讨课，到 2026 年春季已经是第六个版本（V6）。它和大多数课程的结构不同：没有作业，没有考试，每周一次课，邀请一位正在做前沿研究或工程的人来做一场深度报告。往季讲者包括 Geoffrey Hinton、Andrej Karpathy、Ashish Vaswani（2017 年 Transformer 原始论文的作者之一），讲者所在机构覆盖 OpenAI、Anthropic、Google DeepMind、NVIDIA。课程面向全体斯坦福学生开放选课，讲座在 Skilling Auditorium 现场举行，同时通过 Zoom 提供公开直播，任何人都可以在线参与，不需要斯坦福学籍。
         </p>
         <p>
-            本季（V6，2026 年春季学期）以"从表征学习到世界模型"（From Representation Learning to World Modeling）为主题，核心问题意识是：当 Transformer 架构本身已经趋于稳定、单纯扩大模型与数据规模的边际收益开始递减，下一阶段真正的前沿问题正在从"架构设计"转向"模型内部学到的表征，能否支撑起对世界动态变化的理解与推演"。围绕这一主题，本季课程依次邀请了在状态空间模型、联合嵌入预测架构（JEPA）、超大规模分布式训练、预训练范式、情境学习机制、科学与医学 Agent、原生多模态架构、生产级推理服务等方向具有代表性工作的讲者。
+            本季（V6）的主题是"从表征学习到世界模型"。这个提法背后的判断是：Transformer 架构本身这几年没有发生颠覆性变化，单纯扩大模型和数据规模带来的收益正在变得不那么划算，下一阶段更根本的问题，是模型内部学到的表征能不能支撑对世界如何运作的推演。围绕这个主题，本季依次邀请了在状态空间模型、联合嵌入预测架构（JEPA）、超大规模分布式训练、预训练范式、情境学习机制、科学与医学智能体、原生多模态架构、生产级推理服务这些方向做出代表性工作的讲者。
         </p>
         <h3>组织者简介</h3>
         <ul>
-            <li><strong>Steven Feng</strong>：斯坦福计算机科学系博士生，CS25 课程的核心组织者之一。</li>
-            <li><strong>Karan P. Singh</strong>：斯坦福电子工程系博士生，CS25 课程的核心组织者之一。</li>
-            <li><strong>Michael C. Frank</strong>：斯坦福大学心理学教授，长期从事语言习得与计算认知科学研究。</li>
-            <li><strong>Christopher Manning</strong>：斯坦福大学教授，自然语言处理领域的权威学者，长期领导斯坦福 NLP 研究小组。</li>
+            <li>Steven Feng：斯坦福计算机科学系博士生，CS25 课程组织者之一。</li>
+            <li>Karan P. Singh：斯坦福电子工程系博士生，CS25 课程组织者之一。</li>
+            <li>Michael C. Frank：斯坦福大学人类生物学教授，长期从事语言习得与计算认知科学研究。</li>
+            <li>Christopher Manning：斯坦福大学教授，长期领导斯坦福 NLP 研究小组。</li>
         </ul>
     </section>
 
@@ -51,47 +51,47 @@
 
         <h3><a href="01_Transformer架构全景与统一表征范式.html">01. Transformer架构全景与统一表征范式</a></h3>
         <p>
-            主讲：Steven Feng、Karan P. Singh、Michael C. Frank、Christopher Manning（Stanford 课程组织者）。开篇讲座回顾自注意力机制、位置编码等 Transformer 核心组件的六年演进脉络，并引出本季"从表征学习到世界模型"的核心命题。
+            主讲：Steven Feng、Karan P. Singh、Michael C. Frank、Christopher Manning。开篇讲座重新梳理自注意力、位置编码、前馈网络这三个 Transformer 核心组件，并引出本季"从表征学习到世界模型"的主题。
         </p>
 
         <h3><a href="02_联合嵌入预测架构与世界模型.html">02. 联合嵌入预测架构与世界模型</a></h3>
         <p>
-            主讲：Hazel Nam & Lucas Maes（Brown University）。系统解构联合嵌入预测架构（JEPA）相较生成式建模的根本差异，探讨在表征空间而非像素/Token 空间中做预测为何更接近"理解"。
+            主讲：Hazel Nam、Lucas Maes（Brown University）。讲解 Yann LeCun 提出的联合嵌入预测架构（JEPA），以及为什么在表示空间而不是原始像素空间里做预测，能避免模型把容量浪费在不重要的细节上。
         </p>
 
         <h3><a href="03_状态空间模型与Transformer的效率博弈.html">03. 状态空间模型与Transformer的效率博弈</a></h3>
         <p>
-            主讲：Albert Gu（CMU 助理教授，Cartesia AI 联合创始人）。梳理从 S4 到 Mamba 的状态空间模型技术脉络，剖析其与 Transformer 在长序列推理效率、精确检索能力之间的核心权衡。
+            主讲：Albert Gu（CMU，Cartesia AI 联合创始人）。讲解 Mamba 如何通过让参数依赖输入内容，把序列建模的计算复杂度从平方级降到线性级，以及这个改动带来的硬件效率和长程记忆代价。
         </p>
 
         <h3><a href="04_万卡集群训练与超大规模并行工程.html">04. 万卡集群训练与超大规模并行工程</a></h3>
         <p>
-            主讲：Nouamane Tazi（Hugging Face 机器学习工程师）。基于"超大规模训练手册"，系统讲解数据并行、张量并行、流水线并行与 ZeRO/FSDP 显存分片等支撑千卡万卡级训练的核心工程技术。
+            主讲：Nouamane Tazi（Hugging Face）。基于《Ultra-Scale Playbook》，讲解数据并行、张量并行、流水线并行、上下文并行四种切分方式，以及 ZeRO 显存分片技术如何支撑千卡万卡级训练。
         </p>
 
         <h3><a href="05_预训练范式的未来与效率转向.html">05. 预训练范式的未来与效率转向</a></h3>
         <p>
-            主讲：Shrimai Prabhumoye（Mistral AI 研究科学家，曾任职于 NVIDIA）。围绕规模化定律，探讨在数据存量见顶的背景下，预训练竞争重心如何从"规模扩张"转向数据质量与训练效率工程。
+            主讲：Shrimai Prabhumoye（Mistral AI，前 NVIDIA Nemotron 团队核心成员）。讨论在高质量自然文本逐渐稀缺的背景下，预训练数据工程如何从"抓取更多网页"转向合成数据构建与预训练后训练协同设计。
         </p>
 
         <h3><a href="06_参数记忆与情境学习的泛化分野.html">06. 参数记忆与情境学习的泛化分野</a></h3>
         <p>
-            主讲：Andrew Lampinen（Anthropic 研究科学家）。从认知科学与可解释性视角，剖析模型"参数化记忆"与"情境学习"两种泛化机制的结构性差异，及二者相互桥接的可能路径。
+            主讲：Andrew Lampinen（Anthropic）。讲解同一条知识写进模型权重和放进提示词上下文，为什么会导致模型表现出不同的泛化和推理能力。
         </p>
 
         <h3><a href="07_协作式AI智能体与科学医学发现.html">07. 协作式AI智能体与科学医学发现</a></h3>
         <p>
-            主讲：Vivek Natarajan（Google DeepMind 研究科学家）。以 Med-PaLM 系列研究为背景，探讨多智能体协作架构在高风险的医学诊断与科学发现场景中的应用设计。
+            主讲：Vivek Natarajan（Google DeepMind）。以 Med-PaLM、Med-Gemini、AI Co-Scientist 系列工作为线索，讲解 AI 系统从通过医学知识考试，到处理真实多模态病例，再到协助科学发现的演进过程。
         </p>
 
         <h3><a href="08_原生多模态智能与统一表征.html">08. 原生多模态智能与统一表征</a></h3>
         <p>
-            主讲：Victoria Lin（Thinking Machines 研究科学家）。对比"模态拼接"与"原生统一"两种多模态架构设计哲学，论证原生多模态是通向世界模型的必经路径而非附加功能。
+            主讲：Victoria Lin（Thinking Machines Lab）。对比后期融合和早期融合两种多模态模型设计方式，讲解 Chameleon、MoMa、LMFusion 这几项工作各自的技术取舍。
         </p>
 
         <h3><a href="09_生产级Transformer推理服务工程.html">09. 生产级Transformer推理服务工程</a></h3>
         <p>
-            主讲：Charles Frye（Modal 机器学习工程师）。剖析 KV Cache 显存瓶颈、连续批处理、分页注意力、量化与投机解码等生产级推理服务的核心工程技术，作为本季课程的收官总结。
+            主讲：Charles Frye（Modal）。讲解 KV Cache、连续批处理、投机采样这些让模型能以可承受成本对外提供服务的推理系统工程技术，作为本季课程的收官。
         </p>
     </section>
 
