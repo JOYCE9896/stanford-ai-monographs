@@ -28,7 +28,7 @@
 | :--- | :--- | :--- |
 | [CS329A: Self-Improving AI Agents](https://joyce9896.github.io/stanford-ai-monographs/CS329A-Self-Improving-AI-Agents/) | Aakanksha Chowdhery、Azalia Mirhoseini | Agent 如何通过强化学习与环境反馈实现自我演进 |
 | [CS336: Language Modeling from Scratch](https://joyce9896.github.io/stanford-ai-monographs/CS336-Language-Modeling-from-Scratch/) | Percy Liang、Tatsunori Hashimoto | 从字节到对齐模型，亲手实现完整语言模型工程栈 |
-| [CS25: Transformers United V6](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/) | 轮值主持 + 每周一位业界研究者 | 斯坦福长年公开的 Transformers 前沿研讨课 |
+| [CS25: Transformers United V6](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/) | Steven Feng、Karan P. Singh、Christopher Manning | 斯坦福长年公开的 Transformers 前沿研讨课 |
 | [CS224N: NLP with Deep Learning](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/) | Christopher Manning | 从词向量、Transformer 到推理训练，斯坦福最长寿的 NLP 课 |
 
 ### Non-Technical
