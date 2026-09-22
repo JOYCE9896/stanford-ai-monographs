@@ -28,17 +28,19 @@
     <section>
         <h2>课程概览</h2>
         <p>
-            这里收录了斯坦福大学 2025-2026 学年开设的八门 AI 前沿课程笔记，覆盖技术机制、产业经济学、系统工程、公开研讨、法律治理、前沿系统栈与自然语言处理七个维度：CS329A 探讨 Agent 如何通过强化学习实现自我演进；MS&E 435 聚焦数据中心电力与商业落地的产业经济学；CS336 从字节到对齐模型亲手实现一遍完整的语言模型工程栈；CS25 是斯坦福公开的 Transformers 前沿研讨课；EE392B 从制造业、军工、零售等垂直行业视角审视 AI 落地；CS283 则从法律、政策与制度设计角度系统讨论 AI 治理；CS224N 是斯坦福最长寿的 NLP 课程，从词向量一路讲到今天的推理训练；CS153 聚焦能源、硅片拓扑、多模态世界模型与万卡集群系统工程的代际重构。
+            这里收录斯坦福大学 2025-2026 学年开设的八门 AI 前沿课程研读笔记。分为 Technical（技术机理、模型工程与自演进）与 Non-Technical（产业经济学、垂直工业落地、制度治理与宏观系统栈）两个类别：
+        </p>
+    </section>
+
+    <section>
+        <h2>Technical</h2>
+        <p>
+            聚焦模型底层算法推导、代码工程栈从零实现、强化学习环境交互与自然语言处理技术。
         </p>
 
         <h3><a href="CS329A-Self-Improving-AI-Agents/index.html">CS329A: Self-Improving AI Agents</a></h3>
         <p>
             由 Aakanksha Chowdhery 与 Azalia Mirhoseini 主讲，共 10 讲笔记与 12 场嘉宾访谈纪要。核心探讨 LLM 如何通过 Reinforcement Learning、环境反馈与搜索算法实现推理能力的自我演进。内容涵盖 Pre-training 与 Post-training 的分工、Test-time compute 与 Pass@k 规律、PRM 与 ORM 验证机制、RLEF（代码沙盒反馈强化学习）、Anthropic Constitutional AI、MCTS 树搜索、DeepSeek GRPO 算法原理，以及从 MMLU、GSM8K 到 SWE-bench 与 GAIA 等 Benchmark 的演进脉络。
-        </p>
-
-        <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">MS&E 435: Economics of the AI Supercycle</a></h3>
-        <p>
-            由 Apoorv Agrawal（Altimeter Capital 合伙人）主讲，共 9 讲笔记与 15 场产业嘉宾访谈纪要。核心探讨生成式 AI 的商业模式、基础设施资本开支与传统工业约束。内容涵盖可变推理成本结构、GPU 折旧周期与内存带宽瓶颈、吉瓦级数据中心建设、电网排期与高压变压器供应链、企业软件落地的生产率 J 曲线、Vibe Coding 对软件开发门槛的影响，以及生物制药干湿实验闭环。
         </p>
 
         <h3><a href="CS336-Language-Modeling-from-Scratch/index.html">CS336: Language Modeling from Scratch</a></h3>
@@ -51,6 +53,23 @@
             斯坦福长年公开对外的 Transformers 前沿研讨课，共 9 讲笔记，V6 主题为"从表征学习到世界模型"。2026 年春季嘉宾包括 Cartesia AI 的 Albert Gu（状态空间模型）、Hugging Face 的 Nouamane Tazi（万卡集群训练）、Anthropic 的 Andrew Lampinen（参数记忆与情境学习）、Google DeepMind 的 Vivek Natarajan（科学与医学智能体）等。
         </p>
 
+        <h3><a href="CS224N-NLP-with-Deep-Learning/index.html">CS224N: Natural Language Processing with Deep Learning</a></h3>
+        <p>
+            由 Christopher Manning 主讲，共 12 讲笔记。从词向量与反向传播讲起，覆盖 Transformer 架构的完整数学推导、预训练与后训练（RLHF、DPO）、PEFT/LoRA 高效微调、Agent 与检索增强生成、基准测试的失效模式，直到 DeepSeek R1 式推理训练与分词器的多语言公平性问题。
+        </p>
+    </section>
+
+    <section>
+        <h2>Non-Technical</h2>
+        <p>
+            涵盖生成式 AI 的商业模式与资本开支、垂直重载行业落地、法律制度设计，以及能源、硅片拓扑与基础设施全局审视。
+        </p>
+
+        <h3><a href="MSE435-Economics-of-the-AI-Supercycle/index.html">MS&E 435: Economics of the AI Supercycle</a></h3>
+        <p>
+            由 Apoorv Agrawal（Altimeter Capital 合伙人）主讲，共 9 讲笔记与 15 场产业嘉宾访谈纪要。核心探讨生成式 AI 的商业模式、基础设施资本开支与传统工业约束。内容涵盖可变推理成本结构、GPU 折旧周期与内存带宽瓶颈、吉瓦级数据中心建设、电网排期与高压变压器供应链、企业软件落地的生产率 J 曲线、Vibe Coding 对软件开发门槛的影响，以及生物制药干湿实验闭环。
+        </p>
+
         <h3><a href="EE392B-Industrial-AI/index.html">EE392B: Industrial AI</a></h3>
         <p>
             由 Daniel O'Neill 与 Dimitry Gorinevsky 主讲，共 10 讲笔记，每讲一位业界嘉宾。聚焦制造业、军工系统、机器人、半导体计量与数字孪生、IT 运维、金融科技、零售供应链与汽车产业等垂直行业的 AI 落地工程实践，嘉宾来自 Northrop Grumman、Microsoft、KLA Tencor、Walmart 等。
@@ -59,11 +78,6 @@
         <h3><a href="CS283-Governing-AI/index.html">CS283: Governing Artificial Intelligence</a></h3>
         <p>
             由 Nathaniel Persily、Rob Reich、Anka Reuel 与 Sanmi Koyejo 跨法学院/计算机系/政治系联合主讲，共 10 讲笔记。系统讨论算法公平性的数学不可能定理、欧盟 AI 法案与美国算力阈值立法的分野、数据中心能耗与半导体出口管制的地缘政治、企业自律与评估基准的技术陷阱，以及 AI 智能体的责任归属难题。
-        </p>
-
-        <h3><a href="CS224N-NLP-with-Deep-Learning/index.html">CS224N: Natural Language Processing with Deep Learning</a></h3>
-        <p>
-            由 Christopher Manning 主讲，共 12 讲笔记。从词向量与反向传播讲起，覆盖 Transformer 架构的完整数学推导、预训练与后训练（RLHF、DPO）、PEFT/LoRA 高效微调、Agent 与检索增强生成、基准测试的失效模式，直到 DeepSeek R1 式推理训练与分词器的多语言公平性问题。
         </p>
 
         <h3><a href="CS153-Frontier-Systems/index.html">CS153: Frontier Systems</a></h3>
