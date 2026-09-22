@@ -22,15 +22,15 @@
 
 每门课的完整逐讲笔记只在对应课程主页里展开，这里只做索引。点课程名进对应主页看目录。
 
-| 课程 | 主讲 | 讲数 | 关注点 |
-| :--- | :--- | :--- | :--- |
-| [CS329A: Self-Improving AI Agents](https://joyce9896.github.io/stanford-ai-monographs/CS329A-Self-Improving-AI-Agents/) | Aakanksha Chowdhery、Azalia Mirhoseini | 10 讲 + 嘉宾特辑 | Agent 如何通过强化学习与环境反馈实现自我演进 |
-| [MS&E 435: Economics of the AI Supercycle](https://joyce9896.github.io/stanford-ai-monographs/MSE435-Economics-of-the-AI-Supercycle/) | Apoorv Agrawal | 9 讲 + 嘉宾特辑 | 生成式 AI 的商业模式、基础设施资本开支与产业约束 |
-| [CS336: Language Modeling from Scratch](https://joyce9896.github.io/stanford-ai-monographs/CS336-Language-Modeling-from-Scratch/) | Percy Liang、Tatsunori Hashimoto | 10 讲 + 嘉宾特辑 | 从字节到对齐模型，亲手实现完整语言模型工程栈 |
-| [CS25: Transformers United V6](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/) | 轮值主持 + 每周一位业界研究者 | 9 讲 | 斯坦福长年公开的 Transformers 前沿研讨课 |
-| [EE392B: Industrial AI](https://joyce9896.github.io/stanford-ai-monographs/EE392B-Industrial-AI/) | Daniel O'Neill、Dimitry Gorinevsky | 10 讲 | 制造业、军工、半导体等垂直行业的 AI 落地工程 |
-| [CS283: Governing Artificial Intelligence](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/) | Nathaniel Persily、Rob Reich、Anka Reuel、Sanmi Koyejo | 10 讲 | AI 治理的法律、政策与制度设计 |
-| [CS224N: NLP with Deep Learning](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/) | Christopher Manning | 12 讲 | 从词向量、Transformer 到推理训练，斯坦福最长寿的 NLP 课 |
+| 课程 | 主讲 | 关注点 |
+| :--- | :--- | :--- |
+| [CS329A: Self-Improving AI Agents](https://joyce9896.github.io/stanford-ai-monographs/CS329A-Self-Improving-AI-Agents/) | Aakanksha Chowdhery、Azalia Mirhoseini | Agent 如何通过强化学习与环境反馈实现自我演进 |
+| [MS&E 435: Economics of the AI Supercycle](https://joyce9896.github.io/stanford-ai-monographs/MSE435-Economics-of-the-AI-Supercycle/) | Apoorv Agrawal | 生成式 AI 的商业模式、基础设施资本开支与产业约束 |
+| [CS336: Language Modeling from Scratch](https://joyce9896.github.io/stanford-ai-monographs/CS336-Language-Modeling-from-Scratch/) | Percy Liang、Tatsunori Hashimoto | 从字节到对齐模型，亲手实现完整语言模型工程栈 |
+| [CS25: Transformers United V6](https://joyce9896.github.io/stanford-ai-monographs/CS25-Transformers-United/) | 轮值主持 + 每周一位业界研究者 | 斯坦福长年公开的 Transformers 前沿研讨课 |
+| [EE392B: Industrial AI](https://joyce9896.github.io/stanford-ai-monographs/EE392B-Industrial-AI/) | Daniel O'Neill、Dimitry Gorinevsky | 制造业、军工、半导体等垂直行业的 AI 落地工程 |
+| [CS283: Governing Artificial Intelligence](https://joyce9896.github.io/stanford-ai-monographs/CS283-Governing-AI/) | Nathaniel Persily、Rob Reich、Anka Reuel、Sanmi Koyejo | AI 治理的法律、政策与制度设计 |
+| [CS224N: NLP with Deep Learning](https://joyce9896.github.io/stanford-ai-monographs/CS224N-NLP-with-Deep-Learning/) | Christopher Manning | 从词向量、Transformer 到推理训练，斯坦福最长寿的 NLP 课 |
 
 ---
 
@@ -39,7 +39,6 @@
 - **字体统一**：英文用 Source Serif 4，中文用思源宋体（Noto Serif SC），正文、代码块、表格共用一套字体，不混排无衬线体。
 - **字号精简**：全站只有两级字号，标题 1.35rem，其余一律 1.05rem。
 - **公式支持**：数学公式用 KaTeX 排印。
-- **去 AI 味**：正文按 [Aparnabuilds/humanizer](https://github.com/Aparnabuilds/humanizer) 的规则清理过，不用破折号、不堆排比、不空喊"颠覆性""革命性"。
 
 ---
 
