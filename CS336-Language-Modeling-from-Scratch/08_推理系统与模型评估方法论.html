@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第八讲：推理系统与模型评估方法论 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 08</span>
+    <a href="09_预训练数据工程的全流程剖析.html">下一讲：预训练数据工程的全流程剖析 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第八讲：推理系统与模型评估方法论</h1>
+        <p class="subtitle">从 KV Cache 到连续批处理：把训练好的模型服务给百万用户；以及如何判断这个模型究竟有多好</p>
+        <div class="author-meta">
+            主讲：Percy Liang（斯坦福大学计算机系教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、推理系统核心原理：KV Cache 与自回归生成</h2>
+        <p>
+            自回归生成的本质是逐个 Token 顺序输出，每生成一个新 Token 都需要重新计算它与之前所有 Token 的注意力——如果每一步都从头重算全部历史 Token 的 Key 和 Value 投影，计算量会随序列长度呈平方级增长。KV Cache 的做法是把已经计算过的 Key、Value 向量缓存下来，每一步只需计算新 Token 自身的 Key/Value，与缓存拼接后参与注意力计算，把单步生成的计算复杂度从 $O(n^2)$ 降低到 $O(n)$，代价是需要额外的显存来存储这份随序列增长而线性增长的缓存。
+        </p>
+        <h3>连续批处理与 PagedAttention</h3>
+        <p>
+            传统的静态批处理要求同一批次内所有请求的生成长度一致，实际服务场景中不同请求的输出长度差异巨大，静态批处理要么让先完成的请求空等，要么浪费大量显存预留最坏情况长度。连续批处理（Continuous Batching）允许在批次执行过程中动态地让已完成的请求退出、新请求加入，显著提升了 GPU 利用率。PagedAttention 进一步借鉴操作系统虚拟内存分页的思想，把 KV Cache 拆分为固定大小的"页"，按需动态分配而非为每个请求预留连续的最大长度显存块，大幅降低了显存碎片化，是当前主流推理服务框架的核心设计之一。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、模型评估方法论：从基准分数到方法论陷阱</h2>
+        <h3>1. 提示敏感性</h3>
+        <p>
+            同一个模型在同一个基准测试上，仅仅因为提示词的措辞、示例的排列顺序或格式细节的微小变化，评测分数就可能出现显著波动——这意味着基准测试报告中的单一分数，如果不配合对提示敏感性的系统性分析，其可信度天然存疑，也是评估结果难以在不同研究团队之间直接复现比较的重要原因之一。
+        </p>
+        <h3>2. 基准测试污染</h3>
+        <p>
+            随着基准测试题目被广泛收录进公开网络语料，新一代模型的预训练数据很可能已经"见过"这些测试题的原文或高度相似的变体，这使得模型在基准上取得的高分，越来越难以区分究竟是"真实能力提升"还是"数据污染导致的记忆效应"。检测数据污染的常见方法包括 n-gram 重叠检测与困惑度异常检测，但没有一种方法能完全可靠地排除污染的可能性。
+        </p>
+        <h3>3. 构念效度问题</h3>
+        <p>
+            比数据污染更深层的问题是：许多基准测试题目本身是否真的测量了它声称要测量的能力？一个高分是否真的对应更强的推理或知识能力，还是仅仅对应了模型对某种表面统计规律的捕捉？这一"构念效度"（construct validity）问题要求评估设计者在编写测试题之前，先清晰定义究竟想要测量的抽象能力是什么，再论证具体题目设计是否真正对应了这一抽象能力——而这一步骤在许多基准测试的构建过程中往往被简化甚至忽略。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            推理系统优化与模型评估看似是两个不相关的话题，实则共享同一个底层教训：无论是"实测吞吐量是否兑现了理论算力"，还是"基准分数是否真实反映了模型能力"，都提醒我们不能仅凭纸面上的理论指标下结论，必须建立起对实际测量结果保持怀疑、并主动排查潜在系统性偏差的工程习惯。这也是本课程反复强调"从零构建"的另一层用意：只有亲手搭建过推理服务、亲手设计过评估流程的人，才更容易对这些流程中隐藏的陷阱保持警觉。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="09_预训练数据工程的全流程剖析.html">阅读第九讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

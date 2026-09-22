@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第七讲：企业内部治理机制与评估基准的技术陷阱 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 07</span>
+    <a href="08_数据透明度悖论与生成式AI版权战争.html">下一讲：数据透明度与版权战争 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第七讲：企业内部治理机制与评估基准的技术陷阱</h1>
+        <p class="subtitle">当政府立法长期滞后，实验室的负责任扩展政策与红队测试如何成为事实上的第一道防线</p>
+        <div class="author-meta">
+            主讲导师：Anka Reuel（计算机系）、Sanmi Koyejo（计算机系）<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、组织层面的 AI 治理：从模型卡片到安全框架</h2>
+        <p>
+            这一讲的立论前提是：治理并不只由政府自上而下颁布，也同样由行业内部的专业规范、工具与责任机制自下而上生成。这与本课程第一周就确立的方法论一脉相承——治理是"法律 + 政策 + 规制"的组合体，而后两者很大程度上就发生在企业内部。
+        </p>
+        <h3>模型文档化：模型卡片与风险评估</h3>
+        <p>
+            模型卡片（Model Cards）是当前行业最广泛采纳的模型文档化实践，要求开发者在发布模型时公开训练数据来源、已知局限性、适用与不适用场景等信息。但 Lemley 与 Henderson 在《The mirage of artificial intelligence terms of use restrictions》中揭示了一个尖锐的悖论：许多企业在服务条款中单方面声明的使用限制（如"禁止用于生成虚假信息"），在现有合同法框架下往往缺乏真正的可执行力——违反者面临的法律后果远比条款文字暗示的要模糊得多，这使得"负责任使用条款"在很大程度上只起到公关与免责声明的作用，而非真正的行为约束。
+        </p>
+        <h3>负责任扩展政策：Anthropic 的实践案例</h3>
+        <p>
+            Anthropic 更新后的《负责任扩展政策》（Responsible Scaling Policy）代表了行业自律的另一种模式：把模型能力划分为不同的"AI 安全等级"（ASL），随着模型能力提升触发更严格的内部安全审查与部署限制，这一设计理念与前几讲讨论的"算力阈值"治理工具在逻辑上高度相似，只不过触发条件从算力规模换成了实测能力。Titus 在《Scaling AI safely: Can preparedness frameworks pull their weight?》中的评估则相对审慎：这类自愿性框架的实际约束力，最终取决于企业在商业竞争压力下能在多大程度上坚持自我设限——历史上多个行业的自愿性安全框架，都曾在市场竞争加剧时被悄然稀释。
+        </p>
+        <h3>NIST 风险管理框架：政府与企业的接口</h3>
+        <p>
+            NIST《AI 风险管理框架》（AI RMF 1.0）提供了一套相对中立的政府参考标准，把 AI 风险管理拆解为"治理、映射、测量、管理"四大功能模块，其定位并非强制性法规，而是为企业内部治理提供一套可自愿采纳的通用语言——这种"软法"式的政府介入方式，恰好填补了正式立法与纯粹企业自律之间的中间地带。
+        </p>
+        <h3>红队测试与越狱攻击的猫鼠游戏</h3>
+        <p>
+            Wei 等人在《Jailbroken: How does LLM safety training fail?》中系统分析了绕过模型安全对齐的攻击手法，揭示了一个结构性困境：安全对齐训练本质上是在有限的已知攻击模式上做优化，而攻击者总能发现训练分布之外的新颖绕过路径——这使得模型安全性更像是一场没有终局的持续博弈，而非一次性可以"解决"的工程问题。Feffer 等人在《Red-teaming for generative AI: Silver bullet or security theater?》中则提出了更尖锐的批判：如果红队测试的结果不透明、不可比较、缺乏标准化流程，它很容易退化为一种"安全剧场"——企业借此对外展示"我们做过测试"的姿态，却未必真正降低了实际部署风险。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、AI 评估：技术治理的度量难题</h2>
+        <p>
+            第二节课把焦点从"企业如何自我约束"转向"我们究竟如何知道一个模型是否安全"这一更根本的度量问题——评估（evaluation）由此成为技术治理最具代表性的案例研究对象。
+        </p>
+        <h3>基准测试的有效性危机</h3>
+        <p>
+            Deng 等人在《Investigating data contamination in modern benchmarks》中的研究揭示了一个日益严重的行业性问题：随着基准测试题目被广泛收录进公开网络语料，新一代模型的预训练数据很可能已经"见过"这些测试题的原文或高度相似的变体，这使得模型在基准上的高分越来越难以区分"真实能力提升"与"数据污染导致的记忆效应"。Salaudeen 等人在《Measurement to Meaning》中进一步指出了一个更深层的方法论问题：许多基准测试甚至缺乏基本的"构念效度"（construct validity）——即测试题目是否真的测量了它声称要测量的能力，还是仅仅测量了某种与该能力表面相关但本质不同的统计规律。
+        </p>
+        <h3>评估作为治理工具的制度化尝试</h3>
+        <p>
+            Longpre 等人在《A safe harbor for AI evaluation and red teaming》中提出了一个具有直接政策意义的建议：目前许多独立研究者因担心违反服务条款而不敢对商业模型进行安全性红队测试，作者主张建立法律上的"安全港"机制，为善意的第三方安全研究提供责任豁免——这类似于网络安全领域长期存在的"负责任披露"（responsible disclosure）制度安排，目的是让独立监督力量能够安全地补充企业内部评估的不足。Hadfield 与 Clark 在《Regulatory Markets: The Future of AI Governance》中则提出了一个更具想象力的制度设计：与其由政府直接制定僵化的技术标准，不如建立一个受政府监督、但由市场化的私营监管服务商相互竞争提供合规评估服务的"监管市场"，让评估方法本身也能通过市场竞争机制不断迭代优化。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            这一讲的核心启示是：在正式立法长期滞后于技术演化速度的现实约束下，企业内部治理机制与评估实践事实上承担了远比公众认知中更重的"第一道防线"角色。但这道防线存在结构性的利益冲突——企业既是被治理对象，又是治理工具（模型卡片、安全框架、红队测试）的主要设计者与执行者，这使得"自我监管"的有效性高度依赖外部问责压力的存在。本周材料反复出现的一个主题是：无论是"安全港"式的第三方审计豁免，还是"监管市场"式的竞争性合规服务，其共同逻辑都是试图在政府直接监管与纯粹企业自律之间，构建出某种兼具专业性与外部制衡的中间制度形态。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="08_数据透明度悖论与生成式AI版权战争.html">阅读第八讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

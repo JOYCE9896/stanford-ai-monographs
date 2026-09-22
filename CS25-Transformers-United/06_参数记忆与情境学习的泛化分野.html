@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六讲：参数记忆与情境学习的泛化分野 | 斯坦福 CS25 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS25: Lecture 06</span>
+    <a href="07_协作式AI智能体与科学医学发现.html">下一讲：协作式AI智能体与科学医学发现 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第六讲：参数记忆与情境学习的泛化分野</h1>
+        <p class="subtitle">模型从权重中"记住"的知识，与从上下文中"临场学到"的知识，是同一种泛化能力吗？</p>
+        <div class="author-meta">
+            主讲：Andrew Lampinen（Anthropic 研究科学家）<br>
+            主题：Distinct Modes of Generalization from Parameters and Context, and Paths to Bridge the Gap
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者背景：认知科学视角下的模型泛化研究</h2>
+        <p>
+            Andrew Lampinen 现任 Anthropic 研究科学家，此前在 Google DeepMind 从事研究，其学术背景横跨认知科学与深度学习，长期关注一个交叉性问题：人类与神经网络在"如何从经验中泛化"这件事上，究竟存在怎样的异同。这一背景使他成为探讨"参数化学习"与"情境学习"这两种泛化机制差异的合适人选——这本身既是一个机器学习系统问题，也是一个认知科学问题。
+        </p>
+        <p>
+            本讲的问题背景植根于 Anthropic 更广泛的可解释性（Interpretability）研究计划：与其把大语言模型当作一个只看输出、不问内部机制的黑箱，Anthropic 长期投入资源试图理解模型内部究竟"如何"完成一次推理或泛化，而本讲讨论的正是这一研究计划中的一个核心分支问题。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心技术图谱：两种泛化机制的结构性差异</h2>
+        <p>
+            大语言模型获取和使用知识，存在两条路径，讲座将其明确区分开来：
+        </p>
+        <ul>
+            <li><strong>参数化学习（In-weights Learning）</strong>：模型在预训练阶段，通过梯度下降把海量文本中反复出现的统计规律与知识压缩进权重参数中。这种"记忆"一旦写入权重，推理时几乎是免费调用的，但它的获取过程需要大量重复曝光——一个事实必须在训练语料中出现足够多次，才会被稳定编码进参数。</li>
+            <li><strong>情境学习（In-context Learning, ICL）</strong>：模型在推理阶段，仅凭当前上下文窗口中提供的少量示例或说明，就能在不更新任何权重的情况下完成一个新任务。这种学习方式极度数据高效——往往只需要一到几个示例——但它高度依赖当前上下文，一旦离开这个上下文窗口，"学到"的能力也随之消失，不会被固化。
+        </li>
+        </ul>
+        <h3>两种机制在泛化结构上的实验证据</h3>
+        <p>
+            讲座援引了一系列对照实验的核心结论（此处作为一般性背景知识介绍，而非对某一具体实验数字的引用）：情境学习展现出的泛化模式更接近"类比推理"——模型倾向于识别上下文示例之间的抽象结构关系，并将这种结构关系迁移到新的实例上，这种迁移往往对示例的具体措辞、表面形式相对不敏感；而参数化学习展现出的泛化模式则更接近"统计压缩"——模型倾向于沿着训练数据中高频共现的表面特征进行插值，对于训练分布之外、结构上虽然相似但表面特征迥异的新情形，往往表现出更强的脆弱性。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 关键洞察：为什么两种泛化能力很难相互替代</h2>
+        <p>
+            一个自然的问题是：既然情境学习的泛化能力看起来更"聪明"，能否干脆放弃预训练阶段的参数化记忆，让模型完全依赖情境学习工作？讲座给出的回答是否定的——两种机制解决的是互补而非重叠的问题。参数化记忆提供的是不依赖当前上下文、始终可用的知识基座（例如语言的语法规则、常识性事实），这些内容如果每次都要通过上下文重新"教"给模型，会占用宝贵且有限的上下文窗口长度；而情境学习提供的是应对训练分布之外新颖任务的灵活性，这种灵活性无法仅靠扩大预训练数据规模来获得，因为新任务在定义上就是训练时未曾见过的。
+        </p>
+        <p>
+            由此延伸出"桥接鸿沟"（Bridge the Gap）这一讲座标题后半部分所指向的研究方向：能否设计出一套机制，把模型在情境学习中临时展现出的能力，逐步"蒸馏"或"固化"进参数当中，从而让原本一次性、稍纵即逝的情境适应能力，转变为可以长期复用的参数化知识？链式思维（Chain-of-Thought）推理、以及对模型自身生成的高质量情境学习轨迹进行监督微调，都被认为是这一桥接方向上具有代表性的实践路径。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 延伸思考：对可解释性与终身学习的启发</h2>
+        <p>
+            这一研究议题与 Anthropic 更广泛的可解释性研究传统一脉相承：理解模型内部究竟依赖哪一种机制完成一次具体的推理，直接关系到我们能否预判模型在分布外场景下的行为是否可靠——如果一个看似正确的回答，实际上是参数化记忆里某种表面统计规律的巧合命中，而非真正基于当前上下文的合理推理，这种"虚假的可靠性"恰恰是安全性评估中最危险的盲区之一。
+        </p>
+        <p>
+            从系统设计角度看，这一区分也为"持续学习"（Continual Learning）与终身学习系统提供了方法论启发：一个理想的自我更新系统，或许应当有意识地设计"情境试探—参数固化"的分层机制，而非笼统地依赖单一学习通道。这也为下一讲讨论 Agent 在科研与医疗场景下的协作应用做了铺垫——那些场景中，模型必须同时依赖预训练积累的专业知识，以及针对具体病例或实验情境的临场推理能力。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS25: Transformers United V6 &copy; Spring 2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="07_协作式AI智能体与科学医学发现.html">阅读第七讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三讲：模型架构与超参数选择的工程直觉 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 03</span>
+    <a href="04_混合专家模型MoE的路由与负载均衡.html">下一讲：MoE 的路由与负载均衡 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第三讲：模型架构与超参数选择的工程直觉</h1>
+        <p class="subtitle">从 Post-Norm 到 Pre-Norm，从绝对位置编码到 RoPE：现代 Transformer 的每一个"标配"都曾是一次工程妥协</p>
+        <div class="author-meta">
+            主讲：Tatsunori Hashimoto（斯坦福大学计算机系助理教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、模型架构核心原理</h2>
+        <h3>1. Pre-Norm 与训练稳定性</h3>
+        <p>
+            原始 Transformer 论文采用 Post-Norm（在残差相加之后做层归一化），但这一设计在深层网络中容易导致梯度在反向传播时逐层衰减或爆炸。现代主流架构普遍转向 Pre-Norm（在进入子层之前先做归一化，再与残差相加），其优势在于残差路径上不再被归一化操作打断，使得梯度可以更直接地穿透深层网络——代价是 Pre-Norm 架构的表达能力上限理论上略低于训练良好的 Post-Norm，但换来的训练稳定性收益在实践中被证明是更划算的权衡。
+        </p>
+        <h3>2. RMSNorm 相对 LayerNorm 的效率收益</h3>
+        <p>
+            LayerNorm 需要同时计算均值与方差两个统计量来做归一化，RMSNorm 则只使用均方根（RMS）进行缩放，省去了均值中心化这一步。这一简化在数学上略微牺牲了归一化的完整性，但实践中对模型质量的影响可以忽略不计，却能带来实测的推理与训练速度提升，是"用可忽略的精度损失换取显著工程收益"的典型例子。
+        </p>
+        <h3>3. SwiGLU 激活函数</h3>
+        <p>
+            相比传统的 ReLU 或 GELU，SwiGLU 引入了一个额外的门控分支，用逐元素乘法调制主分支的输出，代价是需要多一组参数矩阵，但在相同参数预算下往往能取得更优的验证损失——多个前沿开源模型不约而同地收敛到 SwiGLU 作为默认选择，被视为架构设计空间中一个相对稳健的局部最优点。
+        </p>
+        <h3>4. RoPE 旋转位置编码</h3>
+        <p>
+            绝对位置编码把位置信息直接加到词嵌入上，但难以泛化到训练时未见过的更长序列。RoPE（Rotary Position Embedding）改用旋转矩阵对 Query 和 Key 向量做位置相关的旋转变换，使得两个 Token 之间的注意力得分天然只依赖于它们的相对位置差——这一设计不仅在数学上更优雅，也在实践中显著改善了模型对长于训练长度的序列的外推能力。
+        </p>
+        <h3>5. GQA：推理显存与生成质量的折中</h3>
+        <p>
+            多头注意力（MHA）中每个注意力头都有独立的 Key/Value 投影，推理时 KV Cache 的显存开销与头数成正比；多查询注意力（MQA）让所有头共享同一组 Key/Value，显存开销骤降但会损失部分建模能力。分组查询注意力（GQA）是二者的折中：把注意力头分为若干组，组内共享 Key/Value 投影，在推理显存与生成质量之间取得一个可调节的平衡点，也是当前主流开源模型的默认选择。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：超参数选择的经验法则</h2>
+        <p>
+            学习率、批次大小与模型宽度/深度的比例并非彼此独立的自由变量。$\mu$P（Maximal Update Parametrization）等参数化方案试图给出一套理论指导：在特定的参数化下，从小模型上搜索出的最优学习率可以近似直接迁移到大模型上，从而避免在千亿参数规模下重复进行代价高昂的超参数搜索。批次大小的选择同样存在一个"临界批次规模"——低于此规模时增大批次能近乎线性地缩短训练时间，超过此规模后继续增大批次则边际收益迅速递减，甚至可能损害最终收敛质量。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            架构选择中最常见的陷阱，是在小规模实验中验证有效的设计改动，未经规模外推验证就直接套用到大模型训练中——由于 Scaling Laws 揭示的规模依赖效应，许多在小模型上带来提升的技巧，在大模型上可能收益消失甚至产生负面影响。这也是为什么本课程反复强调：任何架构或超参数决策，理想情况下都应该配合小规模的 Scaling 曲线外推实验，而非仅凭单一规模下的实验结果直接下结论。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="04_混合专家模型MoE的路由与负载均衡.html">阅读第四讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

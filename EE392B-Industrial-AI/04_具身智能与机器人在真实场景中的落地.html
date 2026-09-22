@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四讲：具身智能与机器人在真实场景中的落地 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 04</span>
+    <a href="05_半导体计量学中的AI质检革命.html">下一讲：半导体计量学中的AI质检革命 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第四讲：具身智能与机器人在真实场景中的落地</h1>
+        <p class="subtitle">从实验室演示到非结构化户外环境：机器人自主性的现实门槛</p>
+        <div class="author-meta">
+            主讲嘉宾：Joanna Lichter、Oriana Peltzer、Mery Toyungyernsub（Emerson Collective / Field AI）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            本讲由三位分别来自影响力投资机构 Emerson Collective 与机器人自主导航公司 Field AI 的嘉宾共同带来，涵盖了从投资视角审视机器人赛道，到工程团队真实解决自主导航难题的完整链条。Field AI 专注于让机器人在没有高精地图、没有 GPS 信号的非结构化环境（如建筑工地、灾后现场、矿井）中实现可靠自主移动，是具身智能落地难度最高的细分方向之一。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：非结构化环境对具身智能的额外要求</h2>
+        <h3>1. 结构化 vs. 非结构化环境</h3>
+        <p>
+            仓库物流机器人通常运行在相对结构化的环境中：固定的货架布局、清晰的地面标线、可预测的障碍物类型。而建筑工地、野外救援这类非结构化环境，地面材质、光照条件、障碍物形态都在不断变化，且往往没有预先建好的高精地图可用，这对机器人的实时感知与路径规划能力提出了数量级更高的要求。
+        </p>
+        <h3>2. 无GPS环境下的定位难题</h3>
+        <p>
+            室内建筑工地、矿井等场景通常无法获得可靠的 GPS 信号，机器人必须依赖同步定位与地图构建（SLAM）等技术，结合视觉、激光雷达、惯性测量单元（IMU）等多传感器融合，在完全未知的环境中一边探索一边构建地图。这类系统对计算实时性和传感器融合算法的鲁棒性要求极高，也是 Field AI 这类公司的核心技术壁垒所在。
+        </p>
+        <h3>3. 安全性与人机共存</h3>
+        <p>
+            工地、灾后现场往往有人类工作人员同时在场，机器人的路径规划不仅要避开静态障碍物，还要预测并避让动态出现的人员，这涉及到概率化的轨迹预测与安全余量设计，与纯粹追求效率最优的仓储机器人调度逻辑有本质不同。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：为什么"通用具身智能"距离现实落地仍有距离</h2>
+        <p>
+            讲座中提出的一个重要观点是：当前媒体热议的"通用机器人大模型"，与真正能在特定垂直场景稳定运行、可以被保险公司承保、可以规模化复制的产品之间，仍然存在巨大的工程鸿沟。像 Field AI 这样的公司选择先在建筑工地、能源基础设施巡检等具体垂直场景中把可靠性做扎实，而不是追求一步到位的通用家用机器人，这种"先窄后宽"的产品策略，反映了具身智能领域普遍认同的一条落地路径：先在容错率相对可控、付费意愿明确的专业场景中站稳脚跟，再逐步扩展任务边界。
+        </p>
+        <p>
+            从投资视角看，Emerson Collective 关注的一个核心问题是：一家具身智能公司的技术优势，是建立在可以快速复制到多个客户场景的通用感知与规划能力之上，还是仅仅针对某一个客户的定制化工程？前者才具备真正的规模化投资价值。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 本讲小结</h2>
+        <p>
+            具身智能在真实世界的落地速度，本质上取决于机器人在非结构化、无先验地图、人机共存环境下的自主决策鲁棒性能否达到可保险、可复制的标准，而不是实验室演示视频里的流畅程度。这与前几讲反复强调的"工业 AI 的容错阈值远高于消费级 AI"这一核心框架一脉相承。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="05_半导体计量学中的AI质检革命.html">阅读第五讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

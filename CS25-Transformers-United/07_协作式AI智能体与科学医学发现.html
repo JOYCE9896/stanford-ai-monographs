@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第七讲：协作式AI智能体与科学医学发现 | 斯坦福 CS25 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS25: Lecture 07</span>
+    <a href="08_原生多模态智能与统一表征.html">下一讲：原生多模态智能与统一表征 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第七讲：协作式AI智能体与科学医学发现</h1>
+        <p class="subtitle">当 Agent 走出代码沙盒，进入实验室与诊室：高风险领域的人机协作范式</p>
+        <div class="author-meta">
+            主讲：Vivek Natarajan（Google DeepMind 研究科学家）<br>
+            主题：Advancing Science and Medicine with Collaborative AI Agents
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者背景：从医学大模型到科学发现 Agent</h2>
+        <p>
+            Vivek Natarajan 任职于 Google DeepMind，长期深度参与 Google 在"AI 用于医学"方向的旗舰研究工作，包括 Med-PaLM 系列医学大语言模型——这是最早系统性验证大语言模型能否在医学执照考试式问答、临床推理等任务上接近甚至达到专业医生水平的研究工作之一。他的研究路径近年逐渐从"单体医学问答模型"扩展到"多智能体协作系统在科学与医学发现中的应用"，本讲正是这一路径延伸的集中呈现。
+        </p>
+        <p>
+            这一背景转变本身就具有指标意义：早期医学大模型的评估范式主要是"单轮问答是否正确"，而真实的临床决策与科学研究过程，从来不是单次问答就能完成的，而是一个包含假设提出、证据检索、多方会诊、方案修正的迭代过程——这正是"协作式 Agent"这一框架相比单体模型更贴近真实工作流程的原因。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心技术图谱：高风险领域中的多智能体协作架构</h2>
+        <h3>医学与科学场景对模型能力提出的特殊要求</h3>
+        <p>
+            相比通用对话或代码生成场景，医学与科学发现场景对模型系统提出了两个额外的硬性要求：其一是知识的时效性与准确性必须经得起专业审查，任何幻觉都可能带来现实伤害而非仅仅是"回答不够好"；其二是决策过程需要具备可追溯、可审计的中间推理链条，而不能是一个不可解释的黑箱输出。这两点共同决定了为什么这一领域的 Agent 系统设计，明显区别于开放域通用助手。
+        </p>
+        <ul>
+            <li><strong>专家分工型智能体（Specialist Agents）</strong>：系统内部不依赖单一模型承担全部推理，而是将不同子任务（如病历信息抽取、鉴别诊断假设生成、文献证据检索、用药相互作用核查）分配给针对性设计或提示的专门化 Agent 模块，各司其职。</li>
+            <li><strong>验证与核查智能体（Verifier Agents）</strong>：独立于生成过程之外，专门负责对其他 Agent 给出的中间结论进行事实核查与一致性检验，形成一种"生成—质疑—修正"的内部对抗式协作，而非依赖单一模型的自我一致性。</li>
+            <li><strong>共识机制（Consensus Mechanism）</strong>：在多个 Agent 或多次独立推理路径给出不完全一致的结论时，系统需要一套类似临床"多学科会诊"（MDT）的机制来综合、仲裁并给出最终建议，而不是简单取多数投票——某些低概率但高危害的假设即便只被少数路径提出，也可能需要被优先排查。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 关键洞察：科学发现流程中的 Agent 角色定位</h2>
+        <p>
+            讲座将讨论范围从临床医学场景延伸到更广义的科学发现（Scientific Discovery）流程，包括假设生成、实验设计建议、文献综述自动化整合，乃至与湿实验室（Wet Lab）流程对接的"实验室在环"（Lab-in-the-loop）系统设想——即 Agent 提出可验证假设，真实实验结果反过来作为反馈信号，指导下一轮假设的生成与筛选，形成一个跨越数字世界与物理世界的迭代闭环。
+        </p>
+        <p>
+            这一设想背后的核心判断是：科学发现过程中最稀缺的资源，往往不是算力或知识存量，而是"提出正确问题"与"筛选值得验证的假设"这一环节的人类专家时间。一个能够高效生成大量候选假设、并对其可信度做初步筛选与排序的 Agent 系统，理论上可以显著放大人类科学家的有效产出——但这一切都建立在系统给出的中间推理必须足够透明、可供人类专家审阅和纠偏这一前提之上，而不是让 Agent 完全自主替代科学家做最终判断。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 延伸思考：从单体模型到协作式系统的范式转移</h2>
+        <p>
+            本讲呈现的技术路径，与前几讲讨论的"更大更强的单体模型"这一朴素叙事形成有意思的对照：在医学与科学这类高风险、高专业壁垒的领域，提升整体系统可靠性的关键，未必是让单一模型变得更强，而是通过恰当的多智能体协作架构设计，把生成、验证、仲裁这几个环节解耦并相互制衡，从制度设计层面降低单点错误被放大的风险。
+        </p>
+        <p>
+            这也为理解 Agent 系统的落地场景提供了一个重要参照系：越是高风险的应用领域，"可解释、可追溯、可人工介入"这几项系统性质的重要性就越是超越单纯的模型能力指标本身。下一讲将从这种面向专业垂直场景的协作系统，转向一个更基础性的架构问题——原生多模态智能应当如何在统一的表征空间中设计。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS25: Transformers United V6 &copy; Spring 2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="08_原生多模态智能与统一表征.html">阅读第八讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

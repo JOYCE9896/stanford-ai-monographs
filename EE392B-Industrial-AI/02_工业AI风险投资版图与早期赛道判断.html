@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二讲：工业AI风险投资版图与早期赛道判断 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 02</span>
+    <a href="03_军工级AI系统的研发部署与可靠性工程.html">下一讲：军工级AI系统的可靠性工程 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第二讲：工业AI风险投资版图与早期赛道判断</h1>
+        <p class="subtitle">从风险资本视角审视工业AI创业公司的估值逻辑与护城河</p>
+        <div class="author-meta">
+            主讲嘉宾：Nick Landolfi（Unusual Ventures）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            Nick Landolfi 来自 Unusual Ventures，一家长期专注早期科技投资、尤其重视企业级与基础设施赛道的风险投资机构。与专注消费应用的基金不同，Unusual Ventures 在工业与企业软件方向积累了大量早期投资案例，这使得 Landolfi 的视角天然带有"如何给一家尚未盈利的工业 AI 初创公司定价"的实务经验。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：工业AI创业公司的估值锚点</h2>
+        <h3>1. 与消费互联网创业公司的估值逻辑差异</h3>
+        <p>
+            消费互联网创业公司习惯用月活跃用户（MAU）、留存率等增长指标讲故事，估值很大程度上锚定在未来的规模效应。工业 AI 创业公司的客户基数天然小得多——可能只有几十家大型制造商或能源公司愿意采购，因此投资人更关注单客户合同金额（ACV）、客户集中度风险，以及技术护城河是否建立在难以复制的专有数据或领域知识之上。
+        </p>
+        <h3>2. 销售周期与现金流曲线</h3>
+        <p>
+            工业客户的采购决策往往需要经过多轮技术验证（POC）、安全合规审查，销售周期动辄六个月到两年。这意味着工业 AI 初创公司在早期阶段的现金流曲线比消费互联网公司更陡峭、更漫长，对早期投资人的耐心和融资节奏规划提出了更高要求。
+        </p>
+        <h3>3. 赛道分类框架</h3>
+        <p>
+            Landolfi 在讲座中提出了一个简明的赛道划分框架，帮助投资人快速判断一家工业 AI 公司所处的位置：
+        </p>
+        <ul>
+            <li><strong>纵向垂直型</strong>：只服务单一行业（如半导体制造、油气勘探），技术壁垒往往来自深厚的行业专有知识（Domain Expertise）。</li>
+            <li><strong>横向平台型</strong>：提供跨行业通用的工业数据基础设施或建模工具，规模效应更强，但需要更长时间证明跨行业的可迁移性。</li>
+            <li><strong>硬件+软件耦合型</strong>：AI 能力与专有传感器、执行机构绑定销售，护城河更深但资本开支也更重。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：为什么"看起来无聊"的赛道反而更值钱</h2>
+        <p>
+            Landolfi 指出一个投资人圈内的共识：越是听起来枯燥、离普通消费者生活很远的工业细分赛道（比如管道腐蚀检测、变压器故障预测），往往越具备真实的付费意愿和更少的同质化竞争。原因在于，这些场景的痛点是真实存在且代价高昂的停机损失或安全事故，客户愿意为哪怕只降低几个百分点故障率的解决方案支付高溢价，而不是被"这个功能很酷"这种叙事打动。
+        </p>
+        <p>
+            这与消费互联网领域"眼球经济"式的估值逻辑形成鲜明对比：工业 AI 投资人评估一家公司时，会更直接地追问"这个模型每年到底为客户省下多少停机时间或维修成本"，这是一个可以被财务量化、可以被客户内部审计团队核实的指标，而不是抽象的用户增长曲线。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 早期赛道判断的实务清单</h2>
+        <p>
+            结合讲座内容，可以将 Landolfi 提出的早期判断标准整理为一份简要清单：
+        </p>
+        <ul>
+            <li>客户是否有可以量化的现有损失（停机成本、次品率、能耗）作为对比基准？</li>
+            <li>团队是否拥有难以被大厂快速复制的行业专有数据或客户关系？</li>
+            <li>产品是否可以从单一标杆客户逐步复制到同行业其他客户，还是每个客户都需要重新定制？</li>
+            <li>销售周期与现金流曲线是否与融资节奏匹配，团队是否为长销售周期做好了准备？</li>
+        </ul>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="03_军工级AI系统的研发部署与可靠性工程.html">阅读第三讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五讲：GPU计算范式与Triton底层内核优化 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 05</span>
+    <a href="06_并行训练策略的全景解构.html">下一讲：并行训练策略的全景解构 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第五讲：GPU 计算范式与 Triton 底层内核优化</h1>
+        <p class="subtitle">为什么理论峰值算力和实测吞吐量之间总有一道鸿沟，以及 FlashAttention 如何跨越它</p>
+        <div class="author-meta">
+            主讲：Tatsunori Hashimoto（斯坦福大学计算机系助理教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：内存层级与算术强度</h2>
+        <p>
+            现代 GPU 的存储体系呈明显的金字塔结构：片上 SRAM 容量极小（通常仅几十 MB）但带宽极高，片外高带宽显存 HBM 容量大（数十 GB）但带宽相对 SRAM 低一到两个数量级。一个算子的性能瓶颈究竟在于计算还是访存，取决于其算术强度（Arithmetic Intensity）——即每从显存搬运一字节数据，能配套执行多少次浮点运算。算术强度低的算子（如逐元素操作、简单的归一化）性能主要受限于显存带宽，无论芯片算力多强都无法跑满；算术强度高的算子（如大矩阵乘法）才能真正把算力兑现为实测速度，这正是 Roofline 模型试图刻画的核心权衡。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：核融合与 FlashAttention</h2>
+        <h3>1. 核融合：减少显存往返</h3>
+        <p>
+            未经优化的实现中，注意力机制的每一步（QK 矩阵乘法、Softmax、与 V 相乘）往往被拆解为多个独立的 GPU 内核（kernel）调用，每次调用都需要把中间结果完整写回 HBM，再在下一步重新读取——这些"显存往返"本身消耗的时间，在算术强度较低的操作序列中，往往超过了实际计算耗费的时间。核融合（kernel fusion）技术把多个连续操作合并进同一个内核调用，让中间结果尽可能保留在高速 SRAM 中，从而大幅减少不必要的显存读写。
+        </p>
+        <h3>2. FlashAttention 的分块 Softmax</h3>
+        <p>
+            标准注意力实现需要先计算并存储完整的 $n \times n$ 注意力得分矩阵才能做 Softmax 归一化，这一矩阵的显存占用随序列长度平方增长，是长序列训练的主要瓶颈之一。FlashAttention 的核心洞察是：借助一种在线（online）Softmax 的数值技巧，可以把注意力计算分块进行——每次只处理 Query 和 Key 的一小块，在处理过程中动态维护归一化所需的运行统计量，全程无需在显存中物化完整的注意力矩阵。这一方法在数学上与标准注意力完全等价，却把显存复杂度从 $O(n^2)$ 降低到 $O(n)$，同时因为大幅减少了显存读写，实测速度反而显著快于"直观上更简单"的标准实现——这是本讲试图传递的一个反直觉但极具代表性的教训：算法的理论浮点运算量并不直接决定实际运行速度，访存模式往往才是真正的胜负手。
+        </p>
+        <h3>3. Triton：块级编程模型</h3>
+        <p>
+            手写 CUDA 内核需要工程师直接管理线程、线程块与共享内存的复杂交互，开发门槛极高。Triton 提供了一种更高层的"块级"（block-level）编程抽象：开发者以张量分块为基本操作单元描述计算逻辑，编译器自动负责底层的线程调度、内存合并访问与寄存器分配等细节，并能针对不同的分块大小自动搜索最优配置（autotuning）。这使得研究者可以用远少于原生 CUDA 的代码量，实现接近手工优化 CUDA 内核的性能，是 CS336 选择用 Triton 而非原生 CUDA 作为教学工具的核心原因。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            一个常见的误判是仅凭理论 FLOPs 估算就断言某个实现"应该很快"，却忽视了访存模式对实测性能的决定性影响——本讲反复强调，MFU（模型 FLOPs 利用率）这一实测指标，才是判断一个训练流水线是否高效的最终标准，任何脱离实测数据的理论推演都只能作为参考而非结论。另一个常见陷阱是过早优化：在未确定训练流程的整体瓶颈究竟出在计算、访存还是通信之前，就投入大量精力手工优化某个单一内核，往往收效甚微。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="06_并行训练策略的全景解构.html">阅读第六讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

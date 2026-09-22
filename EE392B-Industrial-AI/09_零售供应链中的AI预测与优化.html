@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第九讲：零售供应链中的AI预测与优化 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 09</span>
+    <a href="10_汽车产业AI变革与底特律的再工业化.html">下一讲：汽车产业AI变革与底特律的再工业化 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第九讲：零售供应链中的AI预测与优化</h1>
+        <p class="subtitle">从牛鞭效应到SKU-门店级动态补货：全球最大零售商的运筹规模博弈</p>
+        <div class="author-meta">
+            主讲嘉宾：Mohan Akelia（Walmart）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            Mohan Akelia 来自 Walmart，全球营收规模最大的零售商，其供应链体系覆盖数千家门店、数以万计的供应商与横跨全球的物流网络。Walmart 长期以来都是零售运筹技术的先行者——从上世纪末建立的 Retail Link 供应商数据共享系统，到近年来在需求预测、库存优化、仓储自动化上的深度 AI 投入，其供应链决策系统所处理的数据规模与决策颗粒度，在零售行业内几乎没有对标对象。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：超大规模零售供应链的AI决策体系</h2>
+        <h3>1. 需求预测的组合爆炸问题</h3>
+        <p>
+            Walmart 需要对每一个"商品-门店"组合（SKU-Store Combination）独立生成未来一段时期的需求预测，其组合规模达到数百万甚至更高量级。这类超大规模预测任务通常采用分层预测（Hierarchical Forecasting）架构：先在品类、区域等更粗粒度层级上生成宏观预测，再逐级向下分解协调到单一门店单一商品的精细颗粒度，确保各层级预测结果在数学上自洽一致，而不是相互独立、互相矛盾的孤立模型集合。
+        </p>
+        <h3>2. 牛鞭效应与多级库存优化</h3>
+        <p>
+            零售供应链领域的经典现象"牛鞭效应"（Bullwhip Effect）指的是：终端消费需求的微小波动，经过零售商、区域配送中心、供应商等多个环节逐级传导放大后，会在供应链上游演变为剧烈的库存震荡。<strong>多级库存优化（Multi-echelon Inventory Optimization）</strong>正是为应对这一现象而生的建模思路——不再孤立优化单一节点的库存水平，而是把整条供应链视为一个相互耦合的系统整体优化，目标是在满足服务水平约束的前提下，最小化全链条的总持有与短缺成本，并主动抑制波动逐级放大的效应。
+        </p>
+        <h3>3. 补货决策与例外管理式人机协同</h3>
+        <p>
+            在如此庞大的决策规模下，让人类采购员逐一审核每一条补货建议是不现实的。业界普遍采用"例外管理"（Exception-based Management）模式：AI 系统自动执行绝大多数符合历史模式、置信度高的常规补货决策，只有当预测出现显著异常（如需求突增、供应中断信号）时，才将该条决策提交给人类采购员或计划员复核，把人类的注意力资源集中在真正需要判断力介入的少数场景上。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：规模效应下的边际精度与系统性风险的双刃剑</h2>
+        <p>
+            讲座中提出的一个值得深思的观点是：在 Walmart 这样的体量下，需求预测准确率哪怕只提升零点几个百分点，由于基数极为庞大，换算成绝对的库存成本节省与营收提升都是天文数字，这是规模效应带来的巨大正向红利。但硬币的另一面是，一旦预测模型本身存在系统性偏差或对某类突发外部冲击（自然灾害、地缘政治事件、社会性抢购潮）缺乏鲁棒性，这种偏差会在数以百万计的门店-商品组合上同步复制放大，造成的负面影响同样是规模化的、相关性极高的系统性风险，而不是相互独立、可以互相对冲的随机噪声。
+        </p>
+        <p>
+            这决定了超大规模零售供应链 AI 系统的设计必须格外警惕模型的同质化风险：如果所有决策都依赖单一模型架构的输出，其失效模式也会高度同步；因此业界普遍会引入模型集成、跨方法论的交叉验证，并为历史模式之外的极端外部冲击预留明确的人工干预与应急预案通道。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 对更广泛工业AI场景的启示</h2>
+        <p>
+            零售供应链是本课程目前讨论过的场景中数据最为丰富、AI 渗透率最高的垂直领域之一，但其落地路径依然呼应第一讲提出的"组织惯性"框架：像 Walmart 这样的巨头，其 AI 能力的演进更多表现为对既有运筹决策体系的渐进式嵌入与持续迭代，而非另起炉灶式的推倒重来。这提示我们，工业 AI 的成功案例往往不是"颠覆式取代"，而是"深度嵌入并逐步扩大自动化决策的边界"。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="10_汽车产业AI变革与底特律的再工业化.html">阅读第十讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五讲：全球治理版图的多元路径与AI经济学 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 05</span>
+    <a href="06_算力基础设施能耗博弈与国家安全地缘政治.html">下一讲：算力基础设施与地缘政治 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第五讲：全球治理版图的多元路径与 AI 经济学</h1>
+        <p class="subtitle">从中国、非洲、东南亚到印度的差异化监管路径，以及生成式 AI 对劳动力市场与市场结构的双重冲击</p>
+        <div class="author-meta">
+            主讲导师：Rob Reich（政治系）、Nathaniel Persily（法学院）<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、世界其他地区的 AI 治理路径</h2>
+        <p>
+            前一讲聚焦欧美两大治理范式，这一讲把视野扩展到全球其他主要经济体，核心论点是：AI 治理的多元化并非暂时的过渡状态，而是根植于不同地区政治经济结构与发展优先级的持久分歧。
+        </p>
+        <h3>中国：产业政策导向的分层监管</h3>
+        <p>
+            Sheehan 在《Tracing the Roots of China's AI Regulations》中指出，中国的 AI 监管呈现出鲜明的"问题驱动、分批立法"特征——不同于欧盟一步到位的综合性法案，中国监管机构针对生成式内容、算法推荐、深度合成等具体应用场景陆续出台专项规定，且监管目标与产业政策目标高度交织：既要防范内容风险与意识形态安全，也要为国内 AI 产业的国际竞争力保驾护航。这种"监管与产业扶持并行"的模式，与欧美"监管者独立于产业发展目标"的传统监管哲学形成鲜明对比。
+        </p>
+        <h3>印度、东南亚与非洲：发展优先的治理逻辑</h3>
+        <p>
+            Mohanti 与 Sahu 关于印度 AI 监管的分析显示，印度政府长期在"促进创新"与"防范风险"之间倾向前者，监管姿态相对宽松，这与印度将 AI 视为跨越式发展关键杠杆的国家战略定位直接相关。新加坡个人数据保护委员会（PDPC）的生成式 AI 治理框架则代表了另一种路径：以"模型 AI 治理框架"提供非强制性的最佳实践指引，依靠行业自愿采纳而非强制立法来引导负责任部署，这与新加坡长期奉行的"轻触式监管"（light-touch regulation）传统一脉相承。而 Munga 与 Quansah 关于非洲 AI 治理图景的研究则揭示了一个常被忽视的结构性问题：非洲各国在 AI 治理政策制定过程中的话语权高度不对等——治理标准与伦理框架往往由发达经济体的机构率先制定，非洲声音更多是被动采纳者而非规则制定的参与者，Adan 在《Voice and Access in AI》中称之为"全球 AI 多数群体"在治理议程设置上的系统性边缘化。
+        </p>
+        <h3>趋同还是碎片化？</h3>
+        <p>
+            综合这些区域案例，导师提出了一个开放性问题：这些差异化路径究竟会随时间推移逐渐收敛为一套共享的全球规范，还是会持续固化为一个多极、彼此不完全兼容的碎片化治理版图？答案很大程度上取决于跨国 AI 企业的合规策略——如果头部企业选择以最严格辖区的标准（如欧盟）作为全球统一部署基准（这被称为"布鲁塞尔效应"），趋同压力会更强；但如果企业为不同市场定制差异化的合规版本，碎片化格局则可能进一步固化。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、AI 经济学：劳动力市场重构与市场集中度</h2>
+        <p>
+            第二节课把视角从跨国治理转向经济结构，核心是两个彼此关联的问题：AI 如何重塑劳动力市场，以及 AI 驱动的规模经济如何加剧市场权力集中。
+        </p>
+        <h3>自动化的替代与互补效应</h3>
+        <p>
+            Brynjolfsson 等人在 NBER 工作论文《Generative AI at work》中的实证研究揭示了一个比"AI 取代工作岗位"这一简单叙事更细致的图景：生成式 AI 对不同技能层级劳动者的影响并不均匀——对于经验较浅的客服代表，AI 辅助工具带来的生产率提升幅度显著高于资深员工，因为 AI 有效地把新手的表现"拉齐"到接近专家水平，这既是效率提升，也隐含着对资深员工技能溢价的压缩。斯坦福数字经济实验室的《Canaries in the Coal Mine?》一文则试图用早期劳动力市场数据捕捉可观测的就业效应信号，为"AI 到底是渐进渗透还是断崖式替代"这一实证之争提供数据支撑。
+        </p>
+        <h3>竞争政策与反垄断的新战场</h3>
+        <p>
+            Hagiu 与 Wright 在《Artificial Intelligence and Competition Policy》中分析了 AI 产业特有的规模经济机制：训练前沿模型需要的算力、数据与人才投入门槛极高，这天然有利于少数资本雄厚的头部企业，而这些企业一旦通过 API 或云服务成为下游无数应用的基础设施提供方，就获得了传统反垄断法中"平台守门人"式的结构性市场权力。Narechania 与 Sitaraman 在《An Antimonopoly Approach to Governing Artificial Intelligence》中主张，现有反垄断框架主要针对已经形成垄断后的事后救济，但 AI 产业的规模效应形成速度极快，等到反垄断诉讼走完流程，市场格局可能早已固化——这呼应了本课程反复出现的一个主题：AI 治理工具的响应速度，天然落后于 AI 技术与产业演化的速度。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            全球治理碎片化与经济结构重塑这两个议题看似分属不同领域，实则共享一个共同逻辑：AI 能力的扩散速度远快于任何单一辖区或单一政策工具的响应能力。无论是试图统一全球监管标准，还是试图用传统反垄断工具约束新兴的算力寡头，治理者面对的都是同一个结构性困境——规则制定的速度追不上技术与市场演化的速度。这也为课程后续几讲要探讨的"治理基础设施"（算力、企业自律、国际协调机制）埋下了伏笔：当正式立法长期滞后时，非正式的、更具适应性的治理工具（行业标准、自愿承诺、国际软法）往往会先一步填补空白。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="06_算力基础设施能耗博弈与国家安全地缘政治.html">阅读第六讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

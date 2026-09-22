@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一讲：AI转型的竞争性叙事与前沿科技治理史鉴 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 01</span>
+    <a href="02_技术根基解构与算法公平性的度量困境.html">下一讲：技术根基与算法公平性 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第一讲：AI 转型的竞争性叙事与前沿科技治理史鉴</h1>
+        <p class="subtitle">从 AI 2027 到"常态化技术论"：解构围绕通用人工智能的公共想象之争，并向核能、生物技术与互联网的监管史寻找可迁移的制度经验</p>
+        <div class="author-meta">
+            主讲导师：Nathaniel Persily（法学院 / 政治系 / 传播学系）、Rob Reich（政治系，刚从美国 AI 安全研究院卸任归校）、Anka Reuel（计算机系）、Sanmi Koyejo（计算机系）<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions（Law 4052 / CS 283 / COMM 252A / PoliSci 245B-445B）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、导论：竞争性方法论与 AI 转型的想象之争</h2>
+        <p>
+            本课程开篇并不急于给出"AI 应该如何被监管"的答案，而是先让四位来自不同学科的导师坦白各自的方法论出发点——这本身就是治理研究的第一课：法律、政治学、传播学与计算机科学看待同一项技术时，提出的问题从根本上就不一样。法学关心的是既有制度能否被援引应对新技术；政治学关心权力如何在国家、企业与公众之间重新分配；计算机科学则关心哪些说法在技术上是可验证的，哪些只是修辞。
+        </p>
+        <p>
+            这一讲的核心材料，是把当下关于 AI 未来的公共叙事摆在同一张桌子上对照阅读。一端是 AI Futures Project 的《AI 2027》，用近乎技术推演的方式描绘了一条从当前模型能力到递归自我改进、进而在极短时间内产生远超人类智能系统的路径；另一端是 Narayanan 与 Kapoor 的《AI as Normal Technology》，主张 AI 的扩散速度会被现实世界中的组织惯性、监管摩擦与互补性投资需求大幅拖慢，其社会影响应当类比电力或互联网这类"慢慢渗透"的通用技术，而非一次奇点式断裂。
+        </p>
+        <p>
+            这两种叙事并非单纯的学术分歧，而是直接决定了治理议程的优先级排序。如果相信 AI 2027 式的加速路径，那么治理的核心问题是如何在递归自我改进失控之前建立起"刹车"机制——国际协调、算力上限、模型能力评估的强制性关卡都变得紧迫。如果相信"常态化技术论"，治理的重心则会转向更朴素的问题：谁在使用这项技术、谁被技术替代、既有的反歧视法与劳动法是否需要修订以适应新的自动化形式。Helen Toner 在《Unresolved Debates about the Future of AI》中提醒读者，这两种叙事甚至不共享同一套时间尺度假设，这使得表面上"支持监管"或"反对监管"的立场，实际上可能建立在完全不可通约的前提之上。
+        </p>
+        <h3>技术乐观主义与风险管理论的两极</h3>
+        <p>
+            补充阅读材料进一步拉开了叙事光谱的两端：Dario Amodei 的《Machines of Loving Grace》描绘了 AI 加速科学发现、根治疾病的乐观图景；Marc Andreessen 的《技术乐观主义者宣言》则把任何强调风险的论述都归为"去人类化的意识形态"。与之相对，Bengio 等人在《Science》发表的联署文章《Managing Extreme AI Risks Amid Rapid Progress》主张，即便发生灾难性后果的概率不高，其不可逆性也足以要求现在就投入治理资源——这是一种在气候变化与核安全领域早已成熟的"预防性原则"逻辑，被直接移植到了 AI 议题上。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、前沿科技治理史：核能、生物技术与互联网的制度遗产</h2>
+        <p>
+            如果说第一节课回答的是"我们现在处于什么样的叙事分歧之中"，那么第二节课试图回答一个更具操作性的问题：历史上，社会是如何为前所未有的技术建立监管框架的？导师选择了三个案例——核能、生物技术、互联网——作为可供类比迁移的制度模板。
+        </p>
+        <p>
+            Aidinoff 与 Kaiser 在《Novel technologies and the choices we make》中指出，每一次面对全新技术，社会都会经历一段"监管真空期"，在此期间行业自律、非正式规范与事后追责暂时填补制度空白，直到出现足够引人注目的失败案例（核泄漏、生物安全事故、数据滥用丑闻）才会催生正式立法。RAND 的《Historical analogues that can inform AI governance》则更细致地比较了不同技术的"技术特征如何决定监管策略"：核技术的可分离性强（铀浓缩设施相对容易被识别和核查），因此国际原子能机构式的强制核查制度是可行的；而软件和模型权重具有近乎零边际成本的可复制性，这意味着核不扩散那一套建立在"物理稀缺性"之上的治理逻辑，未必能直接套用到 AI 模型扩散问题上。
+        </p>
+        <h3>风险治理的认知基础</h3>
+        <p>
+            美国国家研究委员会（National Research Council）关于"理解风险"的经典报告提出了一个至今仍被援引的框架：风险治理不只是技术专家对客观危害概率的计算，还必须纳入公众对风险的主观感知与制度信任度——一项技术即便在专家眼中风险可控，如果公众感知到失控与不可知，监管压力依然会迅速累积。这一视角提前为本课程后续讨论"AI 焦虑"与"公众叙事如何反向塑造监管议程"埋下了伏笔。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            把两节课放在一起看，第一周实际上给整门课程立下了一条方法论准则：任何关于"应该如何治理 AI"的具体政策建议，都无法脱离其背后隐含的技术轨迹假设和历史类比选择而被中立地评估。一个把 AI 类比为核技术的人，天然会倾向于强调国际条约与算力核查；一个把 AI 类比为互联网的人，则更可能主张事后问责与平台责任制度；而"常态化技术论"的支持者，则会把治理重心放在劳动力市场政策和既有反垄断法的延伸适用上。
+        </p>
+        <p>
+            这也解释了为什么本课程要在第一周就邀请四位学科背景迥异的导师同台——治理 AI 从来不是一个纯粹的技术问题，而是一个需要在竞争性叙事、历史类比与制度设计之间不断校准的持续过程。后续九周的课程，本质上都是在不同具体领域（公平性、隐私、跨国监管、企业自律、版权）里反复检验这一方法论起点。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="02_技术根基解构与算法公平性的度量困境.html">阅读第二讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

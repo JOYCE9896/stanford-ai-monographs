@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六讲：算力基础设施能耗博弈与国家安全地缘政治 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 06</span>
+    <a href="07_企业内部治理机制与评估基准的技术陷阱.html">下一讲：企业治理与评估陷阱 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第六讲：算力基础设施能耗博弈与国家安全地缘政治</h1>
+        <p class="subtitle">从吉瓦级数据中心的电网压力到先进制程出口管制：算力如何成为 21 世纪的战略资源</p>
+        <div class="author-meta">
+            主讲导师：Rob Reich（政治系）、Sanmi Koyejo（计算机系）<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、硬件、基础设施与能源：算力治理的物理基础</h2>
+        <p>
+            这一讲把治理讨论从法律文本拉回到物理世界——前沿 AI 的能力边界最终受限于电力、芯片与数据中心这些硬约束。"算力治理"（compute governance）由此成为一个独立的研究领域：既包括围绕算力获取与监督建立的制度性安排，也包括支撑这些安排得以执行的技术性机制。
+        </p>
+        <h3>数据中心的能耗规模</h3>
+        <p>
+            Epoch AI 的《How Much Energy Does ChatGPT Use?》一文试图对单次推理请求的能耗给出量化估算，虽然具体数字随模型规模与推理策略不断变化，但其方法论价值在于建立了一套可复用的核算框架——把能耗拆解为芯片本身的功耗、数据中心制冷系统的间接开销（以 PUE 电源使用效率衡量）与网络传输损耗三部分。SemiAnalysis 的《AI datacenter energy dilemma》则从产业视角描绘了"数据中心争夺战"的现实图景：头部云服务商为了锁定下一代模型训练所需的电力容量，正在与电网运营商签订长期购电协议，甚至直接投资建设专用发电设施（包括核能与天然气电厂），这种"算力企业亲自下场做能源基础设施"的现象，是过去任何一轮信息技术浪潮都未曾出现过的新局面。
+        </p>
+        <h3>算力治理的制度工具箱</h3>
+        <p>
+            兰德公司《Insights from a Workshop on Hardware-Enabled Governance Mechanisms》梳理了一套正在被学界与政策界讨论的"硬件层面治理机制"：例如在 AI 芯片中嵌入可验证的位置追踪或使用记录功能，使监管机构能够在不侵犯商业机密的前提下核实算力的实际去向与使用规模——这是一种试图把核不扩散领域"可核查性"设计理念移植到算力治理中的技术尝试，但其在工程可行性、隐私影响与国际互信基础上仍存在大量未决争议。
+        </p>
+        <h3>环境代价的分配正义</h3>
+        <p>
+            Kneese 与 Young 在《Carbon Emissions in the Tailpipe of Generative AI》中提出了一个常被忽视的公平性问题：AI 训练与推理的环境成本（碳排放、水资源消耗）与其经济收益的分配主体往往并不重合——数据中心通常选址在电力与土地成本较低的地区，当地社区承担了环境负外部性，而模型训练带来的经济价值却主要流向总部所在地的股东与高技能从业者。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、国家安全、地缘政治风险与国际 AI 治理</h2>
+        <p>
+            如果说第一节课处理的是算力的"物理"维度，第二节课处理的则是算力的"地缘政治"维度——半导体供应链的地理集中度，使得算力天然带有国家安全属性。
+        </p>
+        <h3>半导体供应链的地缘脆弱性</h3>
+        <p>
+            先进制程芯片的制造能力高度集中于少数几家企业与地区，这种集中度本身就是一种结构性的地缘政治脆弱点。Khan 在《AI Chips: What They Are and Why They Matter》中系统解释了为什么先进制程芯片的制造壁垒如此难以复制——极紫外光刻（EUV）设备的研发与量产被极少数供应商垄断，任何一个环节的中断都可能对全球 AI 硬件供应造成连锁冲击，这正是美国近年来一系列出口管制政策的技术逻辑起点。
+        </p>
+        <h3>出口管制与扩散框架的政策拉锯</h3>
+        <p>
+            美国商务部工业与安全局在《AI 扩散框架》上的政策拉锯颇具代表性：拜登政府时期推出的"AI 扩散规则"试图建立一套分级的芯片出口许可体系，按国别信任度对先进 AI 芯片出口设置不同的配额与审查门槛；而这一规则在 2025 年被特朗普政府正式撤销，转而强化更直接的芯片相关出口管制措施。Heim 在《Understanding the artificial intelligence diffusion framework》中的分析指出，这类框架设计面临一个根本性张力：管制越严格，越可能倒逼被排除在外的国家加速发展自主可控的替代供应链，从长期看反而可能削弱管制方的技术领先优势——这与冷战时期出口管制政策反复出现的"管制悖论"如出一辙。
+        </p>
+        <h3>国际协调的制度选项</h3>
+        <p>
+            联合国 AI 咨询机构发布的《Governing AI for Humanity》报告呼吁建立类似国际原子能机构的全球性 AI 治理协调机制，但 Klein 与 Patrick 在《Envisioning a global regime complex to govern artificial intelligence》中提醒，考虑到主要大国在 AI 竞争中的地缘博弈现实，短期内建立具有实质约束力的单一国际机构的可行性较低，更现实的路径可能是多个功能性较窄、约束力较弱的"机制复合体"（regime complex）并行运作——类似气候治理领域《巴黎协定》之外还存在诸多行业性、区域性子协议的格局。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            本周材料共同揭示了一个此前几讲较少触及的维度：AI 治理不仅是关于"如何约束模型的行为"，也是关于"谁掌握了训练模型所需的物理资源"。算力的稀缺性、可追踪性与地缘集中度，使其天然比模型权重本身更适合作为治理的技术抓手——这也解释了为什么无论是加州的算力阈值立法，还是美国的芯片出口管制，都不约而同地把"算力规模"作为监管触发条件。但硬件层面的治理工具也有其局限：算法效率的持续提升与替代供应链的加速形成，都会不断侵蚀这类工具的有效性，这意味着算力治理注定是一场需要持续动态调整的长期博弈，而非一次性的制度设计。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="07_企业内部治理机制与评估基准的技术陷阱.html">阅读第七讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

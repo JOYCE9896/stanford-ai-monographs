@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第九讲：智能体自主性风险与人机关系的哲学追问 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 09</span>
+    <a href="10_反垄断诽谤责任认定与AI未来的终极叙事.html">下一讲：反垄断诽谤与终极叙事 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第九讲：智能体自主性风险与人机关系的哲学追问</h1>
+        <p class="subtitle">当 AI 从"回答问题"走向"自主行动"，治理框架需要回答的全新问题；以及机器能否替代人之为人的哲学边界</p>
+        <div class="author-meta">
+            主讲导师：Sanmi Koyejo（计算机系）、Rob Reich（政治系）<br>
+            嘉宾：Tobin South<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、AI 智能体的特殊治理难题与多智能体动态</h2>
+        <p>
+            本课程前八讲讨论的绝大多数治理工具——透明度披露、内容水印、事后问责——都隐含着一个共同假设：AI 系统是一个被动响应输入的"预测器"，人类始终是发起行动的主体。但具备记忆、工具调用与自主目标设定能力的智能体（Agent）打破了这一假设，这也是本讲被称为"特殊问题"的原因所在。
+        </p>
+        <h3>AI 智能体为何需要独立于模型本身的治理框架</h3>
+        <p>
+            Kapoor 等人在《AI agents that matter》中提出了一个对本课程尤其重要的方法论警示：当前对"智能体能力"的评估很大程度上沿用了评估静态模型的旧范式（单次任务准确率），但智能体系统的真实风险往往产生于其多步骤、跨会话的持续行动能力之中——一个在单步任务评测中表现优秀的智能体，仍可能在长程自主执行中产生偏离预期目标的"目标漂移"，而这种风险在传统的一次性基准测试框架下几乎不可见。Kolt 在《Governing AI agents》（发表于《Notre Dame Law Review》）中系统提出，智能体的自主行动能力使其在法律责任分配上更接近"代理人"（agent）这一传统法律概念——雇主对雇员行为、委托人对代理人行为承担何种连带责任的既有法理，或许可以为 AI 智能体的责任归属提供可类比的制度资源，但这一类比同时也暴露出智能体缺乏法律人格这一根本性空白。
+        </p>
+        <h3>多智能体系统的风险涌现</h3>
+        <p>
+            Hammond 等人在《Multi-agent risks from advanced AI》中把风险场景进一步复杂化：当多个自主智能体在同一环境中彼此交互（无论是协作还是竞争），系统层面可能涌现出任何单一智能体设计者都未曾预见、也难以单方面控制的集体行为模式——这类似于金融市场中高频交易算法之间的意外连锁反应（如闪电崩盘），只不过行动主体从交易算法换成了通用能力更强的语言模型智能体。这为治理设计提出了一个前所未有的难题：现有的问责框架普遍针对单一行为主体设计，而多智能体系统的风险本质上是涌现性的、系统层面的，很难被归因到任何一个具体智能体或其开发者身上。
+        </p>
+        <h3>嘉宾视角：去中心化智能体的治理挑战</h3>
+        <p>
+            嘉宾 Tobin South 的研究背景聚焦于去中心化系统与智能体身份认证问题，这为本讲增添了一个更具体的技术切入点：当智能体数量激增、且分布在不同司法辖区与不同技术栈之上运行时，如何为智能体建立可验证的身份与行为审计轨迹，成为智能体治理能否落地的技术前提——这与第六讲讨论的硬件层面可核查性机制在设计哲学上遥相呼应。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、人机关系的哲学追问：智能、能动性与独特性</h2>
+        <p>
+            第二节课把讨论从制度设计提升到更根本的哲学层面：如果 AI 系统在越来越多的认知任务上表现出与人类相当甚至更优的能力，这对"人之为人"的独特性意味着什么？
+        </p>
+        <h3>图灵测试的当代回响</h3>
+        <p>
+            Turing 在 1950 年的经典论文《计算机器与智能》中提出的"模仿游戏"，本意是回避"机器能否思考"这一形而上学难题，转而用可操作的行为标准（人类评判者能否区分对话对象是人还是机器）来定义智能。Christian 在《Mind vs. machine》中反思道，图灵测试在生成式 AI 时代呈现出某种讽刺性反转——真正困难的不再是让机器表现得像人，而是让评判者相信一段确实由人类撰写的文本"不够完美"到足以被误判为机器生成，这揭示了公众对"人类特质"的直觉判断标准本身正在被 AI 的流畅输出悄然重塑。
+        </p>
+        <h3>语言模型能否替代人类研究参与者？</h3>
+        <p>
+            Dillion 等人在《Can AI language models replace human participants?》中乐观地探讨了用语言模型模拟人类被试以降低行为科学研究成本的可能性；但 Harding 等人在《AI language models cannot replace human research participants》中给出了针锋相对的反驳：语言模型的"意见"来自训练语料的统计聚合，而非真实的主观体验或利益相关性，用其替代真人被试可能系统性地掩盖了社会科学研究本应捕捉的、根植于真实生活经验的异质性与利益冲突。Griffin 等人的实证研究《Large language models respond to influence like humans》则从另一角度提供了微妙的证据：模型在说服性论证前后表现出的"观点漂移"模式，确实与人类被试的心理学实验结果存在某种统计相似性——这使得"模型是否只是复杂的统计模仿，还是在某种意义上具备类似人类的认知过程"这一问题，愈发难以用简单的是非判断来回答。
+        </p>
+        <h3>人机陪伴关系的设计伦理</h3>
+        <p>
+            本讲标题提出的"如何为人机陪伴关系设计"这一问题，直接指向了当下情感陪伴类 AI 应用引发的伦理争议：当用户与 AI 系统建立起类似人际关系的情感依赖，设计者应当在多大程度上主动引导、限制或善用这种依赖？这一问题没有现成答案，但它标志着 AI 治理议题正在从"防止具体伤害"扩展到"塑造健康的人机关系形态"这一更具前瞻性、也更难被传统法律工具触及的领域。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            智能体自主性与人机关系哲学追问这两个议题，标志着本课程正式从"治理已发生的伤害"转向"预判治理框架尚未覆盖的新兴风险形态"。智能体的多步骤自主行动能力，使得责任归因、审计追踪与风险涌现这些此前讨论中已经反复出现的难题，都被进一步放大到一个更复杂的技术层级；而人机关系的哲学追问则提醒我们，AI 治理最终无法完全脱离"我们希望人类在这个技术转型中保留什么"这一价值判断——这正是为下一讲、也是本课程最后一讲的终极叙事讨论所做的铺垫。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="10_反垄断诽谤责任认定与AI未来的终极叙事.html">阅读第十讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

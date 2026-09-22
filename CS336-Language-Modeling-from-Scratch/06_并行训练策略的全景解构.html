@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六讲：并行训练策略的全景解构 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 06</span>
+    <a href="07_ScalingLaws与算力最优配比预测.html">下一讲：Scaling Laws 与算力最优配比预测 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第六讲：并行训练策略的全景解构</h1>
+        <p class="subtitle">数据、张量、流水线与显存分片：四种正交的切分维度如何组合出千卡集群的训练方案</p>
+        <div class="author-meta">
+            主讲：Tatsunori Hashimoto & Percy Liang（斯坦福大学计算机系）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：四种并行策略的切分对象</h2>
+        <h3>1. 数据并行（Data Parallelism）</h3>
+        <p>
+            最直观的并行方式：把训练数据切分为多份，每张卡持有完整的模型副本，各自计算梯度后通过 All-Reduce 通信汇总平均梯度再同步更新参数。其局限显而易见——每张卡都必须能放下完整的模型状态，当模型规模超过单卡显存容量时，纯数据并行不再可行。
+        </p>
+        <h3>2. 张量并行（Tensor Parallelism）</h3>
+        <p>
+            把单个层内部的矩阵运算按行或按列切分到多张卡上并行计算，例如把一个大矩阵乘法拆成多个小矩阵乘法分别在不同设备上执行，再通过通信汇总部分结果。这种切分方式需要在每一层内部插入通信操作，通信频率高、对设备间带宽极为敏感，因此通常只在同一台物理机内、通过高带宽互联（如 NVLink）连接的多张卡之间使用。
+        </p>
+        <h3>3. 流水线并行（Pipeline Parallelism）</h3>
+        <p>
+            把模型按层切分为多个阶段，分布在不同设备上，一个批次的数据像流水线一样依次流经各阶段。其固有问题是"流水线气泡"（pipeline bubble）——在流水线填满和排空阶段，部分设备处于空闲等待状态，气泡占比与微批次数量成反比，需要精心设计微批次调度策略（如 GPipe、1F1B 调度）来压缩空闲时间。
+        </p>
+        <h3>4. 显存分片：ZeRO / FSDP</h3>
+        <p>
+            与前三种"切分计算"的思路不同，全分片数据并行（FSDP）延续了数据并行"每卡处理不同数据"的基本模式，但不再让每张卡都保留完整的模型状态（参数、梯度、优化器状态），而是把这些状态分片存储到不同设备上，仅在实际需要计算某一层时才临时通过通信把该层的完整参数聚合到本地——以更频繁的通信换取显存占用的大幅下降，使得能够训练的模型规模不再受限于单卡显存容量除以数据并行的卡数，而是取决于全体设备显存总和。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：3D 并行的组合拓扑</h2>
+        <p>
+            四种策略在通信模式与带宽敏感度上各有不同：张量并行通信最频繁、对带宽要求最高，因此优先用于机内高带宽互联的卡组；流水线并行通信相对稀疏，适合跨机器使用；数据并行（或其显存分片变体 FSDP）则通常作为最外层的切分维度，用于横向扩展到更多机器。千卡乃至万卡规模的训练集群，通常采用"3D 并行"的组合拓扑：机内用张量并行，跨机的相邻节点组用流水线并行，再在此基础上叠加数据并行或 FSDP 横向扩展——三个维度的切分粒度需要根据具体的网络拓扑、模型结构与集群规模联合调优，不存在一套放之四海而皆准的固定配置。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            并行策略选择中最常见的误区，是把"能跑起来"等同于"跑得高效"——一个配置不当的并行方案完全可能在技术上成功训练出模型，但 MFU 只有精心调优方案的一半甚至更低，这意味着同样的训练在实际中多花费了数倍的时间与算力成本。另一个常见陷阱是忽视通信与计算的重叠（overlap）：如果通信操作与计算操作严格串行执行，即便单独的计算和通信效率都很高，整体流水线仍会因为二者无法重叠而产生大量空闲等待，这是大规模分布式训练工程实践中持续被优化的核心方向。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="07_ScalingLaws与算力最优配比预测.html">阅读第七讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

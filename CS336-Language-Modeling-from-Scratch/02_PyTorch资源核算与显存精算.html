@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二讲：PyTorch资源核算与显存精算 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 02</span>
+    <a href="03_模型架构与超参数选择的工程直觉.html">下一讲：模型架构与超参数选择 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第二讲：PyTorch 资源核算与显存精算</h1>
+        <p class="subtitle">在写第一行训练代码之前，先用纸笔算清楚这次训练到底需要多少张卡、多少显存</p>
+        <div class="author-meta">
+            主讲：Percy Liang（斯坦福大学计算机系教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：FLOPs 心算法则</h2>
+        <p>
+            本讲的核心训练目标，是让学生具备不依赖任何 profiler 工具、仅凭纸笔就能估算一次训练大致需要多少计算量与显存的能力。这种"心算直觉"在实际工程决策中极其重要——在申请集群资源或评估一个训练方案是否可行时，往往没有时间先跑一遍完整实验再验证。
+        </p>
+        <h3>矩阵乘法的 FLOPs 计数</h3>
+        <p>
+            一个 $(m \times k)$ 矩阵与 $(k \times n)$ 矩阵相乘，需要执行的浮点运算次数约为 $2mnk$（每个输出元素需要 $k$ 次乘法与 $k-1$ 次加法，近似为 $2k$）。这一基础法则可以逐层累加，推导出整个 Transformer 一次前向传播的总 FLOPs。
+        </p>
+        <h3>Transformer 训练的 6ND 近似法则</h3>
+        <p>
+            对于参数量为 $N$ 的 Transformer 模型，在包含 $D$ 个 Token 的数据上训练一遍（一次前向 + 一次反向传播），总计算量可以用一个被广泛使用的近似公式估计：
+        </p>
+        <p>
+            $$C \approx 6ND$$
+        </p>
+        <p>
+            这里的系数 6 来自于：前向传播约为 $2ND$（每个参数在前向传播中大致参与一次乘加运算），反向传播的计算量约为前向的两倍（需要同时计算相对于激活值与相对于参数的梯度），三者相加即为 $2ND + 4ND = 6ND$。这一法则的价值在于，它把"训练需要多少算力"这一问题，简化成了两个最容易获得的数字——模型参数量与训练 Token 总量——的乘积，是后续课程讨论 Scaling Laws 时反复使用的基础工具。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：混合精度显存分解</h2>
+        <p>
+            光知道算力需求还不够，训练能否跑起来往往首先卡在显存上。混合精度训练下，Adam 优化器每个参数需要维护的状态可以拆解为：
+        </p>
+        <ul>
+            <li><strong>FP16/BF16 模型权重</strong>：2 字节/参数</li>
+            <li><strong>FP16/BF16 梯度</strong>：2 字节/参数</li>
+            <li><strong>FP32 主权重副本</strong>：4 字节/参数（用于保证优化器更新的数值精度）</li>
+            <li><strong>FP32 一阶动量估计（Adam 的 m）</strong>：4 字节/参数</li>
+            <li><strong>FP32 二阶动量估计（Adam 的 v）</strong>：4 字节/参数</li>
+        </ul>
+        <p>
+            合计约为每个参数 $16$ 字节的模型状态显存开销，这一"$16\Psi$ 法则"（$\Psi$ 为参数量）是估算单卡能否放下一个模型的第一道门槛计算。此外还需叠加激活值显存——其规模与批次大小、序列长度、层数近似成正比，是显存不足（OOM）最常见的隐藏元凶，也是后续课程会介绍的梯度检查点（activation checkpointing）技术试图专门解决的问题。
+        </p>
+        <h3>Roofline 模型与 MFU</h3>
+        <p>
+            Roofline 模型把一个算子的实际表现放在"计算受限"与"访存受限"两条渐近线之间定位：算术强度（每字节数据搬运对应的浮点运算次数）低于某个阈值时，性能瓶颈在于显存带宽而非算力；反之则受限于芯片的峰值算力。模型 FLOPs 利用率（MFU，Model FLOPs Utilization）由此成为衡量训练效率的核心指标——它是实测吞吐量对应的算力，除以芯片理论峰值算力的比值，业界前沿训练的 MFU 通常在 30%-55% 区间，能否逼近这一区间上限，直接取决于并行策略与内核实现的精细程度。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            一个常见的错误是只核算模型状态显存而忽略激活值显存，导致小批次训练可行、一旦扩大批次立刻 OOM；另一个常见陷阱是忽视优化器状态在多卡数据并行下会被逐卡完整复制，直到后续课程介绍 ZeRO/FSDP 分片技术后才被真正解决。这一讲建立的核算工具，本质上是为后续所有关于并行策略与 Scaling Laws 的讨论，提供一套可以随时拿出来验证"这个方案在数学上是否说得通"的度量单位。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="03_模型架构与超参数选择的工程直觉.html">阅读第三讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

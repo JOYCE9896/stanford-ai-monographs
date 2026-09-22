@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第八讲：AI成本治理与生成式金融科技 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 08</span>
+    <a href="09_零售供应链中的AI预测与优化.html">下一讲：零售供应链中的AI预测与优化 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第八讲：AI成本治理与生成式金融科技</h1>
+        <p class="subtitle">当一次Agent调用可能触发失控的Token雪崩：企业级AI FinOps的新学科</p>
+        <div class="author-meta">
+            主讲嘉宾：David Tepper（Pay-i）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            David Tepper 来自 Pay-i，一家专注于企业级 AI 成本治理（AI Cost Governance）的初创公司，帮助企业追踪、归因并优化其在大模型 API 调用与生成式 AI 推理上的支出。这一赛道的兴起本身就是一个信号：当企业级 AI 应用从零星的原型验证走向大规模生产部署后，一个此前被普遍低估的问题迅速浮出水面——没有人能说清楚每一分 AI 相关支出究竟花在了哪里、产生了多少实际价值。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：从云FinOps到AI FinOps的范式演变</h2>
+        <h3>1. 传统云FinOps与AI成本的本质差异</h3>
+        <p>
+            云计算领域早已形成成熟的"FinOps"（Financial Operations）实践，围绕虚拟机、存储、带宽等相对可预测的计费单元建立成本可见性与优化机制。生成式 AI 的计费模式则呈现出显著不同的特征：以 Token 为单位的计费，使得同一功能在不同输入长度、不同用户交互模式下的实际成本可以相差数十倍；更关键的是，<strong>Agentic 工作流</strong>的兴起意味着一次表面上简单的用户请求，可能在后台触发多轮工具调用、多个子 Agent 协作、甚至递归式的自我修正循环，实际消耗的算力和费用与请求本身的复杂度呈现高度非线性关系。
+        </p>
+        <h3>2. 成本归因的技术难题</h3>
+        <p>
+            企业级 AI 应用往往同时调用多个不同的模型供应商（如 OpenAI、Anthropic、开源自托管模型），并将调用嵌套在多层业务逻辑与多 Agent 协作管道之中。要准确回答"某个具体功能、某个具体客户、某个具体团队本月究竟消耗了多少 AI 相关成本"，需要在请求链路的每一层插入细粒度的追踪与归因机制，这在技术实现上与前一讲提到的分布式链路追踪（Trace）体系高度相似，只是追踪的对象从系统延迟换成了美元支出。
+        </p>
+        <h3>3. Agent失控与实时成本护栏</h3>
+        <p>
+            相比传统软件系统，自主 Agent 系统存在一类特有的成本风险：由于逻辑缺陷或异常输入触发的重试循环、递归调用或无限探索行为，可能在极短时间内产生远超预期的调用量，即"失控的 Token 雪崩"。因此，成熟的 AI 成本治理体系必须具备实时预算执行能力——为每个团队、每个功能设定用量上限与熔断机制，一旦异常消耗模式被检测到，系统能够在造成重大财务损失之前自动限流或中止相关调用，而不是等到月末账单出炉才追溯发现问题。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：成本可观测性是企业级Agent规模化落地的前置条件</h2>
+        <p>
+            讲座中提出的一个关键论点是：企业在决定是否放开权限让员工或客户自由构建、调用自主 Agent 时，最大的顾虑往往不是技术能力或安全合规，而是财务上的不可预测性——管理层无法接受一个可能在某个异常场景下产生数量级超支的黑盒系统。这与消费互联网时代"先免费获客再考虑变现"的成本文化完全不同：工业与企业级 AI 部署从设计之初就必须把成本治理当作与模型准确率、系统可靠性同等重要的一级工程指标。
+        </p>
+        <p>
+            这也解释了为什么"AI 成本治理"这一原本听起来偏财务、偏后台的职能，正在迅速成为企业级 AI 基础设施栈中与可观测性、安全合规并列的核心组件，而不是事后补充的报表工具。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 对更广泛工业AI场景的启示</h2>
+        <p>
+            AI 成本治理的兴起，本质上是第一讲提出的"投资回报周期错配"问题在生成式 AI 时代的具体延伸：工业客户习惯于对新技术投入进行严格的财务论证与持续监控，而不是像消费互联网公司那样容忍早期阶段的高不确定性支出。任何试图在工业场景中规模化部署自主 Agent 的团队，都需要提前建立起与本讲所述同等严谨的成本可观测性与护栏机制，这也是后续几讲讨论零售供应链、汽车产业等大规模部署场景时反复出现的隐含前提。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="09_零售供应链中的AI预测与优化.html">阅读第九讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

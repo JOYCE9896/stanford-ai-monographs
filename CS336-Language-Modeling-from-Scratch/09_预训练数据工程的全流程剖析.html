@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第九讲：预训练数据工程的全流程剖析 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 09</span>
+    <a href="10_对齐三部曲SFT_RLHF与强化学习.html">下一讲：对齐三部曲 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第九讲：预训练数据工程的全流程剖析</h1>
+        <p class="subtitle">从网页抓取到质量过滤：模型能力的天花板，很大程度上在数据流水线阶段就已经被决定</p>
+        <div class="author-meta">
+            主讲：Percy Liang（斯坦福大学计算机系教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：数据流水线的四个阶段</h2>
+        <p>
+            预训练数据的构建远不止"下载互联网文本"这么简单，一套成熟的数据流水线通常包含抓取、清洗、去重与质量过滤四个环节，每一环节的具体实现都会对最终模型质量产生实测可观察的影响。
+        </p>
+        <h3>1. 抓取与格式提取</h3>
+        <p>
+            原始网页数据包含大量与语言建模无关的噪声——导航栏、广告文案、HTML 标签结构。从原始 HTML 中提取出适合语言建模的正文文本，本身就是一个需要专门优化的子问题：提取过于激进会丢失有效内容，提取过于保守则会混入大量噪声文本。
+        </p>
+        <h3>2. 近似去重：MinHash LSH</h3>
+        <p>
+            互联网文本中存在大量近似重复内容（转载、镜像站点、模板化文本），精确字符串匹配的去重方法无法捕捉这类"近似但不完全相同"的重复。MinHash 局部敏感哈希（LSH）提供了一种高效的近似解法：把每篇文档表示为一组经过多个哈希函数处理后的最小哈希签名，两篇文档签名的重合比例可以高效地近似估计它们的 Jaccard 相似度，从而在不需要两两精确比对全部文档对的前提下（这在互联网规模的语料上计算上不可行），高效识别出高度相似的文档簇并做去重。研究表明，去重程度对模型最终质量有实测可观察的影响——过多重复内容不仅浪费训练算力，还可能导致模型对高频重复片段产生不成比例的记忆倾向。
+        </p>
+        <h3>3. 质量过滤</h3>
+        <p>
+            质量过滤试图从海量网页文本中筛选出更"像书面语言"、信息密度更高的内容，常见方法包括基于分类器的过滤（训练一个轻量级分类器区分高质量样本如维基百科、书籍与低质量样本如垃圾广告页面）与基于启发式规则的过滤（如文本长度、标点符号比例、重复行比例等统计特征阈值）。这一环节的取舍高度依赖具体的质量定义与目标应用场景，并非存在唯一正确答案。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：数据配比与去污染</h2>
+        <h3>数据混合配比</h3>
+        <p>
+            预训练语料通常由多个来源（网页、书籍、代码、学术论文等）按特定比例混合而成，不同来源的混合权重会显著影响模型在不同下游任务上的表现——提高代码数据占比往往能提升模型的逻辑推理与结构化生成能力，但可能以牺牲部分纯自然语言流畅度为代价。确定最优混合配比本身是一个需要通过小规模消融实验反复验证的经验性工程问题，而非可以从第一性原理直接推导出的确定性答案。
+        </p>
+        <h3>评估集去污染</h3>
+        <p>
+            为了确保后续评估结果的有效性，数据流水线通常需要专门检测并移除训练语料中与已知评估基准题目高度重合或相似的内容——这一去污染步骤如果执行不彻底，会直接导致后续评估阶段出现前一讲讨论过的基准测试污染问题，使得评估结果失去参考意义。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            数据工程中最容易被低估的陷阱，是把"更多数据"简单等同于"更好数据"——低质量、高度重复或与目标分布不匹配的数据，即便在数量上再庞大，对模型能力的边际贡献也可能微乎其微，甚至因为挤占了训练算力预算而产生负面效果。这也是为什么现代数据流水线的设计重心，正在从"如何抓取更多数据"逐渐转向"如何更精细地筛选、配比与验证数据质量"，这本身也呼应了前几讲讨论的"数据墙"问题——当可获取的高质量文本存量增长放缓时，数据工程的精细化程度，将愈发成为决定模型能力上限的关键变量。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="10_对齐三部曲SFT_RLHF与强化学习.html">阅读第十讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

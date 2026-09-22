@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二讲：技术根基解构与算法公平性的度量困境 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 02</span>
+    <a href="03_生成式AI操纵民主话语与隐私权的边界.html">下一讲：民主话语操纵与隐私边界 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第二讲：技术根基解构与算法公平性的度量困境</h1>
+        <p class="subtitle">从随机梯度下降到思维链推理的技术素养补课，以及"公平"在数学上为何无法被单一指标穷尽</p>
+        <div class="author-meta">
+            主讲导师：Anka Reuel（计算机系）、Sanmi Koyejo（计算机系）与法律/政策方向导师联合授课<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、技术根基：从梯度下降到规模化能力涌现</h2>
+        <p>
+            本课程虽然以法律与政策为最终落点，但导师团队坚持一个前提：不理解模型是如何被训练出来的，任何治理建议都容易沦为空中楼阁。第二周的第一节课因此是一次浓缩的技术扫盲，核心覆盖三个层次。
+        </p>
+        <h3>1. 优化机制：随机梯度下降</h3>
+        <p>
+            现代神经网络的训练本质上是一个高维空间中的最优化问题：给定参数 <i>θ</i>，通过反复计算损失函数 <i>L</i>(<i>θ</i>) 相对参数的梯度并沿负梯度方向更新，逐步降低模型在训练数据上的预测误差。随机梯度下降（SGD）及其变体（Adam、AdamW）之所以成为行业标配，是因为在参数量达到千亿级别时，计算整个数据集上的精确梯度不可行，必须依靠小批量（mini-batch）采样来近似梯度方向。这个看似纯粹的工程细节，对治理讨论有直接意义：训练过程的随机性意味着同一套代码、同一份数据，在不同的随机种子下会训练出行为略有差异的模型，这为"模型行为的可复现性"与"审计取证"增添了天然的技术难度。
+        </p>
+        <h3>2. 效率化改造：微调、量化与蒸馏</h3>
+        <p>
+            Toner 在阅读材料中区分了三种常见的模型改造手段：微调（fine-tuning）让预训练模型在特定任务数据上继续训练以适配下游场景；量化（quantization）把模型权重从 32 位浮点数压缩到 8 位甚至 4 位整数以降低推理成本；蒸馏（distillation）则让一个更小的"学生模型"模仿一个更大的"教师模型"的输出分布。这三种技术共同构成了当下"基础模型经济"的产业基础——绝大多数下游应用并不从零训练模型，而是在别人训练好的基座上做二次加工，这直接决定了后续课程会反复讨论的"谁该为下游滥用负责"这一追责链条问题。
+        </p>
+        <h3>3. 规模效应与思维链现象</h3>
+        <p>
+            随着参数规模、数据量与计算量的同步扩张，模型会涌现出小规模模型不具备的能力，其中最具治理意义的是思维链（Chain-of-Thought）推理——模型在给出最终答案前，先生成一段逐步展开的中间推理文本。Wolfram 在《What is ChatGPT doing … and why does it work?》中用近乎"祛魅"的方式解释了这背后并无神秘主义：模型本质上仍是逐词的概率预测器，思维链的效果更多来自于把复杂问题分解为更容易预测的子步骤序列，而非模型具备了某种类人的"内心独白"。这一澄清对治理讨论至关重要：它提醒立法者与公众，不应基于对模型"意图"或"理解"的拟人化想象来制定规则，而应基于对其统计本质的准确把握。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、算法公平性：为什么"公平"无法被单一指标定义</h2>
+        <p>
+            如果说技术根基是本周的"是什么"，那么算法公平性讨论的则是本周最尖锐的"应该怎样"问题。Kleinberg 等人在其被广泛引用的理论文章《Inherent Trade-Offs in the Fair Determination of Risk Scores》中证明了一个数学结论：除非不同群体在基础比率（base rate）上完全相同，否则一个风险评分系统不可能同时满足"校准性"（评分在各群体内同样准确地反映真实风险）与"群体间误差平衡"（假阳性率、假阴性率在各群体间相等）这两个直觉上都合理的公平定义。
+        </p>
+        <h3>常见公平性指标及其冲突</h3>
+        <ul>
+            <li><strong>人口平等（Demographic Parity）</strong>：要求模型的正向预测率在不同群体间相等，不考虑各群体真实的基础比率差异。</li>
+            <li><strong>均等化机会（Equalized Odds）</strong>：要求模型在不同群体间的真阳性率和假阳性率相等，更关注错误分类的对称性。</li>
+            <li><strong>预测校准（Calibration）</strong>：要求模型给出的概率评分在各群体内部都同样准确地对应真实发生率。</li>
+        </ul>
+        <p>
+            Kearns 等人提出的"公平性差异审计"（Preventing Fairness Gerrymandering）进一步指出，即便一个模型在粗粒度的人口统计学群体（如性别、种族）上表现公平，也完全可能在这些属性的交叉子群体（如"少数族裔女性"这一更细粒度的类别）上系统性失败——这被称为公平性差异的"选区操纵"问题，因为审计者若只检查粗粒度群体，会像被操纵的选区划分一样掩盖真实的不公平模式。
+        </p>
+        <h3>技术指标与法律框架的错位</h3>
+        <p>
+            Barocas、Hardt 与 Narayanan 合著的《Fairness and Machine Learning》进一步揭示了一个更深层的错位：美国反歧视法传统上区分"故意歧视"（disparate treatment）与"客观后果歧视"（disparate impact），但算法系统往往既没有程序员的主观歧视意图，其偏见又深植于训练数据中反映的历史性结构不平等——这使得算法歧视很难被整齐地装入任何一种既有的法律类别中。Ho 与 Xiang 在《Affirmative algorithms》中主张，与其追求纯粹的"群体盲"（不使用敏感属性）算法设计，不如承认某些情况下主动纳入群体信息进行"差异意识"（difference awareness）校正，才能真正实现实质公平——这与传统平权法学中的争议遥相呼应。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            第二周把技术素养与公平性理论并置，传递出一个明确信号：任何关于算法公平的政策辩论，如果脱离了对模型训练机制的基本理解，就容易陷入"要求模型同时满足数学上互斥的多个公平标准"这样的无效诉求。立法者在起草反歧视审计要求时，必须先明确他们究竟追求哪一种公平定义，并接受这一选择在数学上必然要以牺牲其他公平维度为代价。这也是为什么 Huq 在《Racial equity in algorithmic criminal justice》中主张，公平性政策的设计不能止步于选择一个技术指标，而必须回到具体应用场景中所承载的实质性价值排序——技术只能告诉我们权衡的存在，无法替我们做出权衡本身的价值判断。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="03_生成式AI操纵民主话语与隐私权的边界.html">阅读第三讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

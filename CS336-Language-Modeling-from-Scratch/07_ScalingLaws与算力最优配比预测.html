@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第七讲：Scaling Laws与算力最优配比预测 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 07</span>
+    <a href="08_推理系统与模型评估方法论.html">下一讲：推理系统与模型评估方法论 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第七讲：Scaling Laws 与算力最优配比预测</h1>
+        <p class="subtitle">用小模型上的幂律曲线，外推预测大模型训练前完全未知的最优参数-数据配比</p>
+        <div class="author-meta">
+            主讲：Tatsunori Hashimoto（斯坦福大学计算机系助理教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：损失的幂律衰减</h2>
+        <p>
+            Scaling Laws 研究的核心经验发现是：在固定其他条件的情况下，模型的验证损失相对于参数量 $N$、训练数据量 $D$ 与训练算力 $C$，会呈现出平滑的幂律衰减关系，而非杂乱无章的波动。Chinchilla 论文给出的经典函数形式为：
+        </p>
+        <p>
+            $$L(N, D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}}$$
+        </p>
+        <p>
+            其中 $E$ 是不可约损失（即便参数量与数据量都趋于无穷，模型也无法突破的理论下限，反映了语言本身的内在不确定性），后两项分别刻画了参数量不足与数据量不足各自对损失的独立贡献，$\alpha$、$\beta$ 是通过在一系列不同规模的小模型上拟合实验数据得到的经验指数。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：IsoFLOP 曲线与最优配比</h2>
+        <p>
+            给定一个固定的训练算力预算 $C \approx 6ND$，参数量 $N$ 与数据量 $D$ 之间存在一条此消彼长的权衡曲线——分配更多算力给更大的模型，就意味着能用于训练的 Token 数量相应减少，反之亦然。IsoFLOP 分析方法的做法是：固定若干档算力预算，在每一档预算下训练一系列不同参数量的模型（数据量由算力预算与参数量反推得出），描绘出损失相对参数量的曲线，曲线的最低点就对应该算力预算下的最优参数-数据配比。把不同算力预算下的最优点连接起来，就得到了参数量、数据量分别相对训练算力的最优 Scaling 曲线，这正是 Chinchilla 论文"用远超此前业界标准的数据量训练相对更小模型"这一结论背后的方法论基础。
+        </p>
+        <h3>计算最优解并非部署最优解</h3>
+        <p>
+            这里存在一个容易被误解的关键点：Scaling Laws 给出的"最优配比"，是在"训练算力固定、只关心训练阶段损失最小化"这一假设下的最优解，完全没有考虑模型部署后的推理成本。一个模型一旦训练完成，可能要被数以亿计的用户请求反复调用，推理阶段的总算力消耗很可能远超训练阶段——这正是许多前沿开源模型主动选择用远超计算最优值的数据量、训练一个参数量小于"计算最优"建议的模型的核心动机：牺牲一部分训练效率，换取更低的长期推理成本，这是把 Scaling Laws 从纯粹的训练优化问题，扩展为涵盖模型全生命周期成本的工程决策问题。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            Scaling Laws 外推最常见的陷阱，是在过窄的规模区间内拟合曲线并外推到远超拟合范围的规模——幂律关系在实践中并非无限精确适用，某些架构改动或数据分布变化可能导致外推预测与实际结果出现系统性偏差。此外，Scaling Laws 通常基于交叉熵损失这一单一指标拟合，但损失的平滑下降与下游具体任务能力的提升之间并非总是严格单调对应的关系，这也是后续课程讨论评估方法论时会重新触及的问题：损失曲线告诉我们"模型在统计意义上变得更好了"，却不直接告诉我们"模型在具体任务上究竟提升了多少"。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="08_推理系统与模型评估方法论.html">阅读第八讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

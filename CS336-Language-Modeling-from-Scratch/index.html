@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS336: Language Modeling from Scratch | 斯坦福课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>CS336 (Spring 2025)</span>
+</nav>
+
+<article>
+    <header>
+        <h1>CS336: Language Modeling from Scratch</h1>
+        <p class="subtitle">从字节到对齐模型：亲手实现分词器、Transformer、分布式训练与 RLHF 的全栈语言模型工程课</p>
+        <div class="author-meta">
+            主讲：Percy Liang（斯坦福大学计算机系教授）& Tatsunori Hashimoto（斯坦福大学计算机系助理教授）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
+        </div>
+    </header>
+
+    <section>
+        <h2>核心概念说明</h2>
+        <p>
+            CS336 是斯坦福大学以"从零构建"为教学法核心的语言模型工程课程：学生需要亲手实现从分词器训练、Transformer 前向反向传播、混合精度显存管理，到多卡分布式并行、Scaling Laws 实证拟合、推理服务系统，直至 SFT/RLHF/DPO 对齐算法的完整技术栈，代码量与工程深度远超同类课程的常规作业规模，且脚手架被刻意压缩到最低限度。阅读本课程笔记常涉及以下贯穿全程的核心概念：
+        </p>
+
+        <h3>1. 第一性原理式的资源核算</h3>
+        <p>
+            课程反复训练学生对 FLOPs 与显存开销的"心算直觉"：矩阵乘法的 $2mnk$ 计数法则、Transformer 训练的 $6ND$ 近似算力法则、混合精度训练下 Adam 优化器 $16\Psi$ 字节的模型状态显存分解，都是贯穿多讲内容、用于快速判断一个训练方案是否可行的基础工具。脱离这些核算工具空谈架构或系统设计，很容易得出与工程实践脱节的结论。
+        </p>
+
+        <h3>2. 从单卡到千卡：并行与系统效率</h3>
+        <p>
+            数据并行、张量并行、流水线并行与 FSDP/ZeRO 显存分片是彼此正交又能组合使用的四种并行策略，各自引入不同的通信模式与带宽敏感度。GPU 内存层级（SRAM 与 HBM 的带宽剪刀差）与 Triton 核融合技术，则决定了单个算子能否真正把理论峰值算力兑现为实测吞吐量。
+        </p>
+
+        <h3>3. Scaling Laws 与训练-推理的全生命周期成本</h3>
+        <p>
+            Chinchilla 式的 $L(N,D) = E + A/N^\alpha + B/D^\beta$ 公式给出了固定算力预算下参数量与数据量的计算最优配比，但纯计算最优解并未考虑模型部署后的长期推理成本——这也是许多前沿模型主动选择用远超计算最优值的数据量训练相对更小模型的核心动机。
+        </p>
+
+        <h3>4. 对齐技术栈的演化脉络</h3>
+        <p>
+            从监督微调（SFT）的模仿学习，到 RLHF 基于 Bradley-Terry 偏好模型训练奖励函数并用 PPO 优化策略，再到 DPO 将两阶段流程坍缩为单阶段监督目标、GRPO 用群体相对优势去掉价值网络以适配可验证奖励场景，对齐算法的演化始终围绕着"如何更稳定、更低成本地把人类意图注入模型行为"这一核心问题展开。
+        </p>
+    </section>
+
+    <section>
+        <h2>课程目录（10 讲笔记 + 特辑）</h2>
+
+        <h3><a href="01_Overview与Tokenization的第一性原理.html">01. Overview 与 Tokenization 的第一性原理</a></h3>
+        <p>
+            梳理课程"从零构建"的教学哲学，系统讲解 BPE 分词算法的合并机制、字节级分词如何消灭未登录词，以及词表规模与多语言公平性的工程权衡。
+        </p>
+
+        <h3><a href="02_PyTorch资源核算与显存精算.html">02. PyTorch 资源核算与显存精算</a></h3>
+        <p>
+            推导矩阵乘法与 Transformer 训练的 FLOPs 计数法则，拆解混合精度训练下参数、梯度与 Adam 优化器状态的显存构成，并引入 Roofline 模型与 MFU 指标。
+        </p>
+
+        <h3><a href="03_模型架构与超参数选择的工程直觉.html">03. 模型架构与超参数选择的工程直觉</a></h3>
+        <p>
+            对比 Pre-Norm 与 Post-Norm 的训练稳定性、RMSNorm 与 SwiGLU 的效率收益、RoPE 相对位置编码的外推优势，以及 GQA 在推理显存与生成质量之间的折中设计。
+        </p>
+
+        <h3><a href="04_混合专家模型MoE的路由与负载均衡.html">04. 混合专家模型 MoE 的路由与负载均衡</a></h3>
+        <p>
+            解析 Top-k 门控路由如何将参数量与计算量解耦，推导 Switch Transformer 风格的辅助负载均衡损失，并讨论专家容量、Token 丢弃与 All-to-All 通信开销。
+        </p>
+
+        <h3><a href="05_GPU计算范式与Triton底层内核优化.html">05. GPU 计算范式与 Triton 底层内核优化</a></h3>
+        <p>
+            从 SRAM/HBM 内存层级与算术强度出发，讲解核融合与 FlashAttention 式在线 Softmax 分块计算，并介绍 Triton 块级编程模型与自动调优机制。
+        </p>
+
+        <h3><a href="06_并行训练策略的全景解构.html">06. 并行训练策略的全景解构</a></h3>
+        <p>
+            系统对比数据并行、张量并行、流水线并行与 FSDP/ZeRO 显存分片的切分对象与通信模式，并讨论千卡集群下 3D 并行组合拓扑的设计权衡。
+        </p>
+
+        <h3><a href="07_ScalingLaws与算力最优配比预测.html">07. Scaling Laws 与算力最优配比预测</a></h3>
+        <p>
+            推导 Chinchilla 风格的损失幂律公式与 IsoFLOP 曲线拟合方法，讨论计算最优配比与训练-推理全生命周期成本之间的取舍。
+        </p>
+
+        <h3><a href="08_推理系统与模型评估方法论.html">08. 推理系统与模型评估方法论</a></h3>
+        <p>
+            讲解 KV Cache 显存核算、连续批处理与 PagedAttention 等推理系统优化，并系统讨论评估提示敏感性与基准测试污染等方法论问题。
+        </p>
+
+        <h3><a href="09_预训练数据工程的全流程剖析.html">09. 预训练数据工程的全流程剖析</a></h3>
+        <p>
+            剖析从网页抓取到质量过滤的完整数据流水线，讲解 MinHash LSH 近似去重的数学原理，并讨论数据配比优化与评估集去污染的工程实践。
+        </p>
+
+        <h3><a href="10_对齐三部曲SFT_RLHF与强化学习.html">10. 对齐三部曲——SFT、RLHF 与强化学习</a></h3>
+        <p>
+            系统梳理监督微调、基于 Bradley-Terry 偏好模型的 RLHF、DPO 单阶段偏好优化目标，以及面向可验证奖励的 GRPO 群体相对策略优化。
+        </p>
+
+        <h3><a href="11_业界嘉宾特辑.html">特辑：业界嘉宾——从 Qwen 到 LLaMA 的开源模型体系建设者</a></h3>
+        <p>
+            收录 Qwen 团队负责人 Junyang Lin 与 Meta AI 研究科学家 Mike Lewis 的客座讲座整理，分享多语言开源模型工程实践与预训练目标演化的一线经验。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336 · Notes curated by Joyce</p>
+    </footer>
+</article>
+
+</body>
+</html>

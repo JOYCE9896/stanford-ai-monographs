@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一讲：Transformer架构全景与统一表征范式 | 斯坦福 CS25 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS25: Lecture 01</span>
+    <a href="02_联合嵌入预测架构与世界模型.html">下一讲：联合嵌入预测架构与世界模型 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第一讲：Transformer架构全景与统一表征范式</h1>
+        <p class="subtitle">CS25 九季脉络回顾，以及本季"从表征学习到世界模型"的问题意识起点</p>
+        <div class="author-meta">
+            主讲：Steven Feng（Stanford CS 博士生）、Karan P. Singh（Stanford EE 博士生）、Michael C. Frank（Stanford 人类生物学教授）、Christopher Manning（Stanford NLP 组负责人）<br>
+            课程开篇：Transformer 架构总览与本季主题引入
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 CS25 的九季脉络：一门"没有作业"的顶级公开课</h2>
+        <p>
+            CS25（Transformers United）从 2021 年开设至今已经走到第六个版本（V6），是 Stanford 少数完全以"每周请一位一线研究者做报告"为核心形式的课程。它没有期中期末考试，唯一的"作业"是按时出席——这个设计本身就说明了课程的定位：与其让学生在课堂上被动接受一套固化的知识体系，不如把讲台直接交给正在动手做这些研究的人。
+        </p>
+        <p>
+            往季的讲者名单足以说明这门课的分量：Geoffrey Hinton、Andrej Karpathy、Ashish Vaswani（Transformer 论文作者之一）都曾登台，讲者机构横跨 OpenAI、Anthropic、Google DeepMind、NVIDIA。这种"重讲者、轻讲义"的课程设计，决定了它的价值不在于一套自洽的理论体系，而在于把行业最前沿的问题意识和方法论，以接近实时的速度传递给学生。
+        </p>
+        <p>
+            本季（V6）的主题被定为"从表征学习到世界模型"（From Representation Learning to World Modeling），这个副标题本身透露出一个判断：单纯把 Transformer 堆得更大、训练数据喂得更多，这条路径的边际收益正在被业界重新审视，而"模型如何在内部构建一个可供推理和规划的世界表征"，正在成为下一阶段更根本的问题。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 Transformer 架构全景回顾</h2>
+        <p>
+            开篇讲座照例会带全体学生重新梳理一遍 Transformer 的核心组件，这不是简单的复习，而是为后续九讲搭建一套共同语言。核心组件可以归纳为三层：
+        </p>
+        <ul>
+            <li><strong>自注意力机制（Self-Attention）</strong>：每个 Token 都通过 Query、Key、Value 三组投影，与序列中所有其他 Token 计算相关性权重，再加权聚合信息。这一机制的代价是计算量随序列长度呈平方级增长（<i>O</i>(<i>n</i><sup>2</sup>)），这也是本季第三讲要正面讨论的效率瓶颈。</li>
+            <li><strong>位置编码（Positional Encoding）</strong>：由于自注意力本身对序列顺序不敏感，需要额外注入位置信息，从最初的正弦位置编码演化到如今主流的旋转位置编码（RoPE），核心诉求是让模型在处理更长上下文时依然能保持稳定的相对位置感知。</li>
+            <li><strong>前馈网络与残差连接</strong>：每个注意力层之后接一个逐位置的前馈网络，并通过残差连接与层归一化保证深层网络的训练稳定性。近几年的变体（如 Mixture-of-Experts 前馈层）进一步把"参数总量"与"每次前向实际激活的计算量"解耦开来。</li>
+        </ul>
+        <p>
+            这套架构自 2017 年"Attention is All You Need"论文提出以来，几乎没有发生颠覆性的结构变化——真正发生剧烈变化的，是围绕它的训练数据规模、训练目标设计，以及后训练阶段的对齐方法。这也是为什么 CS25 选择用"表征学习"而非"架构设计"作为本季的统摄性主题：架构本身已经相对稳定，真正的前沿问题转移到了"模型学到的内部表征是什么、够不够用来支撑世界建模"。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 从表征学习到世界模型：本季核心问题意识</h2>
+        <p>
+            "表征学习"（Representation Learning）指的是模型在训练过程中，为输入数据自动学出一套内部向量表示，这套表示越能捕捉数据的本质结构，下游任务的效果就越好。语言模型的成功很大程度上得益于这一点：Next-token Prediction 这个看似朴素的训练目标，副产物却是一套编码了语法、常识乃至一定程度世界知识的高质量表征。
+        </p>
+        <p>
+            但"世界模型"（World Model）是一个更高的要求：它不仅要求模型学出好的静态表征，还要求这套表征能够支持对"如果我这样做，世界会如何变化"的推演——也就是具备某种内部的、可供规划和反事实推理的动态模拟能力。本季第二讲会直接讨论 Joint Embedding Predictive Architecture（JEPA）这一试图专门为世界建模设计的架构范式，正是承接这里埋下的问题。
+        </p>
+        <p>
+            举一个便于理解的类比：Next-token Prediction 训练出来的语言模型，像是一个读过海量书籍、能续写任何文本风格的作家，但它对"物理世界接下来会发生什么"这件事的建模，只是文本共现统计的副产品，并不必然可靠。而世界模型追求的，是让模型直接在一个抽象的状态空间里做"预测—验证—修正"的闭环，这与本季后续讨论状态空间模型、多模态原生架构的多场报告，共享同一个问题根源。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 后续九讲的知识地图</h2>
+        <p>
+            开篇讲座的最后，四位主持人为整季课程勾勒出一张路线图，大体沿着"架构效率 &rarr; 训练工程 &rarr; 能力边界 &rarr; 应用落地"的顺序展开：从状态空间模型与 Transformer 的效率之争，到万卡集群的训练工程学，再到预训练范式的未来、参数记忆与上下文学习的关系、科研与医学场景下的 Agent 协作、原生多模态架构，最后收束在生产环境下的推理服务工程。
+        </p>
+        <p>
+            这条路线图本身也是一种态度声明：CS25 并不试图断言"哪一种架构才是终局"，而是持续把处在不同技术路线最前沿的人请上讲台，让学生直接感受这个领域内部真实存在的路线分歧与工程取舍，而不是接受一个已经被简化和定论的教科书叙事。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS25: Transformers United V6 &copy; Spring 2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="02_联合嵌入预测架构与世界模型.html">阅读第二讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

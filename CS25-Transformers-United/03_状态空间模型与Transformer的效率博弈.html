@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三讲：状态空间模型与Transformer的效率博弈 | 斯坦福 CS25 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS25: Lecture 03</span>
+    <a href="04_万卡集群训练与超大规模并行工程.html">下一讲：万卡集群训练与并行工程 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第三讲：状态空间模型与Transformer的效率博弈</h1>
+        <p class="subtitle">从 S4 到 Mamba：当序列长度成为瓶颈，架构设计需要怎样的权衡</p>
+        <div class="author-meta">
+            主讲：Albert Gu（CMU 助理教授，Cartesia AI 联合创始人）<br>
+            主题：On the Tradeoffs of State Space Models and Transformers
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者背景：从 S4 到 Mamba 的状态空间模型脉络</h2>
+        <p>
+            Albert Gu 是状态空间模型（State Space Model, SSM）应用于深度序列建模这条研究路线最核心的推动者之一，从早期的 S4（Structured State Space Sequence Model）到后来广为人知的 Mamba 系列架构，他的工作持续在回答同一个问题：能不能在保留 Transformer 建模能力的同时，摆脱自注意力机制对序列长度的平方级计算代价？
+        </p>
+        <p>
+            他同时也是 Cartesia AI 的联合创始人，这家公司正是围绕状态空间模型在实时语音等长序列、低延迟场景下的商业化应用而成立——这使得本讲不仅是一次学术架构综述，也带有"这条技术路线在产业界到底有没有站住脚"的实证视角。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心技术图谱：两种序列建模范式的计算复杂度对比</h2>
+        <p>
+            自注意力机制的核心代价来自它的"全对全"比较方式：序列中每一个 Token 都要和其余所有 Token 计算一次相关性，这使得计算量与显存占用都随序列长度 <i>n</i> 呈 <i>O</i>(<i>n</i><sup>2</sup>) 增长；而生成阶段还需要维护一个随序列增长而线性膨胀的 KV Cache。
+        </p>
+        <p>
+            状态空间模型则借鉴经典控制理论中的线性时不变系统（LTI System），用一个隐藏状态 <i>h</i><sub><i>t</i></sub> 沿时间维度递归演化来处理序列：
+        </p>
+        <pre><code>h_t = A h_(t-1) + B x_t
+y_t = C h_t
+其中：
+  A: 状态转移矩阵，决定历史信息如何衰减/保留
+  B: 输入到状态的投影矩阵
+  C: 状态到输出的投影矩阵</code></pre>
+        <p>
+            这一递归形式天然具备两个优点：推理阶段每步只需要一个固定大小的隐藏状态（<i>O</i>(1) 的每步显存占用，而非随序列线性增长的 KV Cache），同时通过将递归展开为卷积形式，训练阶段依然可以做到高度并行化。Mamba 在此基础上引入了"选择性"机制（Selective SSM），让 <i>A</i>、<i>B</i>、<i>C</i> 这些矩阵可以根据当前输入动态变化，从而弥补经典线性 SSM 难以做到"内容相关的信息取舍"这一短板——这正是注意力机制天然擅长、而早期 SSM 相对欠缺的能力。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 关键权衡：训练并行性与推理效率的取舍</h2>
+        <p>
+            讲座中反复强调的一点是：没有一种架构能在所有维度上同时最优，SSM 与 Transformer 的选择本质上是在几个维度间做权衡：
+        </p>
+        <ul>
+            <li><strong>长序列推理效率</strong>：SSM 的固定状态大小在处理极长序列（如长文档、长音频流）时显存与延迟优势明显；Transformer 的 KV Cache 会随上下文线性膨胀。</li>
+            <li><strong>精确检索能力</strong>：注意力机制可以直接"回看"序列中任意位置的原始信息，这种精确检索（Precise Retrieval）能力对某些任务（如需要精确复述长文档中某个细节）至关重要；而 SSM 把全部历史压缩进一个固定维度的隐藏状态，天然存在信息压缩损失，在这类任务上通常弱于同等规模的 Transformer。</li>
+            <li><strong>训练基础设施成熟度</strong>：Transformer 生态经过多年打磨，从分布式训练框架到推理服务栈都高度成熟；SSM 类架构的工程生态相对年轻，这也是它在实际落地中面临的现实阻力之一，而非单纯的架构设计问题。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>四、 延伸思考：混合架构的可能性</h2>
+        <p>
+            讲座并未把问题导向"谁会取代谁"的二元结局，而是指出业界正在越来越多地探索混合架构（Hybrid Architecture）——在同一个模型里交替堆叠 SSM 层与注意力层，用 SSM 层承担大部分长程序列的高效处理，在少数关键层保留注意力机制以维持精确检索能力，从而在效率与能力之间取得更细粒度的平衡。
+        </p>
+        <p>
+            这也呼应了 CS25 本季"效率与能力如何权衡"这一贯穿主题：架构选择从来不是纯理论问题，Cartesia AI 这样的公司之所以押注 SSM，正是因为在语音这类天然长序列、且对延迟极度敏感的场景下，效率优势能够直接转化为产品体验与成本结构上的现实优势。下一讲将从"架构效率"进一步转向"工程规模"，讨论当训练集群扩展到数万张 GPU 时，无论选择哪种架构都必须面对的分布式训练难题。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS25: Transformers United V6 &copy; Spring 2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="04_万卡集群训练与超大规模并行工程.html">阅读第四讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

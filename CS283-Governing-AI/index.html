@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS283: Governing Artificial Intelligence | 斯坦福课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <span><a href="../index.html">&larr; Stanford AI 课程</a></span>
+    <span>CS283 (Autumn 2025-2026)</span>
+</nav>
+
+<article>
+    <header>
+        <h1>CS283: Governing Artificial Intelligence</h1>
+        <p class="subtitle">Law, Policy, and Institutions —— 跨学科视角下的 AI 治理十讲</p>
+        <div class="author-meta">
+            主讲：Nathaniel Persily（法学院/政治系/传播学系）、Rob Reich（政治系）、Anka Reuel（计算机系）、Sanmi Koyejo（计算机系）<br>
+            整理：Joyce（<a href="https://github.com/JOYCE9896" target="_blank">@JOYCE9896</a>）
+        </div>
+    </header>
+
+    <section>
+        <h2>核心概念说明</h2>
+        <p>
+            本课程原名 "Governing Artificial Intelligence: Law, Policy, and Institutions"，跨法学院、计算机系、传播学系与政治系联合开设（课程编号 Law 4052 / CS 283 / COMM 252A / PoliSci 245B-445B），由曾任美国 AI 安全研究院要职的 Rob Reich 与法学教授 Nathaniel Persily 领衔，联合两位计算机系教授 Anka Reuel 与 Sanmi Koyejo 共同授课。课程的核心方法论前提是：AI 治理不是单一学科可以独立完成的任务，而需要在技术事实、法律工具与制度设计之间反复校准。阅读本课程笔记常涉及以下贯穿全程的核心概念：
+        </p>
+
+        <h3>1. 竞争性叙事框架</h3>
+        <p>
+            围绕 AI 未来的公共讨论大致分布在"加速风险论"（如 AI 2027 式的递归自我改进图景）与"常态化技术论"（AI 作为类比电力、互联网的渐进渗透型通用技术）两极之间，不同叙事直接决定了治理议程的优先级排序与时间紧迫感。
+        </p>
+
+        <h3>2. 算力作为治理抓手</h3>
+        <p>
+            欧盟《AI 法案》的 GPAI 系统性风险条款与加州 SB 1047/SB 53，都不约而同地选择训练算力规模（FLOPs）作为监管触发条件，因其相对客观、难以规避，但也面临随算法效率提升而持续"贬值"的固有局限。
+        </p>
+
+        <h3>3. 多层次治理体系</h3>
+        <p>
+            有效的 AI 治理很少单独依赖某一层级的制度工具，而是横跨政府立法（欧盟 AI 法案、美国州级与联邦行政命令）、企业自律（模型卡片、负责任扩展政策、NIST 风险管理框架）与国际协调（出口管制、联合国治理倡议）多个层次协同运作，任何单一层面的方案都难以独立应对生成式 AI 的规模化风险。
+        </p>
+
+        <h3>4. 度量与问责的技术前提</h3>
+        <p>
+            无论是算法公平性指标、基准测试有效性，还是模型审计的访问权限深度，本课程反复揭示了一个模式：有效的治理设计必须建立在对技术度量工具本身局限性的准确理解之上，脱离技术细节的政策建议容易提出数学上互斥或实践中难以执行的诉求。
+        </p>
+    </section>
+
+    <section>
+        <h2>课程目录（10 讲笔记）</h2>
+
+        <h3><a href="01_AI转型的竞争性叙事与前沿科技治理史鉴.html">01. AI 转型的竞争性叙事与前沿科技治理史鉴</a></h3>
+        <p>
+            对照 AI 2027 式加速叙事与"常态化技术论"，并回顾核能、生物技术与互联网监管史留下的可迁移制度经验。
+        </p>
+
+        <h3><a href="02_技术根基解构与算法公平性的度量困境.html">02. 技术根基解构与算法公平性的度量困境</a></h3>
+        <p>
+            补课 SGD、思维链等技术基础，并证明"公平"在数学上无法被单一指标同时满足的 Kleinberg 不可能定理。
+        </p>
+
+        <h3><a href="03_生成式AI操纵民主话语与隐私权的边界.html">03. 生成式AI操纵民主话语与隐私权的边界</a></h3>
+        <p>
+            剖析幻觉、提示注入与水印溯源如何冲击选举诚信，以及训练数据中私人信息的法律真空地带。
+        </p>
+
+        <h3><a href="04_欧盟AI法案与美国算力门槛之治理分野.html">04. 欧盟AI法案与美国算力门槛之治理分野</a></h3>
+        <p>
+            对比欧盟风险分级监管与美国算力阈值立法（SB 1047/SB 53）两种截然不同的立法哲学。
+        </p>
+
+        <h3><a href="05_全球治理版图的多元路径与AI经济学.html">05. 全球治理版图的多元路径与AI经济学</a></h3>
+        <p>
+            梳理中国、印度、东南亚与非洲的差异化监管路径，并分析 AI 对劳动力市场与市场集中度的双重冲击。
+        </p>
+
+        <h3><a href="06_算力基础设施能耗博弈与国家安全地缘政治.html">06. 算力基础设施能耗博弈与国家安全地缘政治</a></h3>
+        <p>
+            探讨吉瓦级数据中心的能源博弈、硬件层面可核查治理机制，以及半导体出口管制的地缘政治拉锯。
+        </p>
+
+        <h3><a href="07_企业内部治理机制与评估基准的技术陷阱.html">07. 企业内部治理机制与评估基准的技术陷阱</a></h3>
+        <p>
+            审视模型卡片、负责任扩展政策与红队测试等企业自律工具，以及基准测试污染与构念效度的评估难题。
+        </p>
+
+        <h3><a href="08_数据透明度悖论与生成式AI版权战争.html">08. 数据透明度悖论与生成式AI版权战争</a></h3>
+        <p>
+            权衡开放权重的双重效应，并解析 OpenAI 诉《纽约时报》案背后的记忆化、机器遗忘与言论自由争议。
+        </p>
+
+        <h3><a href="09_智能体自主性风险与人机关系的哲学追问.html">09. 智能体自主性风险与人机关系的哲学追问</a></h3>
+        <p>
+            讨论多智能体系统的涌现性风险与责任归属空白，并延伸至图灵测试在生成式 AI 时代的哲学新解。
+        </p>
+
+        <h3><a href="10_反垄断诽谤责任认定与AI未来的终极叙事.html">10. 反垄断诽谤责任认定与AI未来的终极叙事</a></h3>
+        <p>
+            课程终章：审视 AI 驱动市场集中的反垄断应对与诽谤责任认定，并回归开篇的竞争性叙事之争做全课程总结。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283 · Notes curated by Joyce</p>
+    </footer>
+</article>
+
+</body>
+</html>

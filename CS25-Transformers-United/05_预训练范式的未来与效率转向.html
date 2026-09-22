@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五讲：预训练范式的未来与效率转向 | 斯坦福 CS25 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS25: Lecture 05</span>
+    <a href="06_参数记忆与情境学习的泛化分野.html">下一讲：参数记忆与情境学习的泛化分野 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第五讲：预训练范式的未来与效率转向</h1>
+        <p class="subtitle">从"下一词元预测"到"下一代智能"：当数据存量见顶，预训练该往何处优化</p>
+        <div class="author-meta">
+            主讲：Shrimai Prabhumoye（Mistral AI 研究科学家，曾任职于 NVIDIA）<br>
+            主题：From Next-Token Prediction to Next-Generation Intelligence: The Future of Pretraining
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者背景：从大规模系统训练到欧洲独立技术路线</h2>
+        <p>
+            Shrimai Prabhumoye 此前任职于 NVIDIA，深度参与了 Megatron-LM 系列超大规模语言模型的预训练工程与数据处理流程，对"如何把数万亿 Token 的数据高效喂给一个千亿参数模型"这件事有第一手的系统级经验。她目前任职于 Mistral AI——一家总部位于巴黎、以"用更少算力做出更强模型"为核心竞争策略的欧洲前沿实验室。
+        </p>
+        <p>
+            这一履历转变本身就带有方法论意味：从聚焦"如何把预训练系统扩展到更大规模"的 NVIDIA 阶段，转向聚焦"如何在给定算力预算下把预训练效率做到极致"的 Mistral 阶段，恰好呼应了本讲的核心命题——当预训练不再是"钱多就能砸出优势"的游戏时，真正的护城河开始向数据质量、训练配方与效率工程转移。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心技术图谱：规模化定律与数据配比工程</h2>
+        <p>
+            讲座首先回顾了预训练领域最重要的经验规律——Chinchilla 缩放定律。该定律指出，在给定计算预算 <i>C</i> 的约束下，模型参数量 <i>N</i> 与训练数据量 <i>D</i> 之间存在一个使损失最小化的最优配比，而不是像早期实践那样一味堆参数、相对忽视数据量：
+        </p>
+        <p>
+            $$L(N, D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}}$$
+        </p>
+        <p>
+            其中 <i>E</i> 是不可约损失（即使无限扩大规模也无法消除的熵），<i>A</i>/<i>N</i><sup>&alpha;</sup> 项刻画参数量不足带来的损失，<i>B</i>/<i>D</i><sup>&beta;</sup> 项刻画数据量不足带来的损失。这一公式的直接推论是：在固定算力预算下，存在一个最优的模型—数据配比，超出这一配比继续单方面扩大参数或数据，边际收益都会迅速衰减。
+        </p>
+        <h3>数据质量工程：去重、配比与课程学习</h3>
+        <p>
+            讲座着重指出，随着互联网上可供抓取的高质量、无污染人类文本逐渐逼近存量上限（即所谓"数据墙"），预训练竞争的重心正在从"抓取更多数据"转向"更精细地处理已有数据"：
+        </p>
+        <ul>
+            <li><strong>去重（Deduplication）</strong>：互联网文本存在大量近似重复内容，未经去重的语料会让模型在同一份内容上反复过拟合，浪费宝贵的有效训练信号。</li>
+            <li><strong>领域配比（Domain Mixture）</strong>：代码、数学、多语言文本、高质量书籍等不同领域的数据对模型不同能力的贡献并不均匀，如何设计各领域的采样权重，本身就是一个需要实验验证的超参数。</li>
+            <li><strong>课程学习（Curriculum Learning）</strong>与多轮训练：在算力和数据总量有限的前提下，让模型在训练后期更多接触高质量、高难度数据，或对稀缺的高质量语料进行多个 Epoch 的重复训练，正成为弥补数据存量瓶颈的现实手段。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>三、 关键洞察：从"预测下一个词"到"预测下一步该学什么"</h2>
+        <p>
+            讲座标题中"从下一词元预测到下一代智能"这一表述，指向一个更深层的判断：Next-token Prediction 作为一个训练目标本身足够通用、足够可扩展，这是过去数年预训练范式成功的根本原因；但它同时也是一个相对"盲目"的目标——模型并不知道当前这个 Token 对于最终能力提升是否重要，只是均匀地对所有位置计算损失并反向传播。
+        </p>
+        <p>
+            由此延伸出的前沿方向，是让预训练过程本身具备某种"主动选择学什么"的能力：例如通过数据难度估计动态调整采样权重，让模型把有限的算力预算更多投入到"信息量大、当前掌握尚不牢固"的数据片段上，而非在已经充分掌握的简单内容上持续消耗算力。这与人类学习过程中"刻意练习"（Deliberate Practice）优先聚焦薄弱环节的直觉是一致的，只是要把它转化为可以在数万亿 Token 规模上自动化执行的工程系统。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 延伸思考：效率优先路线的产业意义</h2>
+        <p>
+            Mistral AI 作为欧洲少数几家坚持自研前沿模型的实验室，其公开的技术叙事始终强调"以远低于头部美国实验室的算力预算，做出具备竞争力的模型"，这与本讲讨论的效率优先预训练理念高度一致。这也提供了一个与第四讲"万卡集群训练"形成对照的视角：第四讲讨论的是"如何把规模化做到极致"，而本讲讨论的是"当规模化的边际收益递减时，效率与数据质量如何成为新的竞争维度"。
+        </p>
+        <p>
+            两讲合在一起，勾勒出预训练工程当前面临的真实处境：一方面头部实验室仍在持续扩大集群规模，另一方面数据存量与收益递减规律又在倒逼整个行业重新审视"钱和卡是否还是唯一的解法"。下一讲将从预训练阶段学到的知识本身出发，讨论模型在"参数化记忆"与"情境学习"这两种截然不同的泛化机制之间存在怎样的结构性差异。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS25: Transformers United V6 &copy; Spring 2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="06_参数记忆与情境学习的泛化分野.html">阅读第六讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

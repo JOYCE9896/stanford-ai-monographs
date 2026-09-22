@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四讲：混合专家模型MoE的路由与负载均衡 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 04</span>
+    <a href="05_GPU计算范式与Triton底层内核优化.html">下一讲：GPU 计算范式与 Triton 内核优化 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第四讲：混合专家模型 MoE 的路由与负载均衡</h1>
+        <p class="subtitle">把参数量与计算量解耦：如何让模型"更大"却不必"更慢"</p>
+        <div class="author-meta">
+            主讲：Tatsunori Hashimoto（斯坦福大学计算机系助理教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、核心原理：稀疏激活如何解耦参数与计算</h2>
+        <p>
+            稠密（Dense）Transformer 的每一次前向传播都会激活全部参数，这意味着模型总参数量与单次推理计算量被死死绑在一起——想要更大的模型容量，就必须承受成比例增长的推理成本。混合专家模型（Mixture-of-Experts, MoE）的核心思路，是把前馈网络层替换为多个并行的"专家"子网络，并引入一个轻量级的路由（Router）模块，对每个 Token 只挑选其中一小部分专家参与计算——模型的总参数量可以随专家数量线性增长，而单次前向传播实际激活、也就是实际消耗算力的参数量，却可以保持基本不变。
+        </p>
+        <h3>Top-k 门控路由机制</h3>
+        <p>
+            路由模块本质上是一个小型的线性层，对每个 Token 的隐藏状态输出一个专家评分向量，再通过 Softmax 得到各专家的选择概率，取评分最高的 $k$ 个专家参与该 Token 的计算（Top-k 门控），最终输出是被选中专家输出的加权组合：
+        </p>
+        <pre><code>g = Softmax(W_router · x)
+top_k_experts = TopK(g, k)
+y = Σ_{i in top_k_experts} g_i · Expert_i(x)</code></pre>
+    </section>
+
+    <section>
+        <h2>二、工程实现要点：负载均衡与通信开销</h2>
+        <h3>1. 负载不均衡问题</h3>
+        <p>
+            如果路由完全由训练自由学习，极容易出现"赢家通吃"现象——少数几个专家被绝大多数 Token 选中，其余专家几乎从未被激活、得不到有效训练，模型实质上退化为一个远小于其名义参数量的稠密模型。Switch Transformer 提出的辅助负载均衡损失（auxiliary load-balancing loss）通过在训练目标中额外加入一项惩罚，鼓励 Token 在各专家间更均匀地分布，其形式大致为专家实际接收 Token 比例与路由概率均值的乘积之和，迫使路由模块在"选择最合适的专家"与"让所有专家都得到训练机会"之间取得平衡。
+        </p>
+        <h3>2. 专家容量与 Token 丢弃</h3>
+        <p>
+            为了让分布式训练中的每个专家所在设备可以预先分配固定大小的计算缓冲区，工程实现通常会为每个专家设定一个"容量"上限——当某个专家在一个批次内被选中的 Token 数量超过其容量，多余的 Token 会被直接丢弃（不经过该专家处理，直接通过残差连接传递）。容量系数设置过小会导致过多 Token 被丢弃、损害模型质量；设置过大则会造成计算资源浪费，这是 MoE 训练中一个需要持续监控的核心工程指标。
+        </p>
+        <h3>3. All-to-All 通信开销</h3>
+        <p>
+            在多卡分布式训练中，各专家通常分布在不同设备上，这意味着每个 Token 在被路由到其对应专家所在设备时，都需要一次跨设备的数据传输（All-to-All 通信）——这一通信模式与稠密模型的通信模式截然不同，也是 MoE 大规模训练中除计算本身之外最主要的系统性能瓶颈来源，直接决定了 MoE 层如何与流水线并行、张量并行等策略协同设计。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            MoE 模型的"参数量"与"激活参数量"是两个必须严格区分的数字——媒体报道或论文摘要中提到的总参数规模，往往远大于实际决定推理成本的激活参数规模，用总参数量直接与稠密模型的参数量做横向对比，会得出误导性结论。此外，MoE 模型虽然在训练算力效率上通常优于同等激活参数量的稠密模型，但其总参数量带来的显存占用（尤其是推理时需要把所有专家权重都加载进显存，即便每次只激活其中一小部分）却不会因为稀疏激活而减少，这使得 MoE 模型在显存受限的部署场景下，其"性价比"未必总是优于稠密模型。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="05_GPU计算范式与Triton底层内核优化.html">阅读第五讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

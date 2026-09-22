@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第五讲：半导体计量学中的AI质检革命 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 05</span>
+    <a href="06_AIOps与智能运维的自动化闭环.html">下一讲：AIOps与智能运维的自动化闭环 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第五讲：半导体计量学中的AI质检革命</h1>
+        <p class="subtitle">从纳米级缺陷检测到虚拟量测：精密测量的物理极限与产业AI的非对称容错基线</p>
+        <div class="author-meta">
+            主讲嘉宾：Arvind Jayaraman（KLA Tencor）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            Arvind Jayaraman 来自 KLA Tencor（现通称 KLA Corporation），全球半导体制程控制与良率管理设备领域的头部厂商之一，与 ASML、应用材料（Applied Materials）、泛林集团（Lam Research）共同构成先进制程不可或缺的设备生态。KLA 的核心业务并非制造芯片本身，而是制造"检测芯片制造是否出错"的设备——在晶圆经历数百道光刻、蚀刻、沉积工序的过程中，KLA 的检测与量测系统负责在纳米尺度上捕捉每一处可能导致良率损失的异常。
+        </p>
+        <p>
+            这一垂直领域是工业 AI 中容错阈值最极端的场景之一：先进制程一片 12 英寸晶圆上可以集成数十颗价值不菲的芯片，一旦某个关键缺陷在早期工序未被捕获，流入后续数十道工序直至封装测试阶段才暴露，其经济损失会随工序推进呈几何级数放大。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：量测（Metrology）与检测（Inspection）的技术分野</h2>
+        <h3>1. 量测与检测：两种不同的测量哲学</h3>
+        <p>
+            工业界常常把"检测"与"量测"混为一谈，但二者在半导体制程控制体系中承担截然不同的职能。<strong>检测（Inspection）</strong>回答的是"这片晶圆上有没有缺陷、缺陷在哪里"的二元或多分类问题；<strong>量测（Metrology）</strong>回答的则是"关键尺寸（Critical Dimension, CD）、套刻精度（Overlay）、薄膜厚度等物理参数的精确数值是多少"，是连续量的高精度测量任务。随着制程节点逼近个位数纳米，量测系统需要以亚纳米级的精度重复测量数以万计的关键结构，任何测量噪声本身都可能掩盖真实的制程漂移信号。
+        </p>
+        <h3>2. 虚拟量测：用过程数据预测测量结果</h3>
+        <p>
+            由于物理量测设备本身昂贵且测量耗时，无法对产线上的每一片晶圆都进行全面实测，这就催生了<strong>虚拟量测（Virtual Metrology）</strong>的思路：利用蚀刻腔体的温度、压力、气体流量、等离子体功率等大量过程传感器数据，训练机器学习模型直接预测该片晶圆本应实测得到的关键尺寸数值，从而大幅降低对实体量测设备产能的依赖，压缩制程反馈的周期时间。这本质上是用高频、低成本的间接过程信号，去逼近低频、高成本的直接物理测量。
+        </p>
+        <h3>3. 极端稀疏样本下的缺陷分类</h3>
+        <p>
+            先进制程的真实缺陷发生率极低，往往以百万分之几（ppm）计，这意味着任何缺陷分类模型天生面对极度不均衡的数据分布——绝大多数样本都是"正常"，真正有价值的负样本却少之又少。业界普遍采用半监督学习、合成缺陷数据生成与主动学习相结合的策略，持续把工程师人工复核确认的新缺陷类型反馈进训练循环，但即便如此，模型对从未见过的新缺陷模式（新工艺引入的未知失效机理）依然存在结构性盲区。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：为什么漏检的代价远高于误检</h2>
+        <p>
+            讲座中反复强调的一个经济学事实是：在半导体制程控制中，漏检（False Negative）与误检（False Positive）的代价高度不对称。一次误检至多导致一片晶圆被不必要地送去复检或返工，损失的是工时与产能；而一次漏检则可能让带缺陷的晶圆继续流经数十道后续高价值工序，直到成品测试阶段才暴露问题，此时晶圆上凝结的加工成本、设备工时与材料价值早已复合累积到极高水平，在先进制程节点上，一片报废晶圆背后代表的经济损失可以是数千甚至数万美元量级。
+        </p>
+        <p>
+            这种非对称性直接决定了模型设计哲学：宁可容忍稍高的误检率、增加一定的人工复核负担，也要把漏检率压到极限。这也是为什么半导体质检 AI 系统几乎从不采用"模型自动放行、无需人工复核"的全自动模式，而是保留分级的人工复核站——AI 负责把海量数据初筛到人类可处理的规模，最终的高风险放行决策仍由资深工艺工程师签字确认。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 对更广泛工业AI场景的启示</h2>
+        <p>
+            半导体计量学案例把第一讲提出的"容错阈值"框架推向了一个极端而清晰的样本：当漏检代价与误检代价之比达到数量级差异时，任何追求单一准确率指标最大化的建模思路都是错误的，正确的做法是显式地在损失函数与决策阈值设计中编码这种经济不对称性，并保留与代价结构相匹配的人工复核层级。这一原则同样适用于本课程后续会涉及的国防装备验证、金融风控与供应链异常检测等场景——凡是漏检代价远高于误检代价的领域，都不应盲目追求全自动化。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="06_AIOps与智能运维的自动化闭环.html">阅读第六讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

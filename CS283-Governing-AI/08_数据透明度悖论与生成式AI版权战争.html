@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第八讲：数据透明度悖论与生成式AI版权战争 | 斯坦福 CS283 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS283: Lecture 08</span>
+    <a href="09_智能体自主性风险与人机关系的哲学追问.html">下一讲：智能体风险与人机关系 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第八讲：数据透明度悖论与生成式 AI 版权战争</h1>
+        <p class="subtitle">开源权重是安全隐患还是问责前提？以及 OpenAI 诉《纽约时报》案背后的记忆化与逐字复现难题</p>
+        <div class="author-meta">
+            主讲导师：Nathaniel Persily（法学院）、Anka Reuel（计算机系）<br>
+            课程：Governing Artificial Intelligence: Law, Policy, and Institutions
+        </div>
+    </header>
+
+    <section>
+        <h2>一、数据、透明度与开放获取的价值权衡</h2>
+        <p>
+            透明度议题横跨了从数据集文档化到模型权重开放程度的多个层次，本节课的核心是展示这些看似都指向"更多公开"的诉求，实际上彼此之间存在真实的张力。
+        </p>
+        <h3>数据集透明度的现状</h3>
+        <p>
+            Longpre 等人在《大规模审计 AI 数据集许可与署名情况》的研究中发现，大量被广泛使用的训练数据集存在许可信息缺失、来源标注错误或与原始许可协议不符的系统性问题——这不仅是学术诚信瑕疵，更直接关系到下游模型开发者能否准确评估自身的法律风险敞口。Bommasani 等人构建的《基础模型透明度指数》试图系统性量化头部模型开发商在数据、方法、下游影响披露等维度的透明程度，其结果显示行业整体透明度参差不齐，且往往与模型的商业化程度呈反向关系——闭源程度最高的头部商业模型，恰恰是透明度指数排名最低的一类。
+        </p>
+        <h3>开放权重的风险收益辩论</h3>
+        <p>
+            Seger 等人在《Open-sourcing highly capable foundation models》中系统梳理了开放模型权重的双重效应：一方面，开放权重降低了研究门槛，使得更广泛的学术界与独立安全研究者能够审查模型内部机制、发现潜在缺陷；另一方面，一旦权重公开发布，开发者就永久失去了对该模型下游使用方式的任何控制能力——恶意行为者可以自由地对模型进行去安全对齐的再训练（fine-tuning to remove safety guardrails），且这种"投放后不可召回"的特性在闭源 API 模式下并不存在。Widder 等人在《Why 'open' AI systems are actually closed》中则从另一个角度质疑了"开源"标签本身的准确性：即便权重公开，训练数据、训练代码与算力资源的持续不对称，意味着绝大多数使用者事实上仍然无法真正独立复现或审计这些"开放"模型，这使得"开放"更多是一种程度问题而非非黑即白的二元状态。
+        </p>
+        <h3>访问方式与审计能力的关系</h3>
+        <p>
+            Casper 等人在《Black-box access is insufficient for rigorous AI audits》中提出了一个对政策制定者极具参考价值的论点：仅仅通过 API 提供的"黑箱访问"（black-box access）不足以支撑严谨的第三方安全审计，因为审计者无法检查模型内部权重、无法控制训练过程中的随机性、也无法验证被测试的模型版本与实际部署版本是否完全一致——这为后续监管设计中"审计权限应达到何种技术深度"这一具体问题提供了论证基础。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、版权与言论自由：训练数据的法律地位之争</h2>
+        <p>
+            第二节课聚焦生成式 AI 与既有知识产权、言论自由法律框架之间日益激烈的碰撞，其代表性案例是 OpenAI 与《纽约时报》之间围绕训练数据使用展开的诉讼。
+        </p>
+        <h3>逐字复现与记忆化的技术事实</h3>
+        <p>
+            Liu 等人在《Language Models May Verbatim Complete Text They Were Not Explicitly Trained On》与 Ippolito 等人在《Preventing verbatim memorization in language models》中提供的技术证据，共同确认了一个此类诉讼的核心事实基础：大语言模型确实会在特定条件下逐字或近乎逐字地复现训练语料中的片段，这种"记忆化"现象的发生概率与该片段在训练数据中的重复出现频次高度相关。这一技术事实直接冲击了部分开发者早期"模型只学习统计模式、从不存储具体文本"的辩护立场，也是《纽约时报》诉状中援引的核心技术证据之一。
+        </p>
+        <h3>机器遗忘的技术局限</h3>
+        <p>
+            面对版权方要求删除特定训练数据影响的诉求，"机器遗忘"（machine unlearning）被视为潜在的技术解法，但 Cooper 等人在《Machine unlearning doesn't do what you think》中泼了一盆冷水：当前的机器遗忘技术大多只能让模型在特定测试条件下"表现得像是"忘记了某些信息，却无法从数学上保证该信息在模型参数中被彻底清除——这意味着"遗忘"更多是一种行为层面的近似，而非可被法律意义上完全信赖的技术保证。Cooper 与 Grimmelmann 在《On copyright, memorization, and generative AI》的长篇论文中主张，版权法的既有分析框架（如"实质性相似"测试）需要针对生成式 AI 的特殊技术机制做出实质性调整，而不能简单套用为传统人类创作侵权案件设计的分析工具。
+        </p>
+        <h3>诽谤与第一修正案的新战场</h3>
+        <p>
+            Volokh 在《Large libel models?》中开辟了另一条战线：当模型生成对真实个人具有诽谤性质的虚构陈述时，谁应承担法律责任——是模型开发者、部署方，还是提示词的输入者？这一问题目前缺乏清晰的判例法指引。更具思辨色彩的是关于"机器人的言论自由权"的讨论：如果对 AI 生成内容施加过于严格的责任标准，是否会产生事实上的"寒蝉效应"，反过来侵蚀第一修正案所保护的言论自由空间？这一议题把版权、侵权与宪法言论自由三个传统上相对独立的法律领域，史无前例地绞合在了同一个技术现象之中。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、本周治理启示</h2>
+        <p>
+            透明度与版权这两个议题共同指向一个此前几讲未曾充分展开的张力：更多的公开与共享，既是问责制的前提，也可能是风险扩散的渠道；训练数据的自由流动，既支撑了 AI 能力的快速进步，也直接冲击了创作者的既有权利结构。本课程至此已经反复验证了一个模式——几乎每一个具体的 AI 治理议题，最终都会显现出类似的结构：初看是"该不该管"的问题，深入分析后往往变成"如何在两种同样正当、却彼此冲突的价值之间做出可问责的权衡"。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS283: Governing Artificial Intelligence &copy; Academic Year 2025-2026</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="09_智能体自主性风险与人机关系的哲学追问.html">阅读第九讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

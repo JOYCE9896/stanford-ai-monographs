@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一讲：Overview与Tokenization的第一性原理 | 斯坦福 CS336 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford CS336: Lecture 01</span>
+    <a href="02_PyTorch资源核算与显存精算.html">下一讲：PyTorch 资源核算与显存精算 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第一讲：Overview 与 Tokenization 的第一性原理</h1>
+        <p class="subtitle">为什么这门课要求学生把语言模型从字节开始亲手实现一遍，以及分词器设计中被低估的工程细节</p>
+        <div class="author-meta">
+            主讲：Percy Liang（斯坦福大学计算机系教授）<br>
+            课程：CS336: Language Modeling from Scratch
+        </div>
+    </header>
+
+    <section>
+        <h2>一、课程哲学：为什么要从零构建</h2>
+        <p>
+            CS336 开宗明义地把自己与市面上大多数"调用 API 学习大模型"的课程区分开来。Percy Liang 在开篇讲座中给出的理由并不复杂：当一名工程师只调用别人封装好的训练框架时，他对"为什么某个超参数选择会导致训练发散"或"为什么某种并行策略在特定集群规模下会成为通信瓶颈"这类问题，往往只有模糊的直觉，而没有可以推导出来的确定性答案。这门课要求学生用最少的脚手架代码，亲手实现分词器、Transformer 前反向传播、混合精度训练、分布式并行直到对齐算法的完整技术栈，代码量被刻意设计为同类课程的十倍以上——这不是为了增加工作量而增加工作量，而是因为许多系统性的工程直觉，只有在亲手调试过一次"为什么我的实现比参考实现慢三倍"之后才能真正建立起来。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、Tokenization：语言模型的第一道工序</h2>
+        <h3>1. 为什么不能直接用字符或单词</h3>
+        <p>
+            分词器的设计目标，是在"词表规模"与"序列长度"之间找到一个可行的折中点。如果直接以字符为单位，词表可以小到几百个符号，但一段普通文本会被切分成数倍于单词数量的序列，直接推高了 Transformer 自注意力机制 $O(n^2)$ 的计算开销；如果直接以整词为单位，序列长度大幅缩短，但词表规模会膨胀到难以承受的地步，且天然无法处理训练时从未见过的新词（out-of-vocabulary，OOV 问题）。
+        </p>
+        <h3>2. 字节对编码（BPE）的合并机制</h3>
+        <p>
+            当前主流分词算法字节对编码（Byte-Pair Encoding, BPE）给出的解法是数据驱动的贪心合并：从最细粒度的字节或字符单元出发，统计训练语料中相邻符号对的共现频率，每一轮迭代把出现频率最高的符号对合并成一个新的词表符号，重复这一过程直至达到预设的词表规模。这一过程可以写成一个简单的迭代：
+        </p>
+        <pre><code>初始化：词表 V = 所有单字节符号
+重复 直到 |V| 达到目标规模：
+    统计语料中所有相邻符号对 (a, b) 的共现次数
+    找到共现次数最高的符号对 (a*, b*)
+    将 (a*, b*) 合并为新符号 ab*，加入词表 V
+    在语料中把所有 (a*, b*) 替换为 ab*</code></pre>
+        <p>
+            这一机制的巧妙之处在于，高频的语素组合（如英文中的词根、词缀，或中文里的常见双字词）会在早期迭代中被合并为单一符号，而低频的生僻组合则始终保持细粒度切分——词表因此天然地把"表达效率"分配给了语言中最常见的模式。
+        </p>
+        <h3>3. 字节级分词：彻底消灭未登录词</h3>
+        <p>
+            GPT-2 之后主流实现进一步把 BPE 的初始符号集从 Unicode 字符收窄到原始字节（byte-level BPE），这样做的好处是词表的基础单元集合被固定为 256 个可能的字节值，任何输入——无论是何种语言的文字、emoji、还是任意二进制数据——理论上都可以被分解为这 256 个基础符号的某种组合，从根本上消除了"未登录词"这一概念。代价是某些语言（尤其是非拉丁字母书写系统）在字节层面天然需要更多字节才能表示一个字符，这导致同样长度的文本在不同语言下被切分为的 Token 数量存在系统性差异，也是后续课程讨论多语言训练公平性时会重新提及的一个具体技术根源。
+        </p>
+        <h3>4. 词表规模的工程权衡</h3>
+        <p>
+            词表规模并非越大越好：更大的词表意味着模型最后一层输出层（通常与词嵌入层参数共享）需要更大的矩阵，直接推高参数量与显存开销；但词表过小又会导致序列长度膨胀，增加自注意力的计算成本，同时降低模型单步能表达的语义信息密度。工业界主流选择大致落在 3 万到 25 万之间，具体取值取决于目标语言覆盖范围与模型整体参数规模的相对权衡。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、常见陷阱与设计权衡</h2>
+        <p>
+            分词器一旦训练完成并投入使用，几乎不可能在不重新训练整个模型的前提下更换——这使得分词器设计中的失误具有异乎寻常的"锁定效应"。常见的陷阱包括：训练分词器所用的语料分布与模型实际预训练语料分布不一致，导致某些领域文本被过度切碎；忽视数字的切分方式，导致同一个数字在不同上下文中被切成不同的 Token 组合，损害模型的算术能力；以及未针对特殊符号（如代码缩进、换行符）做专门处理，导致代码类任务的 Token 效率显著低于自然语言文本。这些看似琐碎的工程细节，恰恰是"从零实现一遍"才能真正建立起免疫力的那类问题。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford CS336: Language Modeling from Scratch &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="02_PyTorch资源核算与显存精算.html">阅读第二讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

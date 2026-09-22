@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六讲：AIOps与智能运维的自动化闭环 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 06</span>
+    <a href="07_半导体数字孪生与物理引导建模.html">下一讲：半导体数字孪生与物理引导建模 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第六讲：AIOps与智能运维的自动化闭环</h1>
+        <p class="subtitle">从告警疲劳到自动化根因定位：超大规模云基础设施运维的AI重构</p>
+        <div class="author-meta">
+            主讲嘉宾：Matthew Johns（Microsoft）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            Matthew Johns 来自 Microsoft，负责 Azure 超大规模云基础设施运维体系相关工作。Azure 这类超大规模云平台每天产生的监控指标、日志条目与分布式链路追踪数据量级达到千亿甚至万亿条，传统依靠人工值班工程师（On-call SRE）凭经验巡检、设定静态告警阈值的运维模式，早已无法匹配这种规模下的故障发现与响应速度要求。这也是"AIOps"（AI for IT Operations，智能运维）这一细分领域诞生的直接背景。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：可观测性、告警疲劳与自动化修复</h2>
+        <h3>1. 可观测性的三大支柱</h3>
+        <p>
+            现代分布式系统的可观测性（Observability）体系通常建立在三类信号之上：<strong>指标（Metrics）</strong>——CPU 利用率、请求延迟、错误率等时间序列量化数据；<strong>日志（Logs）</strong>——系统与应用运行过程中产生的结构化或非结构化文本记录；<strong>链路追踪（Traces）</strong>——一次请求跨越多个微服务的完整调用路径。AIOps 的核心任务，就是在这三类海量、异构、高噪声的信号之上，自动完成异常检测、关联分析与根因定位。
+        </p>
+        <h3>2. 告警疲劳与动态异常检测</h3>
+        <p>
+            传统运维依赖人工设定的静态阈值告警（如"CPU 超过 90% 触发告警"），在超大规模系统中会产生海量误报，值班工程师逐渐对告警麻木，即"告警疲劳"（Alert Fatigue），这本身就是一种严重的安全隐患——真正的严重故障信号被淹没在噪声之中。AIOps 用基于历史模式学习的动态异常检测模型替代静态阈值，能够识别"相对于该服务自身历史基线的异常偏离"，而非套用一刀切的固定数值。
+        </p>
+        <h3>3. 根因分析与服务依赖图谱</h3>
+        <p>
+            超大规模系统中一次故障的表面症状（如某个前端服务延迟升高）往往源自若干跳之外的底层依赖服务，人工排查耗时且容易被表面现象误导。AIOps 系统通常会维护一张动态更新的服务依赖拓扑图，结合因果推断方法，在数百个同时触发的关联告警中反向定位最可能的根因节点，将平均故障定位时间（Mean Time to Diagnose）从小时级压缩至分钟级甚至秒级。
+        </p>
+        <h3>4. 自动化修复的信任分级</h3>
+        <p>
+            在根因定位之后，是否允许系统自动执行修复动作（如自动重启服务、自动回滚发布、自动扩容）是 AIOps 领域最具争议的话题。业界普遍采用分级授权模式：从"仅生成修复建议、由人工确认执行"，到"低风险操作自动执行、高风险操作仍需人工审批"，再到极少数场景下的"完全自主闭环自愈"，授权级别与该操作可能造成的影响范围（Blast Radius）严格挂钩。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：谁来监督监督者？</h2>
+        <p>
+            讲座中提出的一个尖锐悖论是：AIOps 系统本身也是运行在生产基础设施之上的软件系统，一旦其异常检测模型产生误判、或自动化修复动作本身触发了新的故障（例如自动扩容耗尽了资源池、自动回滚引发了版本不兼容），AIOps 系统就从"故障的诊断者"变成了"新故障的制造者"。这意味着 AIOps 系统自身的可靠性工程标准，必须不低于——甚至应该高于——它所监控的目标系统本身，这与第三讲国防级 AI 系统中"失效模式必须在设计阶段就被充分界定"的原则遥相呼应。
+        </p>
+        <p>
+            另一个值得注意的现象是，自动化程度越高，人工值班团队对系统内部机制的直觉理解反而可能随时间退化，一旦遇到 AIOps 系统本身未曾覆盖的全新故障模式，缺乏一线实操经验的团队可能面临更长的应急响应真空期。因此成熟的 AIOps 实践通常会保留定期的人工演练与"混沌工程"（Chaos Engineering）式的主动故障注入，确保人类运维团队的应急能力不会因高度自动化而退化。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 对更广泛工业AI场景的启示</h2>
+        <p>
+            AIOps 是目前企业级场景中，自主 Agent 被允许在生产环境执行真实动作（而非仅生成建议文本）范围最广的领域之一，其分级授权与失效模式管理的实践经验，为其他工业垂直领域探索"AI 自主执行权限如何逐步扩大"提供了极具参考价值的先行样本，也再次印证了第一讲提出的核心命题：工业 AI 的采纳节奏，取决于验证与信任机制的成熟速度，而非模型本身的能力上限。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="07_半导体数字孪生与物理引导建模.html">阅读第七讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>

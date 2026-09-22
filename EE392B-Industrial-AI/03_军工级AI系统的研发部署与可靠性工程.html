@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三讲：军工级AI系统的研发部署与可靠性工程 | 斯坦福 EE392B 课程笔记</title>
+    <link rel="stylesheet" href="tufte.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="index.html">&larr; 返回课程主索引</a>
+    <span>Stanford EE392B: Lecture 03</span>
+    <a href="04_具身智能与机器人在真实场景中的落地.html">下一讲：具身智能与机器人的真实场景落地 &rarr;</a>
+</nav>
+
+<article>
+    <header>
+        <h1>第三讲：军工级AI系统的研发部署与可靠性工程</h1>
+        <p class="subtitle">当模型失误的代价是任务失败或人员伤亡：国防承包商视角下的AI验证体系</p>
+        <div class="author-meta">
+            主讲嘉宾：Tyler Dillstrom（Northrop Grumman）
+        </div>
+    </header>
+
+    <section>
+        <h2>一、 讲者与机构背景</h2>
+        <p>
+            Tyler Dillstrom 来自 Northrop Grumman，美国主要的国防与航空航天承包商之一，长期承担侦察、通信、自主系统等高可靠性装备的研发。国防工业对 AI 系统的可靠性要求，代表了目前所有产业门类中最严苛的一端——系统失效不仅意味着经济损失，还可能直接影响任务成败与人员安全。
+        </p>
+    </section>
+
+    <section>
+        <h2>二、 核心知识图谱：从商业AI到国防级AI的验证鸿沟</h2>
+        <h3>1. 认证与合规的额外负担</h3>
+        <p>
+            商业互联网公司发布一个新模型版本，通常只需要内部 A/B 测试与灰度发布即可上线；国防系统则必须经过独立的验证与确认（Verification and Validation, V&V）流程，往往还需要满足特定的军用标准与适航认证要求。这意味着同样一个模型架构，在国防场景下从原型到实际列装，需要的时间和文档工作量可能是商业场景的数倍。
+        </p>
+        <h3>2. 分布漂移与对抗环境</h3>
+        <p>
+            民用场景下的模型通常假设部署环境与训练数据分布大体一致；国防系统却必须假设对手会主动构造对抗性输入（如电子干扰、传感器欺骗）来诱导系统失效。这要求国防 AI 系统在设计阶段就要考虑鲁棒性测试与红队演练（Red teaming），而不是把安全性当作事后补丁。
+        </p>
+        <h3>3. 人在回路的分级设计</h3>
+        <p>
+            讲座中提到，国防系统对自主决策的授权通常采用分级设计：从"仅提供建议、人类最终决策"到"人类监督下自主执行"，再到极少数场景下的"完全自主"，每一级授权都对应不同强度的验证要求与责任认定机制。这种分级思路本身也逐渐被更广泛的高风险民用场景（如自动驾驶、医疗诊断）所借鉴。
+        </p>
+    </section>
+
+    <section>
+        <h2>三、 核心洞察：可靠性工程如何反向定义模型架构选择</h2>
+        <p>
+            Dillstrom 强调的一个关键观点是：国防场景下，模型架构的选择往往不是从"哪个模型精度最高"出发，而是从"哪个模型的失效模式最容易被理解和界定边界"出发。一个精度略低但行为可解释、失效边界清晰的模型，可能比一个精度更高但黑盒、失效模式不可预测的模型更容易通过认证并获得实际部署许可。
+        </p>
+        <p>
+            这也解释了为什么国防承包商在采纳最新的大模型技术时通常比消费互联网公司更为谨慎——不是技术能力不足，而是可解释性、可验证性与责任认定机制的建设速度决定了实际列装的节奏。
+        </p>
+    </section>
+
+    <section>
+        <h2>四、 对更广泛工业AI场景的启示</h2>
+        <p>
+            虽然国防场景的验证强度是特例，但其背后的方法论——将"失效模式分析"作为架构选型的前置条件，而非部署后的补救措施——正在被越来越多对可靠性要求较高的民用工业场景所借鉴，例如航空、电网调度与医疗设备控制系统。这也呼应了第一讲中提出的核心框架：工业 AI 项目的成败，很大程度上取决于团队是否从一开始就把"容错阈值"作为设计的第一约束，而不是事后才去弥补的短板。
+        </p>
+    </section>
+
+    <footer class="document-footer">
+        <p>Stanford EE392B: Industrial AI &copy; Spring 2025</p>
+        <p><a href="index.html">&larr; 返回课程主目录</a> | <a href="04_具身智能与机器人在真实场景中的落地.html">阅读第四讲 &rarr;</a></p>
+    </footer>
+</article>
+
+</body>
+</html>
